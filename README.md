@@ -11,7 +11,8 @@
 
 _Component to integrate with [integration_blueprint][integration_blueprint]._ -->
 
-# HyperHDR component for Home Assistant
+# HyperHDR custom component for Home Assistant
+HyperHDR is an open source bias lighting implementation which runs on many platforms.
 
 **This component will set up the following platforms.**
 
@@ -30,7 +31,7 @@ Platform | Description
 
 ## Installation
 
-1. Add https://github.com/mjoshd/hyperhdr-ha to your custom repos in [HACS (Home Assistant Community Store)](https://hacs.xyz/)
+1. Add https://github.com/mjoshd/hyperhdr-ha to your custom repos (Category: Integration) in [HACS (Home Assistant Community Store)](https://hacs.xyz/)
 1. Click install.
 1. Restart Home Assistant
 1. In the HA UI go to "Configuration" -> "Integrations" click "+" and search for "HyperHDR".
