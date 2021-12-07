@@ -1,4 +1,4 @@
-[![GitHub Release][releases-shield]][releases]
+<!-- [![GitHub Release][releases-shield]][releases]
 [![GitHub Activity][commits-shield]][commits]
 [![License][license-shield]][license]
 
@@ -9,19 +9,23 @@
 [![Discord][discord-shield]][discord]
 [![Community Forum][forum-shield]][forum]
 
-_Component to integrate with [integration_blueprint][integration_blueprint]._
+_Component to integrate with [integration_blueprint][integration_blueprint]._ -->
 
 **This component will set up the following platforms.**
 
 Platform | Description
 -- | --
-`binary_sensor` | Show something `True` or `False`.
-`sensor` | Show info from API.
-`switch` | Switch something `True` or `False`.
+`camera` | Show image from HyperHDR.
+`light` | Show HyperHDR as a controllable device.
+`switch` | Show switches to control HyperHDR components.
 
-![example][exampleimg]
+<!-- ![hyperhdr-logo][hyperhdr-logoimg] -->
+<img src="hyperhdr-logo.png"
+    alt="HyperHDR logo"
+/>
 
 {% if not installed %}
+
 ## Installation
 
 1. Click install.
@@ -29,12 +33,11 @@ Platform | Description
 
 {% endif %}
 
-
 ## Configuration is done in the UI
 
 <!---->
 
-***
+<!-- ***
 
 [integration_blueprint]: https://github.com/custom-components/integration_blueprint
 [buymecoffee]: https://www.buymeacoffee.com/ludeeus
@@ -53,4 +56,4 @@ Platform | Description
 [maintenance-shield]: https://img.shields.io/badge/maintainer-Joakim%20Sørensen%20%40ludeeus-blue.svg?style=for-the-badge
 [releases-shield]: https://img.shields.io/github/release/custom-components/integration_blueprint.svg?style=for-the-badge
 [releases]: https://github.com/custom-components/integration_blueprint/releases
-[user_profile]: https://github.com/ludeeus
+[user_profile]: https://github.com/ludeeus -->

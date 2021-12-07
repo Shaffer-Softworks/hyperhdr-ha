@@ -1,9 +1,9 @@
 {
-    "name": "Integration blueprint",
+    "name": "HyperHDR",
     "hacs": "1.6.0",
     "domains": [
-        "binary_sensor",
-        "sensor",
+        "camera",
+        "light",
         "switch"
     ],
     "homeassistant": "0.118.0"
