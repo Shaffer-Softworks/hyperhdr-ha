@@ -1,6 +1,6 @@
 {
     "name": "HyperHDR",
-    "hacs": "1.6.0",
+    "render_readme": true,
     "domains": [
         "camera",
         "light",
