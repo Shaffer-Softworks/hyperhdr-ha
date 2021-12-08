@@ -3,7 +3,7 @@
   "documentation": "https://github.com/awawa-dev/HyperHDR#readme",
   "name": "HyperHDR",
   "issue_tracker": "https://github.com/mjoshd/hyperhdr-ha/issues",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "ssdp": [
     {
       "manufacturer": "HyperHDR Open Source Ambient Lighting",
@@ -12,6 +12,6 @@
   ],
   "config_flow": true,
   "codeowners": ["@mjoshd"],
-  "requirements": ["hyperhdr-py==0.0.1"],
+  "requirements": ["hyperhdr-py==0.0.2"],
   "iot_class": "local_push"
 }

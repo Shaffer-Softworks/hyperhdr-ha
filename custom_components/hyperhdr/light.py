@@ -58,7 +58,7 @@ CONF_HDMI_PRIORITY = "hdmi_priority"
 CONF_EFFECT_LIST = "effect_list"
 
 # As we want to preserve brightness control for effects (e.g. to reduce the
-# brightness for V4L), we need to persist the effect that is in flight, so
+# brightness for VIDEOGRABBER), we need to persist the effect that is in flight, so
 # subsequent calls to turn_on will know the keep the effect enabled.
 # Unfortunately the Home Assistant UI does not easily expose a way to remove a
 # selected effect (there is no 'No Effect' option by default). Instead, we
