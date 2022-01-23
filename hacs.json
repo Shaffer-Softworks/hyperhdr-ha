@@ -6,5 +6,5 @@
         "light",
         "switch"
     ],
-    "homeassistant": "0.118.0"
+    "homeassistant": "2021.11.0"
 }
