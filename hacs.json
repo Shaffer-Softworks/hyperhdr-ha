@@ -1,10 +1,8 @@
 {
     "name": "HyperHDR",
-    "render_readme": true,
     "domains": [
-        "camera",
         "light",
         "switch"
     ],
-    "homeassistant": "2021.11.0"
+    "homeassistant": "2021.12.10"
 }

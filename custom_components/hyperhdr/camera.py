@@ -1,4 +1,4 @@
-"""Camera platform for HyperHDR."""
+"""Switch platform for HyperHDR."""
 
 from __future__ import annotations
 

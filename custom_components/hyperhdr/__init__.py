@@ -10,8 +10,11 @@ from typing import Any, cast
 from awesomeversion import AwesomeVersion
 from hyperhdr import client, const as hyperhdr_const
 
+from homeassistant.components.camera.const import DOMAIN as CAMERA_DOMAIN
+from homeassistant.components.light import DOMAIN as LIGHT_DOMAIN
+from homeassistant.components.switch import DOMAIN as SWITCH_DOMAIN
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import CONF_HOST, CONF_PORT, CONF_TOKEN, Platform
+from homeassistant.const import CONF_HOST, CONF_PORT, CONF_TOKEN
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady
 from homeassistant.helpers import device_registry as dr
@@ -33,7 +36,7 @@ from .const import (
     SIGNAL_INSTANCE_REMOVE,
 )
 
-PLATFORMS = [Platform.LIGHT, Platform.SWITCH, Platform.CAMERA]
+PLATFORMS = [LIGHT_DOMAIN, SWITCH_DOMAIN]
 
 _LOGGER = logging.getLogger(__name__)
 

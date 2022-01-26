@@ -19,7 +19,6 @@ HyperHDR is an open source bias lighting implementation which runs on many platf
 
 Platform | Description
 -- | --
-`camera` | Show image from HyperHDR.
 `light` | Show HyperHDR as a controllable device.
 `switch` | Show switches to control HyperHDR components.
 

@@ -85,7 +85,7 @@ async def async_setup_entry(
     hass: HomeAssistant,
     config_entry: ConfigEntry,
     async_add_entities: AddEntitiesCallback,
-) -> None:
+) -> bool:
     """Set up a HyperHDR platform from config entry."""
 
     entry_data = hass.data[DOMAIN][config_entry.entry_id]
@@ -122,6 +122,7 @@ async def async_setup_entry(
             )
 
     listen_for_instance_updates(hass, config_entry, instance_add, instance_remove)
+    return True
 
 
 class HyperHDRBaseLight(LightEntity):
