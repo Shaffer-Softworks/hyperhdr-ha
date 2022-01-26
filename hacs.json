@@ -1,5 +1,6 @@
 {
     "name": "HyperHDR",
+    "render_readme": true,
     "domains": [
         "light",
         "switch"
