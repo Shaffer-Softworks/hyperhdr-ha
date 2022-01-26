@@ -13,10 +13,10 @@ Only do the following if you are updating from an earlier version:
 - Remove the orphaned camera entity
   - go to Configuration > Devices & Services > Integrations
   - locate HyperHDR
-  - click the _12 entities_ link
+  - click the '12 entities' link
   - select the checkbox next to the orphaned camera entity
-  - click _REMOVE SELECTED_
-  - click _REMOVE_
+  - click 'REMOVE SELECTED'
+  - click 'REMOVE'
 
 ## Alternative remediation method (nuclear option)
 
@@ -25,7 +25,7 @@ Only do the following if you are unsuccessful with the previous steps:
 - Install v0.0.4
 - Delete the HyperHDR integration
   - go to Configuration > Devices & Services > Integrations > HyperHDR > 3-dots menu
-  - click _DELETE_
-  - click _OK_
+  - click 'DELETE'
+  - click 'OK'
 - Restart Home Assistant
 - Re-add the HyperHDR integration
