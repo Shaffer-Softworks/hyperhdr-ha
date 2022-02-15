@@ -36,7 +36,7 @@ Only do the following if you are updating from an earlier version:
   - click 'REMOVE SELECTED'
   - click 'REMOVE'
 
-## Alternative remediation method (nuclear option)
+### Alternative remediation method (nuclear option)
 
 Only do the following if you are unsuccessful with the previous steps:
 
