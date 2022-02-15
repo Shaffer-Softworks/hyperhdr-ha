@@ -6,9 +6,15 @@
 1. Choose `Integration` from the category selection.
 1. Click install.
 1. Restart Home Assistant.
-1. In the HA UI go to "Configuration" -> "Integrations" click "+" and search for "HyperHDR".
 
-## Configuration is done in the UI
+## Configuration
+
+1. In Home Assistant navigate to `Configuration` -> `Devices & Services` -> `Integrations`.
+1. Click the `+ Add Integration` button.
+1. Search for `HyperHDR`.
+1. Enter the IP of your HyperHDR instance.
+1. Click the `Submit` button.
+
 <!-- {% endif %} -->
 
 <!-- {% if installed %} -->
