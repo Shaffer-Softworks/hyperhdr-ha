@@ -12,13 +12,17 @@
 <!-- {% endif %} -->
 
 <!-- {% if installed %} -->
+# Integration v0.0.5
+
+Add support for entity categories.
+
 # Integration v0.0.4
 
-## Breaking changes
+### Breaking changes
 
 - removed camera (sensor) due to instability
 
-## Remediation for existing installations
+### Remediation for existing installations
 
 Only do the following if you are updating from an earlier version:
 
