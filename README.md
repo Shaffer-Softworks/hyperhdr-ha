@@ -23,11 +23,6 @@ Platform | Description
 `switch` | Show switches to control HyperHDR components.
 
 ![hyperhdr-logo](https://github.com/mjoshd/hyperhdr-ha/blob/master/hyperhdr-logo.png)
-<!-- <img src="hyperhdr-logo.png"
-    alt="HyperHDR logo"
-/> -->
-
-<!-- {% if not installed %} -->
 
 ## Installation
 
@@ -35,13 +30,14 @@ Platform | Description
 1. Choose `Integration` from the category selection.
 1. Click install.
 1. Restart Home Assistant.
-1. In the HA UI go to "Configuration" -> "Integrations" click "+" and search for "HyperHDR".
 
-<!-- {% endif %} -->
+## Configuration
 
-## Configuration is done in the UI
-
-<!---->
+1. In Home Assistant navigate to `Configuration` -> `Devices & Services` -> `Integrations`.
+1. Click the `+ Add Integration` button.
+1. Search for `HyperHDR`.
+1. Enter the IP address of your HyperHDR instance.
+1. Click the `Submit` button.
 
 <!-- ***
 
