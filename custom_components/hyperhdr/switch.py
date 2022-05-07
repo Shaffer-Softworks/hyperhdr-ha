@@ -193,6 +193,7 @@ class HyperHDRComponentSwitch(SwitchEntity):
             manufacturer=HYPERHDR_MANUFACTURER_NAME,
             model=HYPERHDR_MODEL_NAME,
             name=self._instance_name,
+            configuration_url=self._client.remote_url,
         )
 
     async def _async_send_set_component(self, value: bool) -> None:

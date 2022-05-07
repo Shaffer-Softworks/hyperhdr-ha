@@ -1,4 +1,4 @@
-"""Camera platform for HyperHDR."""
+"""Switch platform for HyperHDR."""
 
 from __future__ import annotations
 
@@ -254,6 +254,7 @@ class HyperHDRCamera(Camera):
             manufacturer=HYPERHDR_MANUFACTURER_NAME,
             model=HYPERHDR_MODEL_NAME,
             name=self._instance_name,
+            configuration_url=self._client.remote_url,
         )
 
 

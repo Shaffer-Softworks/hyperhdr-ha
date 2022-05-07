@@ -18,6 +18,10 @@
 <!-- {% endif %} -->
 
 <!-- {% if installed %} -->
+# Integration v0.0.6
+
+Match changes in the official HyperHDR integration.
+
 # Integration v0.0.5
 
 Add support for entity categories.
