@@ -20,7 +20,8 @@
 <!-- {% if installed %} -->
 # Integration v0.0.6
 
-Match changes in the official HyperHDR integration.
+Match changes present in the official Hyperion component as of ha-core-2022.05.2
+Bump hyperhdr-py version
 
 # Integration v0.0.5
 
