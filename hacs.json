@@ -1,8 +1,10 @@
 {
+    "hacs": "1.6.0",
     "name": "HyperHDR",
     "domains": [
         "light",
         "switch"
     ],
+    "iot_class": "Local Push",
     "homeassistant": "2021.12.10"
 }
