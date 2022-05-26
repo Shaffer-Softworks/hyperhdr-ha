@@ -2,6 +2,8 @@ name: Validate
 
 on:
   push:
+    branches:
+      - master
   pull_request:
   schedule:
     - cron: "0 0 * * *"
@@ -10,8 +12,8 @@ jobs:
   validate:
     runs-on: "ubuntu-latest"
     steps:
-      - uses: "actions/checkout@v2.3.4"
+      - uses: "actions/checkout@v2"
       - name: HACS validation
-        uses: "hacs/action@21.12.1"
+        uses: "hacs/action@main"
         with:
           category: "integration"
