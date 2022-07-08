@@ -45,6 +45,7 @@ Platform | Description
 1. In Home Assistant navigate to `Configuration` -> `Devices & Services` -> `Integrations`.
 1. Click the `+ Add Integration` button.
 1. Search for `HyperHDR`.
+1. If you cannot find `HyperHDR` in the list then be sure to clear your browser cache and/or perform a hard-refresh of the page.
 1. Enter the IP address of your HyperHDR instance.
 1. Click the `Submit` button.
 
