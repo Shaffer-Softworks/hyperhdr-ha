@@ -1,9 +1,11 @@
 {
+  "domain": "hyperhdr",
+  "name": "HyperHDR",
   "codeowners": ["@mjoshd"],
   "config_flow": true,
   "documentation": "https://github.com/awawa-dev/HyperHDR#readme",
-  "domain": "hyperhdr",
-  "name": "HyperHDR",
+  "iot_class": "local_push",
+  "loggers": ["hyperhdr"],
   "requirements": ["hyperhdr-py==0.0.3"],
   "ssdp": [
     {
@@ -11,7 +13,6 @@
       "st": "urn:github.com/awawa-dev/HyperHDR:device:basic:1"
     }
   ],
-  "iot_class": "local_push",
   "issue_tracker": "https://github.com/mjoshd/hyperhdr-ha/issues",
-  "version": "0.0.6"
+  "version": "0.0.7"
 }

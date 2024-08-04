@@ -1,4 +1,5 @@
 """Switch platform for HyperHDR."""
+
 from __future__ import annotations
 
 import functools
@@ -27,7 +28,9 @@ from hyperhdr.const import (
 
 from homeassistant.components.switch import SwitchEntity
 from homeassistant.config_entries import ConfigEntry
+from homeassistant.const import EntityCategory
 from homeassistant.core import HomeAssistant, callback
+from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.dispatcher import (
     async_dispatcher_connect,
     async_dispatcher_send,
@@ -46,7 +49,6 @@ from .const import (
     DOMAIN,
     HYPERHDR_MANUFACTURER_NAME,
     HYPERHDR_MODEL_NAME,
-    NAME_SUFFIX_HYPERHDR_COMPONENT_SWITCH,
     SIGNAL_ENTITY_REMOVE,
     TYPE_HYPERHDR_COMPONENT_SWITCH_BASE,
 )
@@ -75,13 +77,18 @@ def _component_to_unique_id(server_id: str, component: str, instance_num: int) -
     )
 
 
-def _component_to_switch_name(component: str, instance_name: str) -> str:
-    """Convert a component to a switch name."""
-    return (
-        f"{instance_name} "
-        f"{NAME_SUFFIX_HYPERHDR_COMPONENT_SWITCH} "
-        f"{KEY_COMPONENTID_TO_NAME.get(component, component.capitalize())}"
-    )
+def _component_to_translation_key(component: str) -> str:
+    return {
+        KEY_COMPONENTID_ALL: "all",
+        KEY_COMPONENTID_SMOOTHING: "smoothing",
+        KEY_COMPONENTID_BLACKBORDER: "blackbar_detection",
+        KEY_COMPONENTID_FORWARDER: "forwarder",
+        KEY_COMPONENTID_BOBLIGHTSERVER: "boblight_server",
+        KEY_COMPONENTID_SYSTEMGRABBER: "platform_capture",
+        KEY_COMPONENTID_LEDDEVICE: "led_device",
+        KEY_COMPONENTID_VIDEOGRABBER: "usb_capture",
+        KEY_COMPONENTID_HDR: "hdr_tone_mapping",
+    }[component]
 
 
 async def async_setup_entry(
@@ -97,18 +104,16 @@ async def async_setup_entry(
     def instance_add(instance_num: int, instance_name: str) -> None:
         """Add entities for a new HyperHDR instance."""
         assert server_id
-        switches = []
-        for component in COMPONENT_SWITCHES:
-            switches.append(
-                HyperHDRComponentSwitch(
-                    server_id,
-                    instance_num,
-                    instance_name,
-                    component,
-                    entry_data[CONF_INSTANCE_CLIENTS][instance_num],
-                ),
+        async_add_entities(
+            HyperHDRComponentSwitch(
+                server_id,
+                instance_num,
+                instance_name,
+                component,
+                entry_data[CONF_INSTANCE_CLIENTS][instance_num],
             )
-        async_add_entities(switches)
+            for component in COMPONENT_SWITCHES
+        )
 
     @callback
     def instance_remove(instance_num: int) -> None:
@@ -129,6 +134,10 @@ class HyperHDRComponentSwitch(SwitchEntity):
     """ComponentBinarySwitch switch class."""
 
     _attr_entity_category = EntityCategory.CONFIG
+    _attr_should_poll = False
+    _attr_has_entity_name = True
+    # These component controls are for advanced users and are disabled by default.
+    _attr_entity_registry_enabled_default = False
 
     def __init__(
         self,
@@ -139,38 +148,24 @@ class HyperHDRComponentSwitch(SwitchEntity):
         hyperhdr_client: client.HyperHDRClient,
     ) -> None:
         """Initialize the switch."""
-        self._unique_id = _component_to_unique_id(
+        self._attr_unique_id = _component_to_unique_id(
             server_id, component_name, instance_num
         )
         self._device_id = get_hyperhdr_device_id(server_id, instance_num)
-        self._name = _component_to_switch_name(component_name, instance_name)
+        self._attr_translation_key = _component_to_translation_key(component_name)
         self._instance_name = instance_name
         self._component_name = component_name
         self._client = hyperhdr_client
         self._client_callbacks = {
             f"{KEY_COMPONENTS}-{KEY_UPDATE}": self._update_components
         }
-
-    @property
-    def should_poll(self) -> bool:
-        """Return whether or not this entity should be polled."""
-        return False
-
-    @property
-    def entity_registry_enabled_default(self) -> bool:
-        """Whether or not the entity is enabled by default."""
-        # These component controls are for advanced users and are disabled by default.
-        return False
-
-    @property
-    def unique_id(self) -> str:
-        """Return a unique id for this instance."""
-        return self._unique_id
-
-    @property
-    def name(self) -> str:
-        """Return the name of the switch."""
-        return self._name
+        self._attr_device_info = DeviceInfo(
+            identifiers={(DOMAIN, self._device_id)},
+            manufacturer=HYPERHDR_MANUFACTURER_NAME,
+            model=HYPERHDR_MODEL_NAME,
+            name=self._instance_name,
+            configuration_url=self._client.remote_url,
+        )
 
     @property
     def is_on(self) -> bool:
@@ -184,17 +179,6 @@ class HyperHDRComponentSwitch(SwitchEntity):
     def available(self) -> bool:
         """Return server availability."""
         return bool(self._client.has_loaded_state)
-
-    @property
-    def device_info(self) -> DeviceInfo:
-        """Return device information."""
-        return DeviceInfo(
-            identifiers={(DOMAIN, self._device_id)},
-            manufacturer=HYPERHDR_MANUFACTURER_NAME,
-            model=HYPERHDR_MODEL_NAME,
-            name=self._instance_name,
-            configuration_url=self._client.remote_url,
-        )
 
     async def _async_send_set_component(self, value: bool) -> None:
         """Send a component control request."""
@@ -225,7 +209,7 @@ class HyperHDRComponentSwitch(SwitchEntity):
         self.async_on_remove(
             async_dispatcher_connect(
                 self.hass,
-                SIGNAL_ENTITY_REMOVE.format(self._unique_id),
+                SIGNAL_ENTITY_REMOVE.format(self._attr_unique_id),
                 functools.partial(self.async_remove, force_remove=True),
             )
         )

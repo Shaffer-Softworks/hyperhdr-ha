@@ -26,5 +26,41 @@
                 }
             }
         }
+    },
+    "entity": {
+        "switch": {
+            "all": {
+                "name": "Component All"
+            },
+            "smoothing": {
+                "name": "Component Smoothing"
+            },
+            "blackbar_detection": {
+                "name": "Component Blackbar Detection"
+            },
+            "forwarder": {
+                "name": "Component Forwarder"
+            },
+            "boblight_server": {
+                "name": "Component Boblight Server"
+            },
+            "platform_capture": {
+                "name": "Component Platform Capture"
+            },
+            "led_device": {
+                "name": "Component LED Device"
+            },
+            "usb_capture": {
+                "name": "Component USB Capture"
+            },
+            "hdr_tone_mapping": {
+                "name": "Component HDR Tone Mapping"
+            }
+        },
+        "sensor": {
+            "visible_priority": {
+                "name": "Visible Priority"
+            }
+        }
     }
 }

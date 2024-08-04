@@ -520,7 +520,7 @@ class HyperHDRLight(HyperHDRBaseLight):
         # Turn on both ALL (HyperHDR itself) and LEDDEVICE. It would be
         # preferable to enable LEDDEVICE after the settings (e.g. brightness,
         # color, effect), but this is not possible due to:
-        # https://github.com/hyperhdr-project/hyperhdr.ng/issues/967
+        # https://github.com/hyperion-project/hyperion.ng/issues/967
         if not bool(self._client.is_on()):
             for component in (
                 const.KEY_COMPONENTID_ALL,
