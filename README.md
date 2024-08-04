@@ -35,9 +35,9 @@ Platform | Description
 1. Search for `HyperHDR`, select it, then click `Download this repository with HACS`.
 1. Restart Home Assistant to load the integration.
 1. Visit the Wiki for information regarding: 
-- [Initial Setup](https://github.com/mjoshd/hyperhdr-ha/wiki#initial-setup)
-- [Post-setup Advice](https://github.com/mjoshd/hyperhdr-ha/wiki#post-setup-advice)
-- [Debug Logging](https://github.com/mjoshd/hyperhdr-ha/wiki#debug-logging)
+    - [Initial Setup](https://github.com/mjoshd/hyperhdr-ha/wiki#initial-setup)
+    - [Post-setup Advice](https://github.com/mjoshd/hyperhdr-ha/wiki#post-setup-advice)
+    - [Debug Logging](https://github.com/mjoshd/hyperhdr-ha/wiki#debug-logging)
 
 ### Manually (not recommended)
 
