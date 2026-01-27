@@ -33,7 +33,7 @@ from .const import (
     SIGNAL_INSTANCE_REMOVE,
 )
 
-### HyperHDR v0.0.7
+### HyperHDR v0.0.8
 PLATFORMS = [Platform.LIGHT, Platform.SWITCH]
 
 ### Enable BROKEN camera stream. Camera is removed for good reason! Do not open camera related issues!!
