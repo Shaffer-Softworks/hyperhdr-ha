@@ -1,13 +1,3 @@
-## No Longer Maintained
-In 2021 I put in a feature reqest on the HA forums for a proper HyperHDR integration. Nobody seemed to have any interest but I wanted one so I fought with code and some time later came up with what you see today.
-
-This integration was cobbled together back when HyperHDR was at v17 and it has worked pretty well over the years with, thankfully, very little required in the way of 'fixes' (especially since I have no idea how python works).
-
-At some point there will be a breaking change in HyperHDR or Home Assistant and that's going to be the end of this integration as I no longer have the time to spend fighting with python.
-
-My hope is that someone who has the time and skill will pick up where I left off and continue development.
-
-
 <!-- [![GitHub Release][releases-shield]][releases]
 [![GitHub Activity][commits-shield]][commits]
 [![License][license-shield]][license]
@@ -83,4 +73,5 @@ Platform | Description
 [releases-shield]: https://img.shields.io/github/release/custom-components/integration_blueprint.svg?style=for-the-badge
 [releases]: https://github.com/custom-components/integration_blueprint/releases
 [user_profile]: https://github.com/ludeeus -->
+
 
