@@ -18,7 +18,7 @@ DOMAIN = "hyperhdr"
 
 HYPERHDR_MANUFACTURER_NAME = "HyperHDR"
 HYPERHDR_MODEL_NAME = f"{HYPERHDR_MANUFACTURER_NAME}"
-HYPERHDR_RELEASES_URL = "https://github.com/awawa-dev/HyperHDR/releases"
+HYPERHDR_RELEASES_URL = "https://github.com/mjoshd/hyperhdr-ha/releases"
 HYPERHDR_VERSION_WARN_CUTOFF = "21.0.0.0"
 
 NAME_SUFFIX_HYPERHDR_LIGHT = ""
