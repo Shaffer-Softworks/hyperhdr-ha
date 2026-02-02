@@ -25,6 +25,10 @@
 <!-- {% endif %} -->
 
 <!-- {% if installed %} -->
+# Integration v0.0.8
+
+Update HyperHDR to version 0.0.8, adjust version warning cutoff to 21.0.0.0, and clean up imports in light and switch components.
+
 # Integration v0.0.7
 
 - Update most code to match changes present in the official Hyperion component as of 2024.07.4
