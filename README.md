@@ -17,10 +17,25 @@ HyperHDR is an open source bias lighting implementation which runs on many platf
 
 **This component will set up the following platforms.**
 
-Platform | Description
--- | --
-`light` | Show HyperHDR as a controllable device.
-`switch` | Show switches to control HyperHDR components.
+| Platform | Description |
+|----------|-------------|
+| `camera` | Live video stream from HyperHDR (when available from video/USB capture). |
+| `light` | Control HyperHDR lighting with color, brightness, and effects. |
+| `sensor` | Monitor visible priority and average color information. |
+| `switch` | Toggle HyperHDR components (smoothing, HDR tone mapping, blackborder detection, etc.). |
+| `number` | Adjust smoothing parameters (time, decay, update frequency) and HDR tone mapping intensity. |
+| `select` | Choose smoothing type (linear, exponential, inertia, hybrid, yuv) and color engine mode (infinite, linear, hybrid). |
+
+### Key Features
+
+- **Average Color Sensor**: Real-time average color display with hex value and RGB attributes.
+- **Smoothing Controls**: Fine-tune smoothing behavior via number entities for time, decay, and update frequency.
+- **HDR Tone Mapping**: Adjust HDR tone mapping intensity with a dedicated number entity.
+- **Color Engine Selection**: Switch between infinite, linear, and hybrid color engine modes via select entity.
+- **Smoothing Type Selection**: Choose from multiple smoothing interpolation algorithms.
+- **Service Integration**: Use the `hyperhdr.set_color_engine` service for advanced color engine control via automations.
+- **Component Switches**: Enable/disable HyperHDR components (advanced users).
+- **Live Camera Stream**: View real-time video from USB capture or video grabber sources.
 
 ![hyperhdr-logo](https://github.com/mjoshd/hyperhdr-ha/blob/master/hyperhdr-logo.png)
 
@@ -44,6 +59,8 @@ Platform | Description
 - Download the [latest release](https://github.com/mjoshd/hyperhdr-ha/releases) as a **zip file** then extract it and move the `hyperhdr` folder into the `custom_components` folder in your Home Assistant installation.
 - Restart Home Assistant to load the integration.
 
+**Dependencies**: This integration requires `hyperhdr-py-sickkick==0.1.0`. When installing via HACS, the package is installed automatically. For manual installation, ensure your Home Assistant environment has this package available.
+
 ## Configuration
 
 1. In Home Assistant navigate to `Configuration` -> `Devices & Services` -> `Integrations`.
@@ -52,6 +69,32 @@ Platform | Description
 1. If you cannot find `HyperHDR` in the list then be sure to clear your browser cache and/or perform a hard-refresh of the page.
 1. Enter the IP address of your HyperHDR instance.
 1. Click the `Submit` button.
+
+## Advanced Features
+
+### Using the Color Engine Service
+
+For advanced automation and control, you can use the `hyperhdr.set_color_engine` service to send custom color engine payloads:
+
+```yaml
+service: hyperhdr.set_color_engine
+data:
+  instance: 0
+  data:
+    colorEngine:
+      type: infinite
+```
+
+### Entity Discovery
+
+Most entities are created automatically for each HyperHDR instance. Some entities (like smoothing and HDR controls) are disabled by default for advanced users. Enable them in Home Assistant's entity settings if needed.
+
+### Camera Stream Notes
+
+The camera entity provides a live video stream when available:
+- **Video/USB Capture sources** will stream live images
+- **Color priorities** do not stream (no image data available)
+- Stream behavior depends on active HyperHDR priority source
 
 <!-- ***
 

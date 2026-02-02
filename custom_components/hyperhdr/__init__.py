@@ -20,6 +20,7 @@ from homeassistant.helpers.dispatcher import (
     async_dispatcher_connect,
     async_dispatcher_send,
 )
+import voluptuous as vol
 
 from .const import (
     CONF_INSTANCE_CLIENTS,
@@ -34,10 +35,10 @@ from .const import (
 )
 
 ### HyperHDR v0.0.8
-PLATFORMS = [Platform.LIGHT, Platform.SWITCH]
+PLATFORMS = [Platform.CAMERA, Platform.LIGHT, Platform.SWITCH, Platform.NUMBER, Platform.SELECT, Platform.SENSOR]
 
-### Enable BROKEN camera stream. Camera is removed for good reason! Do not open camera related issues!!
-# PLATFORMS = [Platform.CAMERA, Platform.LIGHT, Platform.SWITCH]
+### Disabled platforms (uncomment to enable specific ones)
+# PLATFORMS = [Platform.LIGHT, Platform.SWITCH]
 
 ### Original - From Hyperion
 # PLATFORMS = [Platform.CAMERA, Platform.LIGHT, Platform.SENSOR, Platform.SWITCH]
@@ -198,6 +199,34 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         CONF_INSTANCE_CLIENTS: {},
         CONF_ON_UNLOAD: [],
     }
+
+    # Register a helper service to send arbitrary colorEngine payloads to HyperHDR.
+    # This allows exposing Infinite Color Engine controls via automations or the
+    # developer services UI without adding a full entity at this time.
+    async def async_handle_set_color_engine(service_call: "ServiceCall") -> None:  # type: ignore[name-defined]
+        instance = service_call.data.get("instance")
+        payload = service_call.data.get("data") or {}
+        if instance is None:
+            client_target = hass.data[DOMAIN][entry.entry_id][CONF_ROOT_CLIENT]
+            if client_target:
+                await client_target.async_set_color(**payload)
+            return
+
+        client_target = hass.data[DOMAIN][entry.entry_id][CONF_INSTANCE_CLIENTS].get(instance)
+        if client_target:
+            await client_target.async_set_color(**payload)
+
+    hass.services.async_register(
+        DOMAIN,
+        "set_color_engine",
+        async_handle_set_color_engine,
+        schema=vol.Schema({vol.Optional("instance"): int, vol.Required("data"): dict}),
+    )
+
+    # Ensure service is removed when this entry is unloaded.
+    hass.data[DOMAIN][entry.entry_id][CONF_ON_UNLOAD].append(
+        lambda: hass.services.async_remove(DOMAIN, "set_color_engine")
+    )
 
     async def async_instances_to_clients(response: dict[str, Any]) -> None:
         """Convert instances to HyperHDR clients."""
