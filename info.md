@@ -25,6 +25,31 @@
 <!-- {% endif %} -->
 
 <!-- {% if installed %} -->
+<!-- {% if installed %} -->
+# Integration v0.0.9
+
+**Major Features Added:**
+- ✨ **Average Color Sensor**: Real-time color monitoring with hex display and RGB attributes
+- 🎨 **Color Engine Selection**: Switch between infinite, linear, and hybrid color engine modes via select entity
+- 🔧 **Smoothing Controls**: Number entities for adjusting smoothing time, decay, and update frequency
+- 📊 **HDR Tone Mapping**: Dedicated number entity for HDR intensity adjustment
+- 📹 **Camera Integration**: Enabled live video streaming from USB capture and video grabber sources
+- 🎛️ **Smoothing Type Selection**: Choose from linear, exponential, inertia, hybrid-rgb, and yuv smoothing types
+- 🔌 **Color Engine Service**: New `hyperhdr.set_color_engine` service for advanced automation control
+
+**Dependency Update:**
+- Updated to use `hyperhdr-py-sickkick==0.1.0` with enhanced API support for average color, color engine, and smoothing controls
+- All new platforms (sensor, number, select, camera) are included
+
+**Improvements:**
+- Enhanced sensor platform with improved entity lifecycle management
+- Added entity category support for advanced users (most new controls disabled by default)
+- Improved documentation with feature descriptions and usage examples
+
+# Integration v0.0.8
+
+Update HyperHDR to version 0.0.8, adjust version warning cutoff to 21.0.0.0, and clean up imports in light and switch components.
+
 # Integration v0.0.7
 
 - Update most code to match changes present in the official Hyperion component as of 2024.07.4

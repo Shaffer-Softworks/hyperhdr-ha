@@ -6,6 +6,7 @@ import functools
 from typing import Any
 
 from hyperhdr import client
+from hyperhdr import const as hyperhdr_const
 from hyperhdr.const import (
     KEY_COMPONENTID,
     KEY_ORIGIN,
@@ -41,9 +42,9 @@ from .const import (
     SIGNAL_ENTITY_REMOVE,
     TYPE_HYPERHDR_SENSOR_BASE,
     TYPE_HYPERHDR_SENSOR_VISIBLE_PRIORITY,
+    TYPE_HYPERHDR_SENSOR_AVERAGE_COLOR,
 )
-
-SENSORS = [TYPE_HYPERHDR_SENSOR_VISIBLE_PRIORITY]
+SENSORS = [TYPE_HYPERHDR_SENSOR_VISIBLE_PRIORITY, TYPE_HYPERHDR_SENSOR_AVERAGE_COLOR]
 PRIORITY_SENSOR_DESCRIPTION = SensorEntityDescription(
     key="visible_priority",
     translation_key="visible_priority",
@@ -80,7 +81,13 @@ async def async_setup_entry(
                 instance_name,
                 entry_data[CONF_INSTANCE_CLIENTS][instance_num],
                 PRIORITY_SENSOR_DESCRIPTION,
-            )
+            ),
+            HyperHDRAverageColorSensor(
+                server_id,
+                instance_num,
+                instance_name,
+                entry_data[CONF_INSTANCE_CLIENTS][instance_num],
+            ),
         ]
 
         async_add_entities(sensors)
@@ -208,4 +215,93 @@ class HyperHDRVisiblePrioritySensor(HyperHDRSensor):
         self._attr_native_value = state_value
         self._attr_extra_state_attributes = attrs
 
+        self.async_write_ha_state()
+
+
+AVERAGE_SENSOR_DESCRIPTION = SensorEntityDescription(
+    key="average_color",
+    translation_key="average_color",
+    icon="mdi:palette",
+    native_unit_of_measurement=None,
+)
+
+
+class HyperHDRAverageColorSensor(HyperHDRSensor):
+    """Class that exposes the average color for a HyperHDR instance."""
+
+    def __init__(
+        self,
+        server_id: str,
+        instance_num: int,
+        instance_name: str,
+        hyperhdr_client: client.HyperHDRClient,
+    ) -> None:
+        """Initialize the sensor."""
+
+        super().__init__(
+            server_id,
+            instance_num,
+            instance_name,
+            hyperhdr_client,
+            AVERAGE_SENSOR_DESCRIPTION,
+        )
+
+        self._attr_unique_id = _sensor_unique_id(
+            server_id, instance_num, TYPE_HYPERHDR_SENSOR_AVERAGE_COLOR
+        )
+
+        # Prefer dedicated average color updates from the client if available,
+        # otherwise fall back to observing priorities and deriving a representative
+        # color from visible priorities.
+        client_key = getattr(hyperhdr_const, "KEY_AVERAGE_COLOR", None)
+        if client_key:
+            self._client_callbacks = {f"{client_key}-{KEY_UPDATE}": self._update_average}
+        else:
+            self._client_callbacks = {f"{KEY_PRIORITIES}-{KEY_UPDATE}": self._update_average}
+
+    @callback
+    def _update_average(self, _: dict[str, Any] | None = None) -> None:
+        """Update the average color value from the client."""
+        avg_value = None
+        attrs: dict[str, Any] = {}
+
+        # 1) If client exposes average_color attribute, use it.
+        if hasattr(self._client, "average_color") and self._client.average_color:
+            avg = self._client.average_color
+            # Could be a dict with 'rgb' or a simple list
+            if isinstance(avg, dict):
+                avg_value = avg.get(KEY_RGB) or avg.get("rgb")
+                attrs.update(avg)
+            else:
+                avg_value = avg
+
+        # 2) If hyperhdr.const defines a KEY_AVERAGE payload and the client
+        # populates it, prefer that structure (handled by callback wiring).
+        if avg_value is None:
+            # Fall back to visible priorities: prefer COLOR component values.
+            for priority in self._client.priorities or []:
+                if not (KEY_VISIBLE in priority and priority[KEY_VISIBLE] is True):
+                    continue
+                if priority[KEY_COMPONENTID] == "COLOR":
+                    avg_value = priority[KEY_VALUE].get(KEY_RGB)
+                    attrs = {
+                        "component_id": priority[KEY_COMPONENTID],
+                        "origin": priority.get(KEY_ORIGIN),
+                        "priority": priority.get(KEY_PRIORITY),
+                        "owner": priority.get(KEY_OWNER),
+                        "color": priority[KEY_VALUE],
+                    }
+                    break
+
+        # Update entity state
+        # Convert RGB list to hex string for better state display
+        hex_value = None
+        if avg_value and isinstance(avg_value, (list, tuple)) and len(avg_value) >= 3:
+            r, g, b = avg_value[0], avg_value[1], avg_value[2]
+            hex_value = "#%02x%02x%02x" % (r, g, b)
+            attrs.setdefault("rgb", [r, g, b])
+            attrs["hex"] = hex_value
+
+        self._attr_native_value = hex_value or avg_value
+        self._attr_extra_state_attributes = attrs
         self.async_write_ha_state()

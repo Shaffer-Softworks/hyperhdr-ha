@@ -3,15 +3,15 @@
   "name": "HyperHDR",
   "codeowners": ["@mjoshd"],
   "config_flow": true,
-  "documentation": "https://github.com/awawa-dev/HyperHDR#readme",
+  "documentation": "https://github.com/mjoshd/hyperhdr-ha#readme",
   "homeassistant": "2024.4.0",
   "iot_class": "local_push",
   "loggers": ["hyperhdr"],
-  "requirements": ["hyperhdr-py==0.0.3"],
+  "requirements": ["hyperhdr-py-sickkick==0.1.0"],
   "ssdp": [
     {
       "manufacturer": "HyperHDR Open Source Ambient Lighting",
-      "st": "urn:github.com/awawa-dev/HyperHDR:device:basic:1"
+      "st": "urn:github.com/mjoshd/hyperhdr-ha:device:basic:1"
     }
   ],
   "issue_tracker": "https://github.com/mjoshd/hyperhdr-ha/issues",
