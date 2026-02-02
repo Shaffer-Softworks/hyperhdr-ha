@@ -1,4 +1,4 @@
-"""Switch platform for HyperHDR."""
+"""Camera platform for HyperHDR."""
 
 from __future__ import annotations
 
@@ -8,6 +8,7 @@ import binascii
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 import functools
+import logging
 from typing import Any
 
 from aiohttp import web
@@ -47,6 +48,8 @@ from .const import (
     SIGNAL_ENTITY_REMOVE,
     TYPE_HYPERHDR_CAMERA,
 )
+
+_LOGGER = logging.getLogger(__name__)
 
 IMAGE_STREAM_JPG_SENTINEL = "data:image/jpg;base64,"
 
@@ -156,7 +159,7 @@ class HyperHDRCamera(Camera):
         return bool(self._client.has_loaded_state)
 
     async def _update_imagestream(self, img: dict[str, Any] | None = None) -> None:
-        """Update HyperHDR components."""
+        """Update HyperHDR image stream."""
         if not img:
             return
         img_data = img.get(KEY_RESULT, {}).get(KEY_IMAGE)
@@ -167,7 +170,9 @@ class HyperHDRCamera(Camera):
                 self._image = base64.b64decode(
                     img_data.removeprefix(IMAGE_STREAM_JPG_SENTINEL)
                 )
-            except binascii.Error:
+                _LOGGER.debug("Camera image stream updated: %d bytes", len(self._image))
+            except binascii.Error as e:
+                _LOGGER.warning("Failed to decode camera image: %s", e)
                 return
             self._image_cond.notify_all()
 
@@ -179,22 +184,25 @@ class HyperHDRCamera(Camera):
 
     async def _start_image_streaming_for_client(self) -> bool:
         """Start streaming for a client."""
-        if (
-            not self._image_stream_clients
-            and not await self._client.async_send_image_stream_start()
-        ):
-            return False
+        if self._image_stream_clients == 0:
+            _LOGGER.debug("Starting image stream for HyperHDR camera")
+            if not await self._client.async_send_image_stream_start():
+                _LOGGER.error("Failed to start HyperHDR image stream")
+                return False
 
         self._image_stream_clients += 1
         self._attr_is_streaming = True
         self.async_write_ha_state()
+        _LOGGER.debug("Image stream clients: %d", self._image_stream_clients)
         return True
 
     async def _stop_image_streaming_for_client(self) -> None:
         """Stop streaming for a client."""
         self._image_stream_clients -= 1
+        _LOGGER.debug("Image stream clients: %d", self._image_stream_clients)
 
         if not self._image_stream_clients:
+            _LOGGER.debug("Stopping image stream for HyperHDR camera")
             await self._client.async_send_image_stream_stop()
             self._attr_is_streaming = False
             self.async_write_ha_state()

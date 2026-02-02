@@ -37,26 +37,26 @@ HyperHDR is an open source bias lighting implementation which runs on many platf
 - **Component Switches**: Enable/disable HyperHDR components (advanced users).
 - **Live Camera Stream**: View real-time video from USB capture or video grabber sources.
 
-![hyperhdr-logo](https://github.com/sickkick/hyperhdr-ha/blob/master/hyperhdr-logo.png)
+![hyperhdr-logo](https://github.com/mjoshd/hyperhdr-ha/blob/master/hyperhdr-logo.png)
 
 ## Installation
 
 ### Using HACS
 
-1. Add <https://github.com/sickkick/hyperhdr-ha> to your [HACS](https://hacs.xyz/) custom repositories.
+1. Add <https://github.com/mjoshd/hyperhdr-ha> to your [HACS](https://hacs.xyz/) custom repositories.
 1. Choose `Integration` from the category selection.
 1. Click install.
 1. Return to the Integrations page within HACS then click the `+ Explore & download repositories` button.
 1. Search for `HyperHDR`, select it, then click `Download this repository with HACS`.
 1. Restart Home Assistant to load the integration.
 1. Visit the Wiki for information regarding: 
-    - [Initial Setup](https://github.com/sickkick/hyperhdr-ha/wiki#initial-setup)
-    - [Post-setup Advice](https://github.com/sickkick/hyperhdr-ha/wiki#post-setup-advice)
-    - [Debug Logging](https://github.com/sickkick/hyperhdr-ha/wiki#debug-logging)
+    - [Initial Setup](https://github.com/mjoshd/hyperhdr-ha/wiki#initial-setup)
+    - [Post-setup Advice](https://github.com/mjoshd/hyperhdr-ha/wiki#post-setup-advice)
+    - [Debug Logging](https://github.com/mjoshd/hyperhdr-ha/wiki#debug-logging)
 
 ### Manually (not recommended)
 
-- Download the [latest release](https://github.com/sickkick/hyperhdr-ha/releases) as a **zip file** then extract it and move the `hyperhdr` folder into the `custom_components` folder in your Home Assistant installation.
+- Download the [latest release](https://github.com/mjoshd/hyperhdr-ha/releases) as a **zip file** then extract it and move the `hyperhdr` folder into the `custom_components` folder in your Home Assistant installation.
 - Restart Home Assistant to load the integration.
 
 **Dependencies**: This integration requires `hyperhdr-py-sickkick==0.1.0`. When installing via HACS, the package is installed automatically. For manual installation, ensure your Home Assistant environment has this package available.
@@ -89,12 +89,63 @@ data:
 
 Most entities are created automatically for each HyperHDR instance. Some entities (like smoothing and HDR controls) are disabled by default for advanced users. Enable them in Home Assistant's entity settings if needed.
 
+### Camera Live Preview
+
+The camera entity is **disabled by default** due to performance considerations. To enable live camera preview:
+
+1. Go to **Settings** → **Devices & Services** → **Entities**
+2. Search for `HyperHDR` camera entity
+3. Click the entity to open its details
+4. Click the toggle switch to **enable** the camera
+5. The live preview will now appear in the Lovelace UI
+
+**Requirements for live preview:**
+- HyperHDR instance must have a **video/USB capture source** active (not color priority)
+- The camera will only display frames when an image stream is available
+- Stream quality depends on the active HyperHDR priority source
+
+**Viewing options in Home Assistant:**
+- **Lovelace** - Add a camera card to your dashboard for live preview
+- **Developer Tools** - Use the Camera entity to view current snapshot
+- **Mobile App** - View live stream in Home Assistant mobile application
+- **MJPEG Stream** - Access raw stream at `/api/camera_proxy_stream/camera.hyperhdr_<instance>`
+
+**Troubleshooting - Getting only screenshots instead of live video:**
+
+If you're seeing only still images instead of a continuous live stream:
+
+1. **Enable debug logging** to diagnose the issue:
+   - Go to **Developer Tools** → **Logs**
+   - Add this to your Home Assistant `configuration.yaml`:
+     ```yaml
+     logger:
+       logs:
+         custom_components.hyperhdr.camera: debug
+     ```
+   - Restart Home Assistant and check the logs
+
+2. **Verify HyperHDR is streaming images**:
+   - Check that your HyperHDR instance has an **active video source** (USB Capture, Video Grabber, etc.)
+   - Color-only priorities will not produce image streams
+   - Go to HyperHDR web UI and confirm you can see live video there
+
+3. **Check Lovelace camera card configuration**:
+   - Make sure you're using the **Camera** card type (not picture entity)
+   - The card should automatically use MJPEG streaming
+   - Try refreshing your browser or clearing cache if it still shows static images
+
+4. **Network/Performance issues**:
+   - Live streaming may be slow on weak networks
+   - Check Home Assistant system logs for any errors
+   - Try accessing the raw stream: `http://<home-assistant-ip>:8123/api/camera_proxy_stream/camera.hyperhdr_<instance_number>`
+
 ### Camera Stream Notes
 
 The camera entity provides a live video stream when available:
 - **Video/USB Capture sources** will stream live images
 - **Color priorities** do not stream (no image data available)
 - Stream behavior depends on active HyperHDR priority source
+- **Performance**: The camera is disabled by default to avoid unnecessary stream overhead
 
 <!-- ***
 
