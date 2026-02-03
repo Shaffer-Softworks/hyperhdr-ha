@@ -18,8 +18,7 @@
             "auth": {
                 "data": {
                     "create_token": "Créer automatiquement un nouveau jeton",
-                    "token": "Ou fournir un jeton préexistant",
-                    "password": "Mot de passe (si nécessaire)"
+                    "token": "Ou fournir un jeton préexistant"
                 },
                 "description": "Configurer l'autorisation sur votre serveur HyperHDR Ambilight"
             },

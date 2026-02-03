@@ -18,8 +18,7 @@
             "auth": {
                 "data": {
                     "create_token": "Samodejno ustvari nov žeton",
-                    "token": "ali zagotovite že obstoječi žeton",
-                    "password": "Geslo (če je potrebno)"
+                    "token": "ali zagotovite že obstoječi žeton"
                 },
                 "description": "Nastavite overitev za HyperHDR Ambilight strežnik"
             },

@@ -18,8 +18,7 @@
             "auth": {
                 "data": {
                     "create_token": "새로운 토큰을 자동으로 생성하기",
-                    "token": "또는 기존 토큰 제공하기",
-                    "password": "비밀번호(필요한 경우)"
+                    "token": "또는 기존 토큰 제공하기"
                 },
                 "description": "HyperHDR Amblight 서버에 대한 권한 구성하기"
             },
