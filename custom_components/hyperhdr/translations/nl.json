@@ -18,7 +18,8 @@
             "auth": {
                 "data": {
                     "create_token": "Maak automatisch een nieuw token aan",
-                    "token": "Of geef een reeds bestaand token op"
+                    "token": "Of geef een reeds bestaand token op",
+                    "password": "Wachtwoord (indien nodig)"
                 },
                 "description": "Configureer autorisatie voor uw HyperHDR Ambilight-server"
             },
@@ -54,36 +55,78 @@
     "entity": {
         "switch": {
             "all": {
-                "name": "Component All"
+                "name": "Alle componenten",
+                "icon": "mdi:power"
             },
             "smoothing": {
-                "name": "Component Smoothing"
+                "name": "Component voor smoothing",
+                "icon": "mdi:blur"
             },
             "blackbar_detection": {
-                "name": "Component Blackbar Detection"
+                "name": "Component zwartebalkdetectie",
+                "icon": "mdi:crop-free"
             },
             "forwarder": {
-                "name": "Component Forwarder"
+                "name": "Component doorsturen",
+                "icon": "mdi:send"
             },
             "boblight_server": {
-                "name": "Component Boblight Server"
+                "name": "Component Boblight-server",
+                "icon": "mdi:server"
             },
             "platform_capture": {
-                "name": "Component Platform Capture"
+                "name": "Component platform-capture",
+                "icon": "mdi:video-input-antenna"
             },
             "led_device": {
-                "name": "Component LED Device"
+                "name": "Component LED-apparaat",
+                "icon": "mdi:lightbulb-multiple"
             },
             "usb_capture": {
-                "name": "Component USB Capture"
+                "name": "Component USB-capture",
+                "icon": "mdi:usb"
             },
             "hdr_tone_mapping": {
-                "name": "Component HDR Tone Mapping"
+                "name": "Component HDR-tonemapping",
+                "icon": "mdi:contrast-box"
+            }
+        },
+        "number": {
+            "smoothing_time": {
+                "name": "Smoothing-tijd"
+            },
+            "smoothing_decay": {
+                "name": "Smoothing-verval"
+            },
+            "smoothing_update_freq": {
+                "name": "Smoothing-updatefrequentie"
+            },
+            "hdr_tone_mapping": {
+                "name": "HDR-tonemapping"
+            }
+        },
+        "select": {
+            "smoothing_type": {
+                "name": "Smoothing-type"
+            },
+            "color_engine": {
+                "name": "Kleurenengine"
             }
         },
         "sensor": {
             "visible_priority": {
                 "name": "Visible Priority"
+            },
+            "average_color": {
+                "name": "Gemiddelde kleur"
+            }
+        },
+        "light": {
+            "hyperhdr_light": {
+                "name": "Licht"
+            },
+            "hyperhdr_priority_light": {
+                "name": "Prioriteitslicht"
             }
         }
     }

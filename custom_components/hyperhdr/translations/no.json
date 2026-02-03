@@ -2,13 +2,13 @@
     "config": {
         "abort": {
             "already_configured": "Tjenesten er allerede konfigurert",
-            "already_in_progress": "Konfigurasjonsflyten p\u00e5g\u00e5r allerede",
-            "auth_new_token_not_granted_error": "Nyopprettet token ble ikke godkjent p\u00e5 HyperHDR UI",
+            "already_in_progress": "Konfigurasjonsflyten pågår allerede",
+            "auth_new_token_not_granted_error": "Nyopprettet token ble ikke godkjent på HyperHDR UI",
             "auth_new_token_not_work_error": "Kunne ikke godkjenne ved hjelp av nylig opprettet token",
-            "auth_required_error": "Kan ikke fastsl\u00e5 om autorisasjon er n\u00f8dvendig",
+            "auth_required_error": "Kan ikke fastslå om autorisasjon er nødvendig",
             "cannot_connect": "Tilkobling mislyktes",
             "no_id": "HyperHDR Ambilight-forekomsten rapporterte ikke ID-en",
-            "reauth_successful": "Godkjenning p\u00e5 nytt var vellykket"
+            "reauth_successful": "Godkjenning på nytt var vellykket"
         },
         "error": {
             "cannot_connect": "Tilkobling mislyktes",
@@ -18,7 +18,8 @@
             "auth": {
                 "data": {
                     "create_token": "Opprett nytt token automatisk",
-                    "token": "Eller oppgi eksisterende token"
+                    "token": "Eller oppgi eksisterende token",
+                    "password": "Passord (hvis nødvendig)"
                 },
                 "description": "Konfigurer autorisasjon til HyperHDR Ambilight-serveren"
             },
@@ -27,7 +28,7 @@
                 "title": "Bekreft tillegg av HyperHDR Ambilight-tjenesten"
             },
             "create_token": {
-                "description": "Velg **Send** nedenfor for \u00e5 be om et nytt godkjenningstoken. Du vil bli omdirigert til HyperHDR UI for \u00e5 godkjenne foresp\u00f8rselen. Kontroller at den viste IDen er {auth_id}.",
+                "description": "Velg **Send** nedenfor for å be om et nytt godkjenningstoken. Du vil bli omdirigert til HyperHDR UI for å godkjenne forespørselen. Kontroller at den viste IDen er {auth_id}.",
                 "title": "Opprett nytt godkjenningstoken automatisk"
             },
             "create_token_external": {
@@ -45,7 +46,7 @@
         "step": {
             "init": {
                 "data": {
-                    "effect_show_list": "HyperHDR-effekter \u00e5 vise",
+                    "effect_show_list": "HyperHDR-effekter å vise",
                     "priority": "HyperHDR-prioritet for bruke til farger og effekter"
                 }
             }
@@ -54,36 +55,78 @@
     "entity": {
         "switch": {
             "all": {
-                "name": "Component All"
+                "name": "Alle komponenter",
+                "icon": "mdi:power"
             },
             "smoothing": {
-                "name": "Component Smoothing"
+                "name": "Utjevningskomponent",
+                "icon": "mdi:blur"
             },
             "blackbar_detection": {
-                "name": "Component Blackbar Detection"
+                "name": "Komponent for svarte felter",
+                "icon": "mdi:crop-free"
             },
             "forwarder": {
-                "name": "Component Forwarder"
+                "name": "Videresendingskomponent",
+                "icon": "mdi:send"
             },
             "boblight_server": {
-                "name": "Component Boblight Server"
+                "name": "Boblight-serverkomponent",
+                "icon": "mdi:server"
             },
             "platform_capture": {
-                "name": "Component Platform Capture"
+                "name": "Plattformopptakskomponent",
+                "icon": "mdi:video-input-antenna"
             },
             "led_device": {
-                "name": "Component LED Device"
+                "name": "LED-enhetskomponent",
+                "icon": "mdi:lightbulb-multiple"
             },
             "usb_capture": {
-                "name": "Component USB Capture"
+                "name": "USB-opptakskomponent",
+                "icon": "mdi:usb"
             },
             "hdr_tone_mapping": {
-                "name": "Component HDR Tone Mapping"
+                "name": "HDR tone-mapping-komponent",
+                "icon": "mdi:contrast-box"
+            }
+        },
+        "number": {
+            "smoothing_time": {
+                "name": "Utjevningstid"
+            },
+            "smoothing_decay": {
+                "name": "Utjevningsnedgang"
+            },
+            "smoothing_update_freq": {
+                "name": "Oppdateringsfrekvens for utjevning"
+            },
+            "hdr_tone_mapping": {
+                "name": "HDR tone mapping"
+            }
+        },
+        "select": {
+            "smoothing_type": {
+                "name": "Type utjevning"
+            },
+            "color_engine": {
+                "name": "Fargemotor"
             }
         },
         "sensor": {
             "visible_priority": {
                 "name": "Visible Priority"
+            },
+            "average_color": {
+                "name": "Gjennomsnittsfarge"
+            }
+        },
+        "light": {
+            "hyperhdr_light": {
+                "name": "Lys"
+            },
+            "hyperhdr_priority_light": {
+                "name": "Prioritetslys"
             }
         }
     }

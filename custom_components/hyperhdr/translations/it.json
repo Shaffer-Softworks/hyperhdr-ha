@@ -1,14 +1,14 @@
 {
     "config": {
         "abort": {
-            "already_configured": "Il servizio \u00e8 gi\u00e0 configurato",
-            "already_in_progress": "Il flusso di configurazione \u00e8 gi\u00e0 in corso",
-            "auth_new_token_not_granted_error": "Il token appena creato non \u00e8 stato approvato sull'interfaccia utente di HyperHDR",
+            "already_configured": "Il servizio è già configurato",
+            "already_in_progress": "Il flusso di configurazione è già in corso",
+            "auth_new_token_not_granted_error": "Il token appena creato non è stato approvato sull'interfaccia utente di HyperHDR",
             "auth_new_token_not_work_error": "Autenticazione utilizzando il token appena creato non riuscita",
-            "auth_required_error": "Impossibile determinare se \u00e8 necessaria l'autorizzazione",
+            "auth_required_error": "Impossibile determinare se è necessaria l'autorizzazione",
             "cannot_connect": "Impossibile connettersi",
             "no_id": "L'istanza HyperHDR Ambilight non ha segnalato il suo ID",
-            "reauth_successful": "La nuova autenticazione \u00e8 stata eseguita correttamente"
+            "reauth_successful": "La nuova autenticazione è stata eseguita correttamente"
         },
         "error": {
             "cannot_connect": "Impossibile connettersi",
@@ -18,7 +18,8 @@
             "auth": {
                 "data": {
                     "create_token": "Crea automaticamente un nuovo token",
-                    "token": "Oppure fornisci un token preesistente"
+                    "token": "Oppure fornisci un token preesistente",
+                    "password": "Password (se richiesta)"
                 },
                 "description": "Configura l'autorizzazione per il tuo server HyperHDR Ambilight"
             },
@@ -46,7 +47,7 @@
             "init": {
                 "data": {
                     "effect_show_list": "Effetti di HyperHDR da mostrare",
-                    "priority": "Priorit\u00e0 HyperHDR da usare per colori ed effetti"
+                    "priority": "Priorità HyperHDR da usare per colori ed effetti"
                 }
             }
         }
@@ -54,36 +55,78 @@
     "entity": {
         "switch": {
             "all": {
-                "name": "Component All"
+                "name": "Componente generale",
+                "icon": "mdi:power"
             },
             "smoothing": {
-                "name": "Component Smoothing"
+                "name": "Componente di smoothing",
+                "icon": "mdi:blur"
             },
             "blackbar_detection": {
-                "name": "Component Blackbar Detection"
+                "name": "Componente rilevamento bande nere",
+                "icon": "mdi:crop-free"
             },
             "forwarder": {
-                "name": "Component Forwarder"
+                "name": "Componente inoltro",
+                "icon": "mdi:send"
             },
             "boblight_server": {
-                "name": "Component Boblight Server"
+                "name": "Componente server Boblight",
+                "icon": "mdi:server"
             },
             "platform_capture": {
-                "name": "Component Platform Capture"
+                "name": "Componente acquisizione piattaforma",
+                "icon": "mdi:video-input-antenna"
             },
             "led_device": {
-                "name": "Component LED Device"
+                "name": "Componente dispositivo LED",
+                "icon": "mdi:lightbulb-multiple"
             },
             "usb_capture": {
-                "name": "Component USB Capture"
+                "name": "Componente acquisizione USB",
+                "icon": "mdi:usb"
             },
             "hdr_tone_mapping": {
-                "name": "Component HDR Tone Mapping"
+                "name": "Componente tone mapping HDR",
+                "icon": "mdi:contrast-box"
+            }
+        },
+        "number": {
+            "smoothing_time": {
+                "name": "Tempo di smoothing"
+            },
+            "smoothing_decay": {
+                "name": "Decadimento dello smoothing"
+            },
+            "smoothing_update_freq": {
+                "name": "Frequenza aggiornamento smoothing"
+            },
+            "hdr_tone_mapping": {
+                "name": "Tone mapping HDR"
+            }
+        },
+        "select": {
+            "smoothing_type": {
+                "name": "Tipo di smoothing"
+            },
+            "color_engine": {
+                "name": "Motore colore"
             }
         },
         "sensor": {
             "visible_priority": {
                 "name": "Visible Priority"
+            },
+            "average_color": {
+                "name": "Colore medio"
+            }
+        },
+        "light": {
+            "hyperhdr_light": {
+                "name": "Luce"
+            },
+            "hyperhdr_priority_light": {
+                "name": "Luce prioritaria"
             }
         }
     }
