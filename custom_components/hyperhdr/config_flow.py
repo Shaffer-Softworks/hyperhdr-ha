@@ -37,6 +37,7 @@ from .const import (
     CONF_CREATE_TOKEN,
     CONF_EFFECT_HIDE_LIST,
     CONF_EFFECT_SHOW_LIST,
+    CONF_PASSWORD,
     CONF_PRIORITY,
     DEFAULT_ORIGIN,
     DEFAULT_PRIORITY,
@@ -125,6 +126,7 @@ class HyperHDRConfigFlow(ConfigFlow, domain=DOMAIN):
             self._data[CONF_HOST],
             self._data[CONF_PORT],
             token=self._data.get(CONF_TOKEN),
+            password=self._data.get(CONF_PASSWORD),
             raw_connection=raw_connection,
         )
 
@@ -306,6 +308,7 @@ class HyperHDRConfigFlow(ConfigFlow, domain=DOMAIN):
 
             # Using a static token.
             self._data[CONF_TOKEN] = user_input.get(CONF_TOKEN)
+            self._data[CONF_PASSWORD] = user_input.get(CONF_PASSWORD)
             login_ok = await self._can_login()
             if login_ok is None:
                 return self.async_abort(reason="cannot_connect")
@@ -319,6 +322,7 @@ class HyperHDRConfigFlow(ConfigFlow, domain=DOMAIN):
                 {
                     vol.Required(CONF_CREATE_TOKEN): bool,
                     vol.Optional(CONF_TOKEN): str,
+                    vol.Optional(CONF_PASSWORD): str,
                 }
             ),
             errors=errors,
@@ -440,6 +444,7 @@ class HyperHDROptionsFlow(OptionsFlow):
             self._config_entry.data[CONF_HOST],
             self._config_entry.data[CONF_PORT],
             token=self._config_entry.data.get(CONF_TOKEN),
+            password=self._config_entry.data.get(CONF_PASSWORD),
         )
 
     async def async_step_init(

@@ -142,9 +142,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     host = entry.data[CONF_HOST]
     port = entry.data[CONF_PORT]
     token = entry.data.get(CONF_TOKEN)
+    password = entry.data.get("password")
 
     hyperhdr_client = await async_create_connect_hyperhdr_client(
-        host, port, token=token, raw_connection=True
+        host, port, token=token, password=password, raw_connection=True
     )
 
     # Client won't connect? => Not ready.

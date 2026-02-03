@@ -18,7 +18,8 @@
             "auth": {
                 "data": {
                     "create_token": "Buat token baru secara otomatis",
-                    "token": "Atau berikan token yang sudah ada sebelumnya"
+                    "token": "Atau berikan token yang sudah ada sebelumnya",
+                    "password": "Kata sandi (jika diperlukan)"
                 },
                 "description": "Konfigurasikan otorisasi ke server HyperHDR Ambilight Anda"
             },
@@ -54,36 +55,78 @@
     "entity": {
         "switch": {
             "all": {
-                "name": "Component All"
+                "name": "Semua komponen",
+                "icon": "mdi:power"
             },
             "smoothing": {
-                "name": "Component Smoothing"
+                "name": "Komponen penghalusan",
+                "icon": "mdi:blur"
             },
             "blackbar_detection": {
-                "name": "Component Blackbar Detection"
+                "name": "Komponen deteksi bar hitam",
+                "icon": "mdi:crop-free"
             },
             "forwarder": {
-                "name": "Component Forwarder"
+                "name": "Komponen penerus",
+                "icon": "mdi:send"
             },
             "boblight_server": {
-                "name": "Component Boblight Server"
+                "name": "Komponen server Boblight",
+                "icon": "mdi:server"
             },
             "platform_capture": {
-                "name": "Component Platform Capture"
+                "name": "Komponen tangkap platform",
+                "icon": "mdi:video-input-antenna"
             },
             "led_device": {
-                "name": "Component LED Device"
+                "name": "Komponen perangkat LED",
+                "icon": "mdi:lightbulb-multiple"
             },
             "usb_capture": {
-                "name": "Component USB Capture"
+                "name": "Komponen tangkap USB",
+                "icon": "mdi:usb"
             },
             "hdr_tone_mapping": {
-                "name": "Component HDR Tone Mapping"
+                "name": "Komponen pemetaan nada HDR",
+                "icon": "mdi:contrast-box"
+            }
+        },
+        "number": {
+            "smoothing_time": {
+                "name": "Waktu penghalusan"
+            },
+            "smoothing_decay": {
+                "name": "Pelemahan penghalusan"
+            },
+            "smoothing_update_freq": {
+                "name": "Frekuensi pembaruan penghalusan"
+            },
+            "hdr_tone_mapping": {
+                "name": "Pemetaan nada HDR"
+            }
+        },
+        "select": {
+            "smoothing_type": {
+                "name": "Jenis penghalusan"
+            },
+            "color_engine": {
+                "name": "Mesin warna"
             }
         },
         "sensor": {
             "visible_priority": {
                 "name": "Visible Priority"
+            },
+            "average_color": {
+                "name": "Warna rata-rata"
+            }
+        },
+        "light": {
+            "hyperhdr_light": {
+                "name": "Lampu"
+            },
+            "hyperhdr_priority_light": {
+                "name": "Lampu prioritas"
             }
         }
     }
