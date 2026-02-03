@@ -18,8 +18,7 @@
             "auth": {
                 "data": {
                     "create_token": "Neie Jeton automatesch erstellen",
-                    "token": "oder scho bestehenden Jeton uginn",
-                    "password": "Passwuert (wann noutwenneg)"
+                    "token": "oder scho bestehenden Jeton uginn"
                 },
                 "description": "Autorisatioun mat dengem HyperHDR Ambilight Server konfiguréieren"
             },

@@ -18,8 +18,7 @@
             "auth": {
                 "data": {
                     "create_token": "Loo automaatselt uus juurdepääsutõend",
-                    "token": "Või kasuta juba olemasolevat juurdepääsutõendit",
-                    "password": "Parool (vajadusel)"
+                    "token": "Või kasuta juba olemasolevat juurdepääsutõendit"
                 },
                 "description": "Seadista oma HyperHDR Ambilighti serveri tuvastamine"
             },

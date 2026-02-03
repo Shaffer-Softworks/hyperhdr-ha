@@ -18,8 +18,7 @@
             "auth": {
                 "data": {
                     "create_token": "Otomatik olarak yeni belirteç oluşturma",
-                    "token": "Veya önceden varolan belirteç leri sağlayın",
-                    "password": "Parola (gerekirse)"
+                    "token": "Veya önceden varolan belirteç leri sağlayın"
                 },
                 "description": "Configure authorization to your HyperHDR Ambilight server"
             },

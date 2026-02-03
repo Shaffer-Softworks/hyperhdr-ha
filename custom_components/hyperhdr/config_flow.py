@@ -308,7 +308,6 @@ class HyperHDRConfigFlow(ConfigFlow, domain=DOMAIN):
 
             # Using a static token.
             self._data[CONF_TOKEN] = user_input.get(CONF_TOKEN)
-            self._data[CONF_PASSWORD] = user_input.get(CONF_PASSWORD)
             login_ok = await self._can_login()
             if login_ok is None:
                 return self.async_abort(reason="cannot_connect")
@@ -322,7 +321,6 @@ class HyperHDRConfigFlow(ConfigFlow, domain=DOMAIN):
                 {
                     vol.Required(CONF_CREATE_TOKEN): bool,
                     vol.Optional(CONF_TOKEN): str,
-                    vol.Optional(CONF_PASSWORD): str,
                 }
             ),
             errors=errors,
