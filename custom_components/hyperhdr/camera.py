@@ -8,10 +8,13 @@ import binascii
 from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 import functools
+import io
+import json
 import logging
 from typing import Any
 
 from aiohttp import ClientSession, WSMsgType, web
+from PIL import Image
 from hyperhdr import client
 from hyperhdr.const import (
     KEY_IMAGE,
@@ -50,6 +53,7 @@ from .const import (
     SIGNAL_ENTITY_REMOVE,
     TYPE_HYPERHDR_CAMERA,
     TYPE_HYPERHDR_LED_CAMERA,
+    TYPE_HYPERHDR_LED_GRADIENT_CAMERA,
 )
 
 _LOGGER = logging.getLogger(__name__)
@@ -79,6 +83,13 @@ async def async_setup_entry(
         assert server_id
         return get_hyperhdr_unique_id(server_id, instance_num, TYPE_HYPERHDR_LED_CAMERA)
 
+    def led_gradient_unique_id(instance_num: int) -> str:
+        """Return the led gradient camera unique_id."""
+        assert server_id
+        return get_hyperhdr_unique_id(
+            server_id, instance_num, TYPE_HYPERHDR_LED_GRADIENT_CAMERA
+        )
+
     @callback
     def instance_add(instance_num: int, instance_name: str) -> None:
         """Add entities for a new HyperHDR instance."""
@@ -92,6 +103,13 @@ async def async_setup_entry(
                     entry_data[CONF_INSTANCE_CLIENTS][instance_num],
                 ),
                 HyperHDRLedCamera(
+                    server_id,
+                    instance_num,
+                    instance_name,
+                    host,
+                    port_ws,
+                ),
+                HyperHDRLedGradientCamera(
                     server_id,
                     instance_num,
                     instance_name,
@@ -115,6 +133,12 @@ async def async_setup_entry(
             hass,
             SIGNAL_ENTITY_REMOVE.format(
                 led_camera_unique_id(instance_num),
+            ),
+        )
+        async_dispatcher_send(
+            hass,
+            SIGNAL_ENTITY_REMOVE.format(
+                led_gradient_unique_id(instance_num),
             ),
         )
 
@@ -405,7 +429,185 @@ class HyperHDRLedCamera(Camera):
             0.0,
         )
 
+class HyperHDRLedGradientCamera(Camera):
+    """Camera entity for HyperHDR LED Gradient stream."""
+
+    _attr_has_entity_name = True
+    _attr_name = "LED Gradient"
+    _attr_entity_registry_enabled_default = False
+
+    def __init__(
+        self,
+        server_id: str,
+        instance_num: int,
+        instance_name: str,
+        host: str,
+        port: int,
+    ) -> None:
+        """Initialize the LED camera."""
+        super().__init__()
+        self._attr_unique_id = get_hyperhdr_unique_id(
+            server_id, instance_num, TYPE_HYPERHDR_LED_GRADIENT_CAMERA
+        )
+        self._device_id = get_hyperhdr_device_id(server_id, instance_num)
+        self._host = host
+        self._port = port
+        self._last_image: bytes | None = None
+        self._stream_task: asyncio.Task | None = None
+        self._image_cond = asyncio.Condition()
+        self._attr_device_info = DeviceInfo(
+            identifiers={(DOMAIN, self._device_id)},
+            manufacturer=HYPERHDR_MANUFACTURER_NAME,
+            model=HYPERHDR_MODEL_NAME,
+            name=instance_name,
+        )
+
+    async def async_added_to_hass(self) -> None:
+        """Start the background streaming task."""
+        await super().async_added_to_hass()
+        self.async_on_remove(
+            async_dispatcher_connect(
+                self.hass,
+                SIGNAL_ENTITY_REMOVE.format(self._attr_unique_id),
+                functools.partial(self.async_remove, force_remove=True),
+            )
+        )
+        self._stream_task = self.hass.async_create_background_task(
+            self._stream_worker(),
+            f"hyperhdr_led_gradient_stream_{self._device_id}",
+        )
+
+    async def async_will_remove_from_hass(self) -> None:
+        """Stop the background streaming task."""
+        if self._stream_task:
+            self._stream_task.cancel()
+            try:
+                await self._stream_task
+            except asyncio.CancelledError:
+                pass
+            self._stream_task = None
+        await super().async_will_remove_from_hass()
+
+    async def _stream_worker(self) -> None:
+        """Background task to maintain WebSocket connection and update image."""
+        url = f"ws://{self._host}:{self._port}/json-rpc"
+        while True:
+            try:
+                async with ClientSession() as session:
+                    # Use heartbeat to keep connection alive
+                    async with session.ws_connect(url, heartbeat=30) as ws:
+                        _LOGGER.debug(
+                            "Connected to HyperHDR LED gradient stream at %s", url
+                        )
+                        # Start video stream
+                        await ws.send_json(
+                            {
+                                "command": "ledcolors",
+                                "subcommand": "ledstream-start",
+                                "tan": 1,
+                            }
+                        )
+                        _LOGGER.debug("Sent ledstream-start command")
+
+                        async for msg in ws:
+                            if msg.type == WSMsgType.BINARY:
+                                # Convert binary RGB data to 1D image
+                                try:
+                                    # Assuming data is simple RGB flat array
+                                    # Width = len(data) / 3
+                                    data = msg.data
+                                    total_leds = len(data) // 3
+                                    if len(data) % 3 != 0:
+                                        _LOGGER.warning(
+                                            "Received incomplete LED data: %d bytes",
+                                            len(data),
+                                        )
+                                        continue
+
+                                    # Create 1D image with some height (e.g., 20px) to make it visible in UI
+                                    img = Image.frombytes(
+                                        "RGB", (total_leds, 1), data
+                                    )
+                                    if total_leds > 0:
+                                        img = img.resize((total_leds, 20), Image.Resampling.NEAREST)
+
+                                    # Save to bytes
+                                    img_byte_arr = io.BytesIO()
+                                    img.save(img_byte_arr, format="JPEG")
+                                    
+                                    async with self._image_cond:
+                                        self._last_image = img_byte_arr.getvalue()
+                                        self._image_cond.notify_all()
+                                        
+                                except Exception as err:
+                                    _LOGGER.error("Error processing LED gradient: %s", err)
+                                    
+                            elif msg.type == WSMsgType.TEXT:
+                                try:
+                                    json_data = json.loads(msg.data)
+                                    if json_data.get("command") == "ledcolors-ledstream-update":
+                                        leds = json_data.get("result", {}).get("leds")
+                                        if leds:
+                                            # Convert list of integers [R, G, B, ...] to bytes
+                                            data = bytes(leds)
+                                            total_leds = len(data) // 3
+                                            
+                                            # Create image and notify
+                                            img = Image.frombytes("RGB", (total_leds, 1), data)
+                                            if total_leds > 0:
+                                                img = img.resize((total_leds, 20), Image.Resampling.NEAREST)
+                                            
+                                            img_byte_arr = io.BytesIO()
+                                            img.save(img_byte_arr, format="JPEG")
+                                            
+                                            async with self._image_cond:
+                                                self._last_image = img_byte_arr.getvalue()
+                                                self._image_cond.notify_all()
+                                                
+                                    _LOGGER.debug("HyperHDR stream text: %s", msg.data)
+                                except Exception as err:
+                                    _LOGGER.error("Error parsing LED gradient JSON: %s", err)
+                            elif msg.type == WSMsgType.CLOSED:
+                                _LOGGER.warning("HyperHDR stream connection closed")
+                                break
+                            elif msg.type == WSMsgType.ERROR:
+                                _LOGGER.error(
+                                    "HyperHDR LED stream error: %s", msg.data
+                                )
+                                break
+            except asyncio.CancelledError:
+                raise
+            except Exception as err:
+                _LOGGER.error("HyperHDR LED stream connection failed: %s", err)
+
+            _LOGGER.debug("Stream worker waiting 5s before reconnect...")
+            await asyncio.sleep(5)
+
+    async def _wait_for_image(self) -> bytes | None:
+        """Wait for new image."""
+        async with self._image_cond:
+            await self._image_cond.wait()
+            return self._last_image
+
+    async def async_camera_image(
+        self, width: int | None = None, height: int | None = None
+    ) -> bytes | None:
+        """Return the latest image."""
+        return self._last_image
+
+    async def handle_async_mjpeg_stream(
+        self, request: web.Request
+    ) -> web.StreamResponse | None:
+        """Serve an HTTP MJPEG stream from the camera."""
+        return await async_get_still_stream(
+            request,
+            self._wait_for_image,
+            DEFAULT_CONTENT_TYPE,
+            0.0,
+        )
 
 CAMERA_TYPES = {
     TYPE_HYPERHDR_CAMERA: HyperHDRCamera,
+    TYPE_HYPERHDR_LED_CAMERA: HyperHDRLedCamera,
+    TYPE_HYPERHDR_LED_GRADIENT_CAMERA: HyperHDRLedGradientCamera,
 }
