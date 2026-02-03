@@ -1,37 +1,38 @@
 {
     "config": {
         "abort": {
-            "already_configured": "A szolg\u00e1ltat\u00e1s m\u00e1r konfigur\u00e1lva van",
-            "already_in_progress": "A konfigur\u00e1ci\u00f3 m\u00e1r folyamatban van.",
-            "auth_new_token_not_granted_error": "Az \u00fajonnan l\u00e9trehozott tokent nem hagyt\u00e1k j\u00f3v\u00e1 a HyperHDR felhaszn\u00e1l\u00f3i fel\u00fclet\u00e9n",
-            "auth_new_token_not_work_error": "Nem siker\u00fclt hiteles\u00edteni az \u00fajonnan l\u00e9trehozott token haszn\u00e1lat\u00e1val",
-            "auth_required_error": "Nem siker\u00fclt meghat\u00e1rozni, hogy sz\u00fcks\u00e9ges-e enged\u00e9ly",
-            "cannot_connect": "Sikertelen csatlakoz\u00e1s",
-            "no_id": "A HyperHDR Ambilight p\u00e9ld\u00e1ny nem szolg\u00e1ltatja az azonos\u00edt\u00f3j\u00e1t",
-            "reauth_successful": "Az \u00fajrahiteles\u00edt\u00e9s sikeres volt"
+            "already_configured": "A szolgáltatás már konfigurálva van",
+            "already_in_progress": "A konfiguráció már folyamatban van.",
+            "auth_new_token_not_granted_error": "Az újonnan létrehozott tokent nem hagyták jóvá a HyperHDR felhasználói felületén",
+            "auth_new_token_not_work_error": "Nem sikerült hitelesíteni az újonnan létrehozott token használatával",
+            "auth_required_error": "Nem sikerült meghatározni, hogy szükséges-e engedély",
+            "cannot_connect": "Sikertelen csatlakozás",
+            "no_id": "A HyperHDR Ambilight példány nem szolgáltatja az azonosítóját",
+            "reauth_successful": "Az újrahitelesítés sikeres volt"
         },
         "error": {
-            "cannot_connect": "Sikertelen csatlakoz\u00e1s",
-            "invalid_access_token": "\u00c9rv\u00e9nytelen hozz\u00e1f\u00e9r\u00e9si token"
+            "cannot_connect": "Sikertelen csatlakozás",
+            "invalid_access_token": "Érvénytelen hozzáférési token"
         },
         "step": {
             "auth": {
                 "data": {
-                    "create_token": "\u00daj token automatikus l\u00e9trehoz\u00e1sa",
-                    "token": "Vagy adjon meg m\u00e1r l\u00e9tez\u0151 tokent"
+                    "create_token": "Új token automatikus létrehozása",
+                    "token": "Vagy adjon meg már létező tokent",
+                    "password": "Jelszó (ha szükséges)"
                 },
-                "description": "Konfigur\u00e1lja a jogosults\u00e1got a HyperHDR Ambilight kiszolg\u00e1l\u00f3hoz"
+                "description": "Konfigurálja a jogosultságot a HyperHDR Ambilight kiszolgálóhoz"
             },
             "confirm": {
-                "description": "Hozz\u00e1 szeretn\u00e9 adni ezt a HyperHDR Ambilight-ot az Otthoni asszisztenshez? \n\n ** Host: ** {host}\n ** Port: ** {port}\n ** azonos\u00edt\u00f3 **: {id}",
-                "title": "Er\u0151s\u00edtse meg a HyperHDR Ambilight szolg\u00e1ltat\u00e1s hozz\u00e1ad\u00e1s\u00e1t"
+                "description": "Hozzá szeretné adni ezt a HyperHDR Ambilight-ot az Otthoni asszisztenshez? \n\n ** Host: ** {host}\n ** Port: ** {port}\n ** azonosító **: {id}",
+                "title": "Erősítse meg a HyperHDR Ambilight szolgáltatás hozzáadását"
             },
             "create_token": {
-                "description": "Az al\u00e1bbiakban v\u00e1lassza a ** K\u00fcld\u00e9s ** lehet\u0151s\u00e9get \u00faj hiteles\u00edt\u00e9si token k\u00e9r\u00e9s\u00e9hez. A k\u00e9relem j\u00f3v\u00e1hagy\u00e1s\u00e1hoz \u00e1tir\u00e1ny\u00edtunk a HyperHDR felhaszn\u00e1l\u00f3i fel\u00fcletre. K\u00e9rj\u00fck, ellen\u0151rizze, hogy a megjelen\u00edtett azonos\u00edt\u00f3 \" {auth_id} \"",
-                "title": "\u00daj hiteles\u00edt\u00e9si token automatikus l\u00e9trehoz\u00e1sa"
+                "description": "Az alábbiakban válassza a ** Küldés ** lehetőséget új hitelesítési token kéréséhez. A kérelem jóváhagyásához átirányítunk a HyperHDR felhasználói felületre. Kérjük, ellenőrizze, hogy a megjelenített azonosító \" {auth_id} \"",
+                "title": "Új hitelesítési token automatikus létrehozása"
             },
             "create_token_external": {
-                "title": "\u00daj token elfogad\u00e1sa a HyperHDR felhaszn\u00e1l\u00f3i fel\u00fcleten"
+                "title": "Új token elfogadása a HyperHDR felhasználói felületen"
             },
             "user": {
                 "data": {
@@ -45,8 +46,8 @@
         "step": {
             "init": {
                 "data": {
-                    "effect_show_list": "Megjelen\u00edtend\u0151 HyperHDR effektusok",
-                    "priority": "HyperHDR priorit\u00e1s a sz\u00ednekhez \u00e9s effektekhez"
+                    "effect_show_list": "Megjelenítendő HyperHDR effektusok",
+                    "priority": "HyperHDR prioritás a színekhez és effektekhez"
                 }
             }
         }
@@ -54,36 +55,78 @@
     "entity": {
         "switch": {
             "all": {
-                "name": "Component All"
+                "name": "Összes komponens",
+                "icon": "mdi:power"
             },
             "smoothing": {
-                "name": "Component Smoothing"
+                "name": "Simítás komponens",
+                "icon": "mdi:blur"
             },
             "blackbar_detection": {
-                "name": "Component Blackbar Detection"
+                "name": "Fekete sáv felismerő komponens",
+                "icon": "mdi:crop-free"
             },
             "forwarder": {
-                "name": "Component Forwarder"
+                "name": "Továbbító komponens",
+                "icon": "mdi:send"
             },
             "boblight_server": {
-                "name": "Component Boblight Server"
+                "name": "Boblight szerver komponens",
+                "icon": "mdi:server"
             },
             "platform_capture": {
-                "name": "Component Platform Capture"
+                "name": "Platform rögzítő komponens",
+                "icon": "mdi:video-input-antenna"
             },
             "led_device": {
-                "name": "Component LED Device"
+                "name": "LED eszköz komponens",
+                "icon": "mdi:lightbulb-multiple"
             },
             "usb_capture": {
-                "name": "Component USB Capture"
+                "name": "USB rögzítő komponens",
+                "icon": "mdi:usb"
             },
             "hdr_tone_mapping": {
-                "name": "Component HDR Tone Mapping"
+                "name": "HDR tónusleképező komponens",
+                "icon": "mdi:contrast-box"
+            }
+        },
+        "number": {
+            "smoothing_time": {
+                "name": "Simítás ideje"
+            },
+            "smoothing_decay": {
+                "name": "Simítás lecsengése"
+            },
+            "smoothing_update_freq": {
+                "name": "Simítás frissítési gyakorisága"
+            },
+            "hdr_tone_mapping": {
+                "name": "HDR tónusleképezés"
+            }
+        },
+        "select": {
+            "smoothing_type": {
+                "name": "Simítás típusa"
+            },
+            "color_engine": {
+                "name": "Színmotor"
             }
         },
         "sensor": {
             "visible_priority": {
                 "name": "Visible Priority"
+            },
+            "average_color": {
+                "name": "Átlagos szín"
+            }
+        },
+        "light": {
+            "hyperhdr_light": {
+                "name": "Fény"
+            },
+            "hyperhdr_priority_light": {
+                "name": "Prioritás fény"
             }
         }
     }

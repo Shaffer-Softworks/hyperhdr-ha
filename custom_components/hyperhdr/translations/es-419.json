@@ -1,9 +1,53 @@
 {
+    "config": {
+        "abort": {
+            "already_configured": "El servicio ya está configurado",
+            "already_in_progress": "El flujo de configuración ya está en curso",
+            "auth_new_token_not_granted_error": "El token recién creado no fue aprobado en la interfaz de HyperHDR",
+            "auth_new_token_not_work_error": "No se pudo autenticar con el token recién creado",
+            "auth_required_error": "No se pudo determinar si se requiere autorización",
+            "cannot_connect": "No se pudo conectar",
+            "no_id": "La instancia de HyperHDR Ambilight no informó su id",
+            "reauth_successful": "La reautenticación fue exitosa"
+        },
+        "error": {
+            "cannot_connect": "No se pudo conectar",
+            "invalid_access_token": "Token de acceso no válido"
+        },
+        "step": {
+            "auth": {
+                "data": {
+                    "create_token": "Crear automáticamente un token nuevo",
+                    "token": "O proporcionar un token ya existente",
+                    "password": "Contraseña (si es necesario)"
+                },
+                "description": "Configura la autorización a tu servidor HyperHDR Ambilight"
+            },
+            "confirm": {
+                "description": "Do you want to add this HyperHDR Ambilight to Home Assistant?\n\n**Host:** {host}\n**Port:** {port}\n**ID**: {id}",
+                "title": "Confirm addition of HyperHDR Ambilight service"
+            },
+            "create_token": {
+                "description": "Elige **Enviar** abajo para solicitar un nuevo token de autenticación. Serás redirigido a la interfaz de HyperHDR para aprobar la solicitud. Verifica que el id mostrado sea \"{auth_id}\"",
+                "title": "Crear automáticamente un nuevo token de autenticación"
+            },
+            "create_token_external": {
+                "title": "Aceptar nuevo token en la interfaz de HyperHDR"
+            },
+            "user": {
+                "data": {
+                    "host": "Host",
+                    "port": "Puerto"
+                }
+            }
+        }
+    },
     "options": {
         "step": {
             "init": {
                 "data": {
-                    "effect_show_list": "Efectos de HyperHDR a mostrar"
+                    "effect_show_list": "Efectos de HyperHDR a mostrar",
+                    "priority": "HyperHDR priority to use for colors and effects"
                 }
             }
         }
@@ -11,36 +55,78 @@
     "entity": {
         "switch": {
             "all": {
-                "name": "Component All"
+                "name": "Componente general",
+                "icon": "mdi:power"
             },
             "smoothing": {
-                "name": "Component Smoothing"
+                "name": "Componente de suavizado",
+                "icon": "mdi:blur"
             },
             "blackbar_detection": {
-                "name": "Component Blackbar Detection"
+                "name": "Componente de detección de barras negras",
+                "icon": "mdi:crop-free"
             },
             "forwarder": {
-                "name": "Component Forwarder"
+                "name": "Componente de reenvío",
+                "icon": "mdi:send"
             },
             "boblight_server": {
-                "name": "Component Boblight Server"
+                "name": "Componente servidor Boblight",
+                "icon": "mdi:server"
             },
             "platform_capture": {
-                "name": "Component Platform Capture"
+                "name": "Componente de captura de plataforma",
+                "icon": "mdi:video-input-antenna"
             },
             "led_device": {
-                "name": "Component LED Device"
+                "name": "Componente dispositivo LED",
+                "icon": "mdi:lightbulb-multiple"
             },
             "usb_capture": {
-                "name": "Component USB Capture"
+                "name": "Componente de captura USB",
+                "icon": "mdi:usb"
             },
             "hdr_tone_mapping": {
-                "name": "Component HDR Tone Mapping"
+                "name": "Componente de mapeo de tono HDR",
+                "icon": "mdi:contrast-box"
+            }
+        },
+        "number": {
+            "smoothing_time": {
+                "name": "Tiempo de suavizado"
+            },
+            "smoothing_decay": {
+                "name": "Decaimiento del suavizado"
+            },
+            "smoothing_update_freq": {
+                "name": "Frecuencia de actualización del suavizado"
+            },
+            "hdr_tone_mapping": {
+                "name": "Mapeo de tono HDR"
+            }
+        },
+        "select": {
+            "smoothing_type": {
+                "name": "Tipo de suavizado"
+            },
+            "color_engine": {
+                "name": "Motor de color"
             }
         },
         "sensor": {
             "visible_priority": {
                 "name": "Visible Priority"
+            },
+            "average_color": {
+                "name": "Color promedio"
+            }
+        },
+        "light": {
+            "hyperhdr_light": {
+                "name": "Luz"
+            },
+            "hyperhdr_priority_light": {
+                "name": "Luz de prioridad"
             }
         }
     }

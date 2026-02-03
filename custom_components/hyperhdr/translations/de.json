@@ -2,8 +2,8 @@
     "config": {
         "abort": {
             "already_configured": "Der Dienst ist bereits konfiguriert",
-            "already_in_progress": "Der Konfigurationsablauf wird bereits ausgef\u00fchrt",
-            "auth_new_token_not_granted_error": "Neu erstellter Token wurde auf der HyperHDR-Benutzeroberfl\u00e4che nicht genehmigt",
+            "already_in_progress": "Der Konfigurationsablauf wird bereits ausgeführt",
+            "auth_new_token_not_granted_error": "Neu erstellter Token wurde auf der HyperHDR-Benutzeroberfläche nicht genehmigt",
             "auth_new_token_not_work_error": "Authentifizierung mit neu erstelltem Token fehlgeschlagen",
             "auth_required_error": "Es konnte nicht festgestellt werden, ob eine Autorisierung erforderlich ist",
             "cannot_connect": "Verbindung fehlgeschlagen",
@@ -12,22 +12,23 @@
         },
         "error": {
             "cannot_connect": "Verbindung fehlgeschlagen",
-            "invalid_access_token": "Ung\u00fcltiger Zugriffs-Token"
+            "invalid_access_token": "Ungültiger Zugriffs-Token"
         },
         "step": {
             "auth": {
                 "data": {
                     "create_token": "Automatisch neuen Authentifizierungs-Token erstellen",
-                    "token": "Oder stelle einen bereits vorhandenen Token bereit"
+                    "token": "Oder stelle einen bereits vorhandenen Token bereit",
+                    "password": "Passwort (falls erforderlich)"
                 },
-                "description": "Konfiguriere die Autorisierung f\u00fcr den HyperHDR-Ambilight-Server"
+                "description": "Konfiguriere die Autorisierung für den HyperHDR-Ambilight-Server"
             },
             "confirm": {
-                "description": "Soll dieses HyperHDR Ambilight zu Home Assistant hinzugef\u00fcgt werden? \n\n ** Host: ** {host}\n ** Port: ** {port}\n ** ID **: {id}",
-                "title": "Best\u00e4tige das Hinzuf\u00fcgen des HyperHDR-Ambilight-Dienstes"
+                "description": "Soll dieses HyperHDR Ambilight zu Home Assistant hinzugefügt werden? \n\n ** Host: ** {host}\n ** Port: ** {port}\n ** ID **: {id}",
+                "title": "Bestätige das Hinzufügen des HyperHDR-Ambilight-Dienstes"
             },
             "create_token": {
-                "description": "W\u00e4hle **Submit**, um einen neuen Authentifizierungs-Token anzufordern. Du wirst zur HyperHDR-Benutzeroberfl\u00e4che weitergeleitet, um die Anforderung zu best\u00e4tigen. Bitte \u00fcberpr\u00fcfe, ob die angezeigte ID \"{auth_id}\" lautet.",
+                "description": "Wähle **Submit**, um einen neuen Authentifizierungs-Token anzufordern. Du wirst zur HyperHDR-Benutzeroberfläche weitergeleitet, um die Anforderung zu bestätigen. Bitte überprüfe, ob die angezeigte ID \"{auth_id}\" lautet.",
                 "title": "Automatisch neuen Authentifizierungs-Token erstellen"
             },
             "create_token_external": {
@@ -46,7 +47,7 @@
             "init": {
                 "data": {
                     "effect_show_list": "HyperHDR-Effekte zum Anzeigen",
-                    "priority": "HyperHDR-Priorit\u00e4t f\u00fcr Farben und Effekte"
+                    "priority": "HyperHDR-Priorität für Farben und Effekte"
                 }
             }
         }
@@ -54,36 +55,78 @@
     "entity": {
         "switch": {
             "all": {
-                "name": "Component All"
+                "name": "Alle Komponenten",
+                "icon": "mdi:power"
             },
             "smoothing": {
-                "name": "Component Smoothing"
+                "name": "Komponente Glättung",
+                "icon": "mdi:blur"
             },
             "blackbar_detection": {
-                "name": "Component Blackbar Detection"
+                "name": "Komponente Balkenerkennung",
+                "icon": "mdi:crop-free"
             },
             "forwarder": {
-                "name": "Component Forwarder"
+                "name": "Komponente Weiterleitung",
+                "icon": "mdi:send"
             },
             "boblight_server": {
-                "name": "Component Boblight Server"
+                "name": "Komponente Boblight-Server",
+                "icon": "mdi:server"
             },
             "platform_capture": {
-                "name": "Component Platform Capture"
+                "name": "Komponente Plattformaufnahme",
+                "icon": "mdi:video-input-antenna"
             },
             "led_device": {
-                "name": "Component LED Device"
+                "name": "Komponente LED-Gerät",
+                "icon": "mdi:lightbulb-multiple"
             },
             "usb_capture": {
-                "name": "Component USB Capture"
+                "name": "Komponente USB-Aufnahme",
+                "icon": "mdi:usb"
             },
             "hdr_tone_mapping": {
-                "name": "Component HDR Tone Mapping"
+                "name": "Komponente HDR-Tonemapping",
+                "icon": "mdi:contrast-box"
+            }
+        },
+        "number": {
+            "smoothing_time": {
+                "name": "Glättungszeit"
+            },
+            "smoothing_decay": {
+                "name": "Glättungsabfall"
+            },
+            "smoothing_update_freq": {
+                "name": "Aktualisierungsrate der Glättung"
+            },
+            "hdr_tone_mapping": {
+                "name": "HDR-Tonemapping"
+            }
+        },
+        "select": {
+            "smoothing_type": {
+                "name": "Glättungstyp"
+            },
+            "color_engine": {
+                "name": "Farb-Engine"
             }
         },
         "sensor": {
             "visible_priority": {
                 "name": "Visible Priority"
+            },
+            "average_color": {
+                "name": "Durchschnittsfarbe"
+            }
+        },
+        "light": {
+            "hyperhdr_light": {
+                "name": "Licht"
+            },
+            "hyperhdr_priority_light": {
+                "name": "Prioritätslicht"
             }
         }
     }

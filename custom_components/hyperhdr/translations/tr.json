@@ -1,34 +1,38 @@
 {
     "config": {
         "abort": {
-            "already_configured": "Hizmet zaten yap\u0131land\u0131r\u0131lm\u0131\u015f",
-            "already_in_progress": "Yap\u0131land\u0131rma ak\u0131\u015f\u0131 zaten devam ediyor",
-            "auth_new_token_not_granted_error": "HyperHDR UI'de yeni olu\u015fturulan belirte\u00e7 onaylanmad\u0131",
-            "auth_new_token_not_work_error": "Yeni olu\u015fturulan belirte\u00e7 kullan\u0131larak kimlik do\u011frulamas\u0131 ba\u015far\u0131s\u0131z oldu",
-            "auth_required_error": "Yetkilendirmenin gerekli olup olmad\u0131\u011f\u0131 belirlenemedi",
-            "cannot_connect": "Ba\u011flanma hatas\u0131",
-            "no_id": "HyperHDR Ambilight \u00f6rne\u011fi kimli\u011fini bildirmedi",
-            "reauth_successful": "Yeniden kimlik do\u011frulama ba\u015far\u0131l\u0131 oldu"
+            "already_configured": "Hizmet zaten yapılandırılmış",
+            "already_in_progress": "Yapılandırma akışı zaten devam ediyor",
+            "auth_new_token_not_granted_error": "HyperHDR UI'de yeni oluşturulan belirteç onaylanmadı",
+            "auth_new_token_not_work_error": "Yeni oluşturulan belirteç kullanılarak kimlik doğrulaması başarısız oldu",
+            "auth_required_error": "Yetkilendirmenin gerekli olup olmadığı belirlenemedi",
+            "cannot_connect": "Bağlanma hatası",
+            "no_id": "HyperHDR Ambilight örneği kimliğini bildirmedi",
+            "reauth_successful": "Yeniden kimlik doğrulama başarılı oldu"
         },
         "error": {
-            "cannot_connect": "Ba\u011flanma hatas\u0131",
-            "invalid_access_token": "Ge\u00e7ersiz eri\u015fim belirteci"
+            "cannot_connect": "Bağlanma hatası",
+            "invalid_access_token": "Geçersiz erişim belirteci"
         },
         "step": {
             "auth": {
                 "data": {
-                    "create_token": "Otomatik olarak yeni belirte\u00e7 olu\u015fturma",
-                    "token": "Veya \u00f6nceden varolan belirte\u00e7 leri sa\u011flay\u0131n"
-                }
+                    "create_token": "Otomatik olarak yeni belirteç oluşturma",
+                    "token": "Veya önceden varolan belirteç leri sağlayın",
+                    "password": "Parola (gerekirse)"
+                },
+                "description": "Configure authorization to your HyperHDR Ambilight server"
             },
             "confirm": {
-                "title": "HyperHDR Ambilight hizmetinin eklenmesini onaylay\u0131n"
+                "description": "Do you want to add this HyperHDR Ambilight to Home Assistant?\n\n**Host:** {host}\n**Port:** {port}\n**ID**: {id}",
+                "title": "HyperHDR Ambilight hizmetinin eklenmesini onaylayın"
             },
             "create_token": {
-                "title": "Otomatik olarak yeni kimlik do\u011frulama belirteci olu\u015fturun"
+                "description": "Choose **Submit** below to request a new authentication token. You will be redirected to the HyperHDR UI to approve the request. Please verify the shown id is \"{auth_id}\"",
+                "title": "Otomatik olarak yeni kimlik doğrulama belirteci oluşturun"
             },
             "create_token_external": {
-                "title": "HyperHDR kullan\u0131c\u0131 aray\u00fcz\u00fcnde yeni belirteci kabul edin"
+                "title": "HyperHDR kullanıcı arayüzünde yeni belirteci kabul edin"
             },
             "user": {
                 "data": {
@@ -42,7 +46,8 @@
         "step": {
             "init": {
                 "data": {
-                    "priority": "Renkler ve efektler i\u00e7in kullan\u0131lacak hyperhdr \u00f6nceli\u011fi"
+                    "effect_show_list": "HyperHDR effects to show",
+                    "priority": "Renkler ve efektler için kullanılacak hyperhdr önceliği"
                 }
             }
         }
@@ -50,36 +55,78 @@
     "entity": {
         "switch": {
             "all": {
-                "name": "Component All"
+                "name": "Tüm bileşenler",
+                "icon": "mdi:power"
             },
             "smoothing": {
-                "name": "Component Smoothing"
+                "name": "Yumuşatma bileşeni",
+                "icon": "mdi:blur"
             },
             "blackbar_detection": {
-                "name": "Component Blackbar Detection"
+                "name": "Siyah çubuk algılama bileşeni",
+                "icon": "mdi:crop-free"
             },
             "forwarder": {
-                "name": "Component Forwarder"
+                "name": "Yönlendirme bileşeni",
+                "icon": "mdi:send"
             },
             "boblight_server": {
-                "name": "Component Boblight Server"
+                "name": "Boblight sunucu bileşeni",
+                "icon": "mdi:server"
             },
             "platform_capture": {
-                "name": "Component Platform Capture"
+                "name": "Platform yakalama bileşeni",
+                "icon": "mdi:video-input-antenna"
             },
             "led_device": {
-                "name": "Component LED Device"
+                "name": "LED aygıt bileşeni",
+                "icon": "mdi:lightbulb-multiple"
             },
             "usb_capture": {
-                "name": "Component USB Capture"
+                "name": "USB yakalama bileşeni",
+                "icon": "mdi:usb"
             },
             "hdr_tone_mapping": {
-                "name": "Component HDR Tone Mapping"
+                "name": "HDR ton eşleme bileşeni",
+                "icon": "mdi:contrast-box"
+            }
+        },
+        "number": {
+            "smoothing_time": {
+                "name": "Yumuşatma süresi"
+            },
+            "smoothing_decay": {
+                "name": "Yumuşatma sönümü"
+            },
+            "smoothing_update_freq": {
+                "name": "Yumuşatma güncelleme sıklığı"
+            },
+            "hdr_tone_mapping": {
+                "name": "HDR ton eşleme"
+            }
+        },
+        "select": {
+            "smoothing_type": {
+                "name": "Yumuşatma türü"
+            },
+            "color_engine": {
+                "name": "Renk motoru"
             }
         },
         "sensor": {
             "visible_priority": {
                 "name": "Visible Priority"
+            },
+            "average_color": {
+                "name": "Ortalama renk"
+            }
+        },
+        "light": {
+            "hyperhdr_light": {
+                "name": "Işık"
+            },
+            "hyperhdr_priority_light": {
+                "name": "Öncelikli ışık"
             }
         }
     }

@@ -1,34 +1,35 @@
 {
     "config": {
         "abort": {
-            "already_configured": "El servicio ya est\u00e1 configurado",
-            "already_in_progress": "El flujo de configuraci\u00f3n ya est\u00e1 en proceso",
-            "auth_new_token_not_granted_error": "El token reci\u00e9n creado no se aprob\u00f3 en la interfaz de usuario de HyperHDR",
-            "auth_new_token_not_work_error": "Error al autenticarse con el token reci\u00e9n creado",
-            "auth_required_error": "No se pudo determinar si se requiere autorizaci\u00f3n",
+            "already_configured": "El servicio ya está configurado",
+            "already_in_progress": "El flujo de configuración ya está en proceso",
+            "auth_new_token_not_granted_error": "El token recién creado no se aprobó en la interfaz de usuario de HyperHDR",
+            "auth_new_token_not_work_error": "Error al autenticarse con el token recién creado",
+            "auth_required_error": "No se pudo determinar si se requiere autorización",
             "cannot_connect": "No se pudo conectar",
-            "no_id": "La instancia de HyperHDR Ambilight no inform\u00f3 su identificaci\u00f3n",
-            "reauth_successful": "La reautenticaci\u00f3n se realiz\u00f3 correctamente"
+            "no_id": "La instancia de HyperHDR Ambilight no informó su identificación",
+            "reauth_successful": "La reautenticación se realizó correctamente"
         },
         "error": {
             "cannot_connect": "No se pudo conectar",
-            "invalid_access_token": "Token de acceso no v\u00e1lido"
+            "invalid_access_token": "Token de acceso no válido"
         },
         "step": {
             "auth": {
                 "data": {
-                    "create_token": "Crea un nuevo token autom\u00e1ticamente",
-                    "token": "O proporcionar un token preexistente"
+                    "create_token": "Crea un nuevo token automáticamente",
+                    "token": "O proporcionar un token preexistente",
+                    "password": "Contraseña (si es necesario)"
                 },
-                "description": "Configurar autorizaci\u00f3n a tu servidor HyperHDR Ambilight"
+                "description": "Configurar autorización a tu servidor HyperHDR Ambilight"
             },
             "confirm": {
-                "description": "\u00bfQuieres a\u00f1adir este HyperHDR Ambilight a Home Assistant?\n\n**Host:** {host}\n**Puerto:** {port}\n**Identificaci\u00f3n**: {id}",
-                "title": "Confirmar la adici\u00f3n del servicio HyperHDR Ambilight"
+                "description": "¿Quieres añadir este HyperHDR Ambilight a Home Assistant?\n\n**Host:** {host}\n**Puerto:** {port}\n**Identificación**: {id}",
+                "title": "Confirmar la adición del servicio HyperHDR Ambilight"
             },
             "create_token": {
-                "description": "Elige ** Enviar ** a continuaci\u00f3n para solicitar un nuevo token de autenticaci\u00f3n. Se te redirigir\u00e1 a la interfaz de usuario de HyperHDR para aprobar la solicitud. Verifica que la identificaci\u00f3n que se muestra sea \"{auth_id}\"",
-                "title": "Crear autom\u00e1ticamente un nuevo token de autenticaci\u00f3n"
+                "description": "Elige ** Enviar ** a continuación para solicitar un nuevo token de autenticación. Se te redirigirá a la interfaz de usuario de HyperHDR para aprobar la solicitud. Verifica que la identificación que se muestra sea \"{auth_id}\"",
+                "title": "Crear automáticamente un nuevo token de autenticación"
             },
             "create_token_external": {
                 "title": "Aceptar nuevo token en la interfaz de usuario de HyperHDR"
@@ -54,36 +55,78 @@
     "entity": {
         "switch": {
             "all": {
-                "name": "Component All"
+                "name": "Componente general",
+                "icon": "mdi:power"
             },
             "smoothing": {
-                "name": "Component Smoothing"
+                "name": "Componente de suavizado",
+                "icon": "mdi:blur"
             },
             "blackbar_detection": {
-                "name": "Component Blackbar Detection"
+                "name": "Componente de detección de barras negras",
+                "icon": "mdi:crop-free"
             },
             "forwarder": {
-                "name": "Component Forwarder"
+                "name": "Componente de reenvío",
+                "icon": "mdi:send"
             },
             "boblight_server": {
-                "name": "Component Boblight Server"
+                "name": "Componente servidor Boblight",
+                "icon": "mdi:server"
             },
             "platform_capture": {
-                "name": "Component Platform Capture"
+                "name": "Componente de captura de plataforma",
+                "icon": "mdi:video-input-antenna"
             },
             "led_device": {
-                "name": "Component LED Device"
+                "name": "Componente dispositivo LED",
+                "icon": "mdi:lightbulb-multiple"
             },
             "usb_capture": {
-                "name": "Component USB Capture"
+                "name": "Componente de captura USB",
+                "icon": "mdi:usb"
             },
             "hdr_tone_mapping": {
-                "name": "Component HDR Tone Mapping"
+                "name": "Componente de mapeo de tono HDR",
+                "icon": "mdi:contrast-box"
+            }
+        },
+        "number": {
+            "smoothing_time": {
+                "name": "Tiempo de suavizado"
+            },
+            "smoothing_decay": {
+                "name": "Decaimiento del suavizado"
+            },
+            "smoothing_update_freq": {
+                "name": "Frecuencia de actualización del suavizado"
+            },
+            "hdr_tone_mapping": {
+                "name": "Mapeo de tono HDR"
+            }
+        },
+        "select": {
+            "smoothing_type": {
+                "name": "Tipo de suavizado"
+            },
+            "color_engine": {
+                "name": "Motor de color"
             }
         },
         "sensor": {
             "visible_priority": {
                 "name": "Visible Priority"
+            },
+            "average_color": {
+                "name": "Color promedio"
+            }
+        },
+        "light": {
+            "hyperhdr_light": {
+                "name": "Luz"
+            },
+            "hyperhdr_priority_light": {
+                "name": "Luz de prioridad"
             }
         }
     }

@@ -1,37 +1,38 @@
 {
     "config": {
         "abort": {
-            "already_configured": "Storitev je \u017ee name\u0161\u010dena",
-            "already_in_progress": "Name\u0161\u010danje se \u017ee izvaja",
-            "auth_new_token_not_granted_error": "Uporabni\u0161ki vmesnik HyperHDR UI ni potrdil novo ustvarjenega \u017eetona",
-            "auth_new_token_not_work_error": "Overjanje s pomo\u010djo novo ustvarjenega \u017eetona ni uspelo",
-            "auth_required_error": "Ni mogo\u010de dolo\u010diti ali je overjanje potrebno",
-            "cannot_connect": "Povezovanje ni bilo uspe\u0161no",
+            "already_configured": "Storitev je že nameščena",
+            "already_in_progress": "Nameščanje se že izvaja",
+            "auth_new_token_not_granted_error": "Uporabniški vmesnik HyperHDR UI ni potrdil novo ustvarjenega žetona",
+            "auth_new_token_not_work_error": "Overjanje s pomočjo novo ustvarjenega žetona ni uspelo",
+            "auth_required_error": "Ni mogoče določiti ali je overjanje potrebno",
+            "cannot_connect": "Povezovanje ni bilo uspešno",
             "no_id": "HyperHDR Ambilight instanca ni prijavila tega id",
             "reauth_successful": "Ponovno overjanje je uspelo."
         },
         "error": {
             "cannot_connect": "Neuspelo povezovanje",
-            "invalid_access_token": "Neveljaven \u017eeton za dostop"
+            "invalid_access_token": "Neveljaven žeton za dostop"
         },
         "step": {
             "auth": {
                 "data": {
-                    "create_token": "Samodejno ustvari nov \u017eeton",
-                    "token": "ali zagotovite \u017ee obstoje\u010di \u017eeton"
+                    "create_token": "Samodejno ustvari nov žeton",
+                    "token": "ali zagotovite že obstoječi žeton",
+                    "password": "Geslo (če je potrebno)"
                 },
-                "description": "Nastavite overitev za HyperHDR Ambilight stre\u017enik"
+                "description": "Nastavite overitev za HyperHDR Ambilight strežnik"
             },
             "confirm": {
-                "description": "\u017delite dodati ta HyperHDR Ambilight v  Home Assistant?\n\n**Gostitelj:** {host}\n**Vrata:** {port}\n**ID**: {id}",
+                "description": "Želite dodati ta HyperHDR Ambilight v  Home Assistant?\n\n**Gostitelj:** {host}\n**Vrata:** {port}\n**ID**: {id}",
                 "title": "Potrdi dodajanje storitve HyperHDR Ambilight"
             },
             "create_token": {
-                "description": "Izberite **Posreduj*, \u010de \u017eelite zahtevati nov overitveni \u017eeton. Preusmerjeni boste na uporabni\u0161ki vmesnik HyperHDR, da potrdite zahtevek. Prepri\u010dajte se, da je prikazani id \"{auth_id}\"",
-                "title": "Samodejno ustvari nov overitveni \u017eeton"
+                "description": "Izberite **Posreduj*, če želite zahtevati nov overitveni žeton. Preusmerjeni boste na uporabniški vmesnik HyperHDR, da potrdite zahtevek. Prepričajte se, da je prikazani id \"{auth_id}\"",
+                "title": "Samodejno ustvari nov overitveni žeton"
             },
             "create_token_external": {
-                "title": "Sprejmi nov \u017eeton v uporabni\u0161kem vmesniku HyperHDR"
+                "title": "Sprejmi nov žeton v uporabniškem vmesniku HyperHDR"
             },
             "user": {
                 "data": {
@@ -45,7 +46,8 @@
         "step": {
             "init": {
                 "data": {
-                    "priority": "Prednostna raba HyperHDRa za barve in u\u010dinke"
+                    "effect_show_list": "HyperHDR effects to show",
+                    "priority": "Prednostna raba HyperHDRa za barve in učinke"
                 }
             }
         }
@@ -53,36 +55,78 @@
     "entity": {
         "switch": {
             "all": {
-                "name": "Component All"
+                "name": "Vse komponente",
+                "icon": "mdi:power"
             },
             "smoothing": {
-                "name": "Component Smoothing"
+                "name": "Komponenta glajenja",
+                "icon": "mdi:blur"
             },
             "blackbar_detection": {
-                "name": "Component Blackbar Detection"
+                "name": "Komponenta zaznavanja črnih pasov",
+                "icon": "mdi:crop-free"
             },
             "forwarder": {
-                "name": "Component Forwarder"
+                "name": "Komponenta posredovanja",
+                "icon": "mdi:send"
             },
             "boblight_server": {
-                "name": "Component Boblight Server"
+                "name": "Komponenta strežnika Boblight",
+                "icon": "mdi:server"
             },
             "platform_capture": {
-                "name": "Component Platform Capture"
+                "name": "Komponenta zajema platforme",
+                "icon": "mdi:video-input-antenna"
             },
             "led_device": {
-                "name": "Component LED Device"
+                "name": "Komponenta LED naprave",
+                "icon": "mdi:lightbulb-multiple"
             },
             "usb_capture": {
-                "name": "Component USB Capture"
+                "name": "Komponenta USB zajema",
+                "icon": "mdi:usb"
             },
             "hdr_tone_mapping": {
-                "name": "Component HDR Tone Mapping"
+                "name": "Komponenta preslikave tona HDR",
+                "icon": "mdi:contrast-box"
+            }
+        },
+        "number": {
+            "smoothing_time": {
+                "name": "Čas glajenja"
+            },
+            "smoothing_decay": {
+                "name": "Upad glajenja"
+            },
+            "smoothing_update_freq": {
+                "name": "Frekvenca posodobitve glajenja"
+            },
+            "hdr_tone_mapping": {
+                "name": "Preslikava tona HDR"
+            }
+        },
+        "select": {
+            "smoothing_type": {
+                "name": "Vrsta glajenja"
+            },
+            "color_engine": {
+                "name": "Barvni pogon"
             }
         },
         "sensor": {
             "visible_priority": {
                 "name": "Visible Priority"
+            },
+            "average_color": {
+                "name": "Povprečna barva"
+            }
+        },
+        "light": {
+            "hyperhdr_light": {
+                "name": "Luč"
+            },
+            "hyperhdr_priority_light": {
+                "name": "Prednostna luč"
             }
         }
     }

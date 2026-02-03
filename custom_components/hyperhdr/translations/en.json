@@ -18,7 +18,8 @@
             "auth": {
                 "data": {
                     "create_token": "Automatically create new token",
-                    "token": "Or provide pre-existing token"
+                    "token": "Or provide pre-existing token",
+                    "password": "Password (if required)"
                 },
                 "description": "Configure authorization to your HyperHDR Ambilight server"
             },
@@ -54,36 +55,78 @@
     "entity": {
         "switch": {
             "all": {
-                "name": "Component All"
+                "name": "Component All",
+                "icon": "mdi:power"
             },
             "smoothing": {
-                "name": "Component Smoothing"
+                "name": "Component Smoothing",
+                "icon": "mdi:blur"
             },
             "blackbar_detection": {
-                "name": "Component Blackbar Detection"
+                "name": "Component Blackbar Detection",
+                "icon": "mdi:crop-free"
             },
             "forwarder": {
-                "name": "Component Forwarder"
+                "name": "Component Forwarder",
+                "icon": "mdi:send"
             },
             "boblight_server": {
-                "name": "Component Boblight Server"
+                "name": "Component Boblight Server",
+                "icon": "mdi:server"
             },
             "platform_capture": {
-                "name": "Component Platform Capture"
+                "name": "Component Platform Capture",
+                "icon": "mdi:video-input-antenna"
             },
             "led_device": {
-                "name": "Component LED Device"
+                "name": "Component LED Device",
+                "icon": "mdi:lightbulb-multiple"
             },
             "usb_capture": {
-                "name": "Component USB Capture"
+                "name": "Component USB Capture",
+                "icon": "mdi:usb"
             },
             "hdr_tone_mapping": {
-                "name": "Component HDR Tone Mapping"
+                "name": "Component HDR Tone Mapping",
+                "icon": "mdi:contrast-box"
+            }
+        },
+        "number": {
+            "smoothing_time": {
+                "name": "Smoothing Time"
+            },
+            "smoothing_decay": {
+                "name": "Smoothing Decay"
+            },
+            "smoothing_update_freq": {
+                "name": "Smoothing Update Frequency"
+            },
+            "hdr_tone_mapping": {
+                "name": "HDR Tone Mapping"
+            }
+        },
+        "select": {
+            "smoothing_type": {
+                "name": "Smoothing Type"
+            },
+            "color_engine": {
+                "name": "Color Engine"
             }
         },
         "sensor": {
             "visible_priority": {
                 "name": "Visible Priority"
+            },
+            "average_color": {
+                "name": "Average Color"
+            }
+        },
+        "light": {
+            "hyperhdr_light": {
+                "name": "Light"
+            },
+            "hyperhdr_priority_light": {
+                "name": "Priority Light"
             }
         }
     }

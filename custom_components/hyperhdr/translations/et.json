@@ -2,23 +2,24 @@
     "config": {
         "abort": {
             "already_configured": "Teenus on juba seadistatud",
-            "already_in_progress": "Seadistamine on juba k\u00e4imas",
-            "auth_new_token_not_granted_error": "\u00c4sja loodud juurdep\u00e4\u00e4sut\u00f5end ei ole HyperHDRi oma",
-            "auth_new_token_not_work_error": "Loodud juurdep\u00e4\u00e4sut\u00f5endiga autentimine nurjus",
+            "already_in_progress": "Seadistamine on juba käimas",
+            "auth_new_token_not_granted_error": "Äsja loodud juurdepääsutõend ei ole HyperHDRi oma",
+            "auth_new_token_not_work_error": "Loodud juurdepääsutõendiga autentimine nurjus",
             "auth_required_error": "Autoriseerimise vajalikkuse tuvastamine nurjus",
-            "cannot_connect": "\u00dchendamine nurjus",
+            "cannot_connect": "Ühendamine nurjus",
             "no_id": "HyperHDR Ambilighti eksemplar ei teatanud oma ID-d",
-            "reauth_successful": "Taastuvastamine \u00f5nnestus"
+            "reauth_successful": "Taastuvastamine õnnestus"
         },
         "error": {
-            "cannot_connect": "\u00dchendamine nurjus",
-            "invalid_access_token": "Vigane juurdep\u00e4\u00e4sut\u00f5end"
+            "cannot_connect": "Ühendamine nurjus",
+            "invalid_access_token": "Vigane juurdepääsutõend"
         },
         "step": {
             "auth": {
                 "data": {
-                    "create_token": "Loo automaatselt uus juurdep\u00e4\u00e4sut\u00f5end",
-                    "token": "V\u00f5i kasuta juba olemasolevat juurdep\u00e4\u00e4sut\u00f5endit"
+                    "create_token": "Loo automaatselt uus juurdepääsutõend",
+                    "token": "Või kasuta juba olemasolevat juurdepääsutõendit",
+                    "password": "Parool (vajadusel)"
                 },
                 "description": "Seadista oma HyperHDR Ambilighti serveri tuvastamine"
             },
@@ -27,11 +28,11 @@
                 "title": "Kinnita HyperHDR Ambilight teenuse lisamine"
             },
             "create_token": {
-                "description": "Uue juurdep\u00e4\u00e4sut\u00f5endi taotlemiseks vali allpool ** Esita **. Taotluse kinnitamiseks suunatakse HyperHDRi kasutajaliidesesse. Palun kontrolli kas kuvatud ID on \" {auth_id} \"",
-                "title": "Loo automaatselt uus juurdep\u00e4\u00e4sut\u00f5end"
+                "description": "Uue juurdepääsutõendi taotlemiseks vali allpool ** Esita **. Taotluse kinnitamiseks suunatakse HyperHDRi kasutajaliidesesse. Palun kontrolli kas kuvatud ID on \" {auth_id} \"",
+                "title": "Loo automaatselt uus juurdepääsutõend"
             },
             "create_token_external": {
-                "title": "N\u00f5ustu uue juurdep\u00e4\u00e4sut\u00f5endiga HyperHDR UI-s"
+                "title": "Nõustu uue juurdepääsutõendiga HyperHDR UI-s"
             },
             "user": {
                 "data": {
@@ -46,7 +47,7 @@
             "init": {
                 "data": {
                     "effect_show_list": "Kuvatavad HyperHDRi efektid",
-                    "priority": "V\u00e4rvide ja efektide puhul on kasutatavad HyperHDRi eelistused"
+                    "priority": "Värvide ja efektide puhul on kasutatavad HyperHDRi eelistused"
                 }
             }
         }
@@ -54,36 +55,78 @@
     "entity": {
         "switch": {
             "all": {
-                "name": "Component All"
+                "name": "Kõik komponendid",
+                "icon": "mdi:power"
             },
             "smoothing": {
-                "name": "Component Smoothing"
+                "name": "Silumise komponent",
+                "icon": "mdi:blur"
             },
             "blackbar_detection": {
-                "name": "Component Blackbar Detection"
+                "name": "Mustade ribade tuvastuse komponent",
+                "icon": "mdi:crop-free"
             },
             "forwarder": {
-                "name": "Component Forwarder"
+                "name": "Edastamise komponent",
+                "icon": "mdi:send"
             },
             "boblight_server": {
-                "name": "Component Boblight Server"
+                "name": "Boblight serveri komponent",
+                "icon": "mdi:server"
             },
             "platform_capture": {
-                "name": "Component Platform Capture"
+                "name": "Platvormi jäädvustamise komponent",
+                "icon": "mdi:video-input-antenna"
             },
             "led_device": {
-                "name": "Component LED Device"
+                "name": "LED-seadme komponent",
+                "icon": "mdi:lightbulb-multiple"
             },
             "usb_capture": {
-                "name": "Component USB Capture"
+                "name": "USB-jäädvustuse komponent",
+                "icon": "mdi:usb"
             },
             "hdr_tone_mapping": {
-                "name": "Component HDR Tone Mapping"
+                "name": "HDR toonikaardistuse komponent",
+                "icon": "mdi:contrast-box"
+            }
+        },
+        "number": {
+            "smoothing_time": {
+                "name": "Silumise aeg"
+            },
+            "smoothing_decay": {
+                "name": "Silumise hääbumine"
+            },
+            "smoothing_update_freq": {
+                "name": "Silumise uuendussagedus"
+            },
+            "hdr_tone_mapping": {
+                "name": "HDR toonikaardistus"
+            }
+        },
+        "select": {
+            "smoothing_type": {
+                "name": "Silumise tüüp"
+            },
+            "color_engine": {
+                "name": "Värvimootor"
             }
         },
         "sensor": {
             "visible_priority": {
                 "name": "Visible Priority"
+            },
+            "average_color": {
+                "name": "Keskmine värv"
+            }
+        },
+        "light": {
+            "hyperhdr_light": {
+                "name": "Valgus"
+            },
+            "hyperhdr_priority_light": {
+                "name": "Prioriteedi valgus"
             }
         }
     }

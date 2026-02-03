@@ -1,41 +1,42 @@
 {
     "config": {
         "abort": {
-            "already_configured": "Le service est d\u00e9ja configur\u00e9 ",
-            "already_in_progress": "La configuration est d\u00e9j\u00e0 en cours",
-            "auth_new_token_not_granted_error": "Le jeton nouvellement cr\u00e9\u00e9 n'a pas \u00e9t\u00e9 approuv\u00e9 sur l'interface utilisateur HyperHDR",
-            "auth_new_token_not_work_error": "\u00c9chec de l'authentification \u00e0 l'aide du jeton nouvellement cr\u00e9\u00e9",
-            "auth_required_error": "Impossible de d\u00e9terminer si une autorisation est requise",
+            "already_configured": "Le service est déja configuré ",
+            "already_in_progress": "La configuration est déjà en cours",
+            "auth_new_token_not_granted_error": "Le jeton nouvellement créé n'a pas été approuvé sur l'interface utilisateur HyperHDR",
+            "auth_new_token_not_work_error": "Échec de l'authentification à l'aide du jeton nouvellement créé",
+            "auth_required_error": "Impossible de déterminer si une autorisation est requise",
             "cannot_connect": "Echec de connection",
-            "no_id": "L'instance HyperHDR Ambilight n'a pas signal\u00e9 son identifiant",
-            "reauth_successful": "La r\u00e9-authentification a r\u00e9ussi"
+            "no_id": "L'instance HyperHDR Ambilight n'a pas signalé son identifiant",
+            "reauth_successful": "La ré-authentification a réussi"
         },
         "error": {
             "cannot_connect": "Echec de la connexion ",
-            "invalid_access_token": "jeton d'acc\u00e8s Invalide"
+            "invalid_access_token": "jeton d'accès Invalide"
         },
         "step": {
             "auth": {
                 "data": {
-                    "create_token": "Cr\u00e9er automatiquement un nouveau jeton",
-                    "token": "Ou fournir un jeton pr\u00e9existant"
+                    "create_token": "Créer automatiquement un nouveau jeton",
+                    "token": "Ou fournir un jeton préexistant",
+                    "password": "Mot de passe (si nécessaire)"
                 },
                 "description": "Configurer l'autorisation sur votre serveur HyperHDR Ambilight"
             },
             "confirm": {
-                "description": "Voulez-vous ajouter cet HyperHDR Ambilight \u00e0 Home Assistant? \n\n ** H\u00f4te: ** {host}\n ** Port: ** {port}\n ** ID **: {id}",
+                "description": "Voulez-vous ajouter cet HyperHDR Ambilight à Home Assistant? \n\n ** Hôte: ** {host}\n ** Port: ** {port}\n ** ID **: {id}",
                 "title": "Confirmer l'ajout du service HyperHDR Ambilight"
             },
             "create_token": {
-                "description": "Choisissez ** Soumettre ** ci-dessous pour demander un nouveau jeton d'authentification. Vous serez redirig\u00e9 vers l'interface utilisateur HyperHDR pour approuver la demande. Veuillez v\u00e9rifier que l'identifiant affich\u00e9 est \" {auth_id} \"",
-                "title": "Cr\u00e9er automatiquement un nouveau jeton d'authentification"
+                "description": "Choisissez ** Soumettre ** ci-dessous pour demander un nouveau jeton d'authentification. Vous serez redirigé vers l'interface utilisateur HyperHDR pour approuver la demande. Veuillez vérifier que l'identifiant affiché est \" {auth_id} \"",
+                "title": "Créer automatiquement un nouveau jeton d'authentification"
             },
             "create_token_external": {
                 "title": "Accepter un nouveau jeton dans l'interface utilisateur HyperHDR"
             },
             "user": {
                 "data": {
-                    "host": "H\u00f4te",
+                    "host": "Hôte",
                     "port": "Port"
                 }
             }
@@ -45,8 +46,8 @@
         "step": {
             "init": {
                 "data": {
-                    "effect_show_list": "Effets HyperHDR \u00e0 montrer",
-                    "priority": "Priorit\u00e9 HyperHDR \u00e0 utiliser pour les couleurs et les effets"
+                    "effect_show_list": "Effets HyperHDR à montrer",
+                    "priority": "Priorité HyperHDR à utiliser pour les couleurs et les effets"
                 }
             }
         }
@@ -54,36 +55,78 @@
     "entity": {
         "switch": {
             "all": {
-                "name": "Component All"
+                "name": "Composant global",
+                "icon": "mdi:power"
             },
             "smoothing": {
-                "name": "Component Smoothing"
+                "name": "Composant lissage",
+                "icon": "mdi:blur"
             },
             "blackbar_detection": {
-                "name": "Component Blackbar Detection"
+                "name": "Composant détection des bandes noires",
+                "icon": "mdi:crop-free"
             },
             "forwarder": {
-                "name": "Component Forwarder"
+                "name": "Composant de transfert",
+                "icon": "mdi:send"
             },
             "boblight_server": {
-                "name": "Component Boblight Server"
+                "name": "Composant serveur Boblight",
+                "icon": "mdi:server"
             },
             "platform_capture": {
-                "name": "Component Platform Capture"
+                "name": "Composant capture de plateforme",
+                "icon": "mdi:video-input-antenna"
             },
             "led_device": {
-                "name": "Component LED Device"
+                "name": "Composant appareil LED",
+                "icon": "mdi:lightbulb-multiple"
             },
             "usb_capture": {
-                "name": "Component USB Capture"
+                "name": "Composant capture USB",
+                "icon": "mdi:usb"
             },
             "hdr_tone_mapping": {
-                "name": "Component HDR Tone Mapping"
+                "name": "Composant mappage de ton HDR",
+                "icon": "mdi:contrast-box"
+            }
+        },
+        "number": {
+            "smoothing_time": {
+                "name": "Temps de lissage"
+            },
+            "smoothing_decay": {
+                "name": "Décroissance du lissage"
+            },
+            "smoothing_update_freq": {
+                "name": "Fréquence de mise à jour du lissage"
+            },
+            "hdr_tone_mapping": {
+                "name": "Mappage de ton HDR"
+            }
+        },
+        "select": {
+            "smoothing_type": {
+                "name": "Type de lissage"
+            },
+            "color_engine": {
+                "name": "Moteur de couleur"
             }
         },
         "sensor": {
             "visible_priority": {
                 "name": "Visible Priority"
+            },
+            "average_color": {
+                "name": "Couleur moyenne"
+            }
+        },
+        "light": {
+            "hyperhdr_light": {
+                "name": "Lumière"
+            },
+            "hyperhdr_priority_light": {
+                "name": "Lumière prioritaire"
             }
         }
     }

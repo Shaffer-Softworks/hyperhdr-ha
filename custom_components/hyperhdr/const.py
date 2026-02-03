@@ -9,6 +9,7 @@ CONF_PRIORITY = "priority"
 CONF_ROOT_CLIENT = "ROOT_CLIENT"
 CONF_EFFECT_HIDE_LIST = "effect_hide_list"
 CONF_EFFECT_SHOW_LIST = "effect_show_list"
+CONF_PASSWORD = "password"
 
 DEFAULT_NAME = "HyperHDR"
 DEFAULT_ORIGIN = "Home Assistant"

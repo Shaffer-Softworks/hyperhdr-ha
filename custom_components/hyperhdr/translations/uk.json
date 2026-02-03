@@ -1,42 +1,43 @@
 {
     "config": {
         "abort": {
-            "already_configured": "\u0426\u044f \u0441\u043b\u0443\u0436\u0431\u0430 \u0432\u0436\u0435 \u0434\u043e\u0434\u0430\u043d\u0430 \u0432 Home Assistant.",
-            "already_in_progress": "\u041f\u0440\u043e\u0446\u0435\u0441 \u043d\u0430\u043b\u0430\u0448\u0442\u0443\u0432\u0430\u043d\u043d\u044f \u0432\u0436\u0435 \u0442\u0440\u0438\u0432\u0430\u0454.",
-            "auth_new_token_not_granted_error": "\u0421\u0442\u0432\u043e\u0440\u0435\u043d\u0438\u0439 \u0442\u043e\u043a\u0435\u043d \u043d\u0435 \u0431\u0443\u0432 \u0441\u0445\u0432\u0430\u043b\u0435\u043d\u0438\u0439 \u0432 \u0456\u043d\u0442\u0435\u0440\u0444\u0435\u0439\u0441\u0456 HyperHDR.",
-            "auth_new_token_not_work_error": "\u041d\u0435\u043c\u043e\u0436\u043b\u0438\u0432\u043e \u043f\u0440\u043e\u0439\u0442\u0438 \u0430\u0443\u0442\u0435\u043d\u0442\u0438\u0444\u0456\u043a\u0430\u0446\u0456\u044e \u0437 \u0432\u0438\u043a\u043e\u0440\u0438\u0441\u0442\u0430\u043d\u043d\u044f\u043c \u0441\u0442\u0432\u043e\u0440\u0435\u043d\u043e\u0433\u043e \u0442\u043e\u043a\u0435\u043d\u0430.",
-            "auth_required_error": "\u041d\u0435 \u0432\u0434\u0430\u043b\u043e\u0441\u044f \u0432\u0438\u0437\u043d\u0430\u0447\u0438\u0442\u0438, \u0447\u0438 \u043f\u043e\u0442\u0440\u0456\u0431\u043d\u0430 \u0430\u0432\u0442\u043e\u0440\u0438\u0437\u0430\u0446\u0456\u044f.",
-            "cannot_connect": "\u041d\u0435 \u0432\u0434\u0430\u043b\u043e\u0441\u044f \u043f\u0456\u0434'\u0454\u0434\u043d\u0430\u0442\u0438\u0441\u044f",
-            "no_id": "HyperHDR Ambilight \u043d\u0435 \u043d\u0430\u0434\u0430\u0432 \u0441\u0432\u0456\u0439 \u0456\u0434\u0435\u043d\u0442\u0438\u0444\u0456\u043a\u0430\u0442\u043e\u0440.",
-            "reauth_successful": "\u041f\u043e\u0432\u0442\u043e\u0440\u043d\u0430 \u0430\u0432\u0442\u0435\u043d\u0442\u0438\u0444\u0456\u043a\u0430\u0446\u0456\u044f \u043f\u0440\u043e\u0439\u0448\u043b\u0430 \u0443\u0441\u043f\u0456\u0448\u043d\u043e"
+            "already_configured": "Ця служба вже додана в Home Assistant.",
+            "already_in_progress": "Процес налаштування вже триває.",
+            "auth_new_token_not_granted_error": "Створений токен не був схвалений в інтерфейсі HyperHDR.",
+            "auth_new_token_not_work_error": "Неможливо пройти аутентифікацію з використанням створеного токена.",
+            "auth_required_error": "Не вдалося визначити, чи потрібна авторизація.",
+            "cannot_connect": "Не вдалося під'єднатися",
+            "no_id": "HyperHDR Ambilight не надав свій ідентифікатор.",
+            "reauth_successful": "Повторна автентифікація пройшла успішно"
         },
         "error": {
-            "cannot_connect": "\u041d\u0435 \u0432\u0434\u0430\u043b\u043e\u0441\u044f \u043f\u0456\u0434'\u0454\u0434\u043d\u0430\u0442\u0438\u0441\u044f",
-            "invalid_access_token": "\u041d\u0435\u0432\u0456\u0440\u043d\u0438\u0439 \u0442\u043e\u043a\u0435\u043d \u0434\u043e\u0441\u0442\u0443\u043f\u0443."
+            "cannot_connect": "Не вдалося під'єднатися",
+            "invalid_access_token": "Невірний токен доступу."
         },
         "step": {
             "auth": {
                 "data": {
-                    "create_token": "\u0410\u0432\u0442\u043e\u043c\u0430\u0442\u0438\u0447\u043d\u043e \u0441\u0442\u0432\u043e\u0440\u0438\u0442\u0438 \u043d\u043e\u0432\u0438\u0439 \u0442\u043e\u043a\u0435\u043d",
-                    "token": "\u0410\u0431\u043e \u043d\u0430\u0434\u0430\u0442\u0438 \u043d\u0430\u044f\u0432\u043d\u0438\u0439 \u0442\u043e\u043a\u0435\u043d"
+                    "create_token": "Автоматично створити новий токен",
+                    "token": "Або надати наявний токен",
+                    "password": "Пароль (якщо потрібно)"
                 },
-                "description": "\u0410\u0432\u0442\u043e\u0440\u0438\u0437\u0430\u0446\u0456\u044f \u043d\u0430 \u0441\u0435\u0440\u0432\u0435\u0440\u0456 HyperHDR Ambilight."
+                "description": "Авторизація на сервері HyperHDR Ambilight."
             },
             "confirm": {
-                "description": "\u0412\u0438 \u0432\u043f\u0435\u0432\u043d\u0435\u043d\u0456, \u0449\u043e \u0445\u043e\u0447\u0435\u0442\u0435 \u0434\u043e\u0434\u0430\u0442\u0438 HyperHDR Ambilight? \n\n ** \u0425\u043e\u0441\u0442: ** {host}\n ** \u041f\u043e\u0440\u0442: ** {port}\n ** ID **: {id}",
-                "title": "\u041f\u0456\u0434\u0442\u0432\u0435\u0440\u0434\u0456\u0442\u044c \u0434\u043e\u0434\u0430\u0432\u0430\u043d\u043d\u044f \u0441\u043b\u0443\u0436\u0431\u0438 HyperHDR Ambilight"
+                "description": "Ви впевнені, що хочете додати HyperHDR Ambilight? \n\n ** Хост: ** {host}\n ** Порт: ** {port}\n ** ID **: {id}",
+                "title": "Підтвердіть додавання служби HyperHDR Ambilight"
             },
             "create_token": {
-                "description": "\u041d\u0430\u0442\u0438\u0441\u043d\u0456\u0442\u044c ** \u041f\u0456\u0434\u0442\u0432\u0435\u0440\u0434\u0438\u0442\u0438 ** \u043d\u0438\u0436\u0447\u0435, \u0449\u043e\u0431 \u043e\u0442\u0440\u0438\u043c\u0430\u0442\u0438 \u043d\u043e\u0432\u0438\u0439 \u0442\u043e\u043a\u0435\u043d \u0430\u0443\u0442\u0435\u043d\u0442\u0438\u0444\u0456\u043a\u0430\u0446\u0456\u0457. \u0412\u0438 \u0431\u0443\u0434\u0435\u0442\u0435 \u043f\u0435\u0440\u0435\u043d\u0430\u043f\u0440\u0430\u0432\u043b\u0435\u043d\u0456 \u0432 \u0456\u043d\u0442\u0435\u0440\u0444\u0435\u0439\u0441 \u043a\u043e\u0440\u0438\u0441\u0442\u0443\u0432\u0430\u0447\u0430 HyperHDR \u0434\u043b\u044f \u043f\u0456\u0434\u0442\u0432\u0435\u0440\u0434\u0436\u0435\u043d\u043d\u044f \u0437\u0430\u043f\u0438\u0442\u0443. \u041f\u0435\u0440\u0435\u043a\u043e\u043d\u0430\u0439\u0442\u0435\u0441\u044f, \u0449\u043e \u043f\u043e\u043a\u0430\u0437\u0430\u043d\u0438\u0439 \u0456\u0434\u0435\u043d\u0442\u0438\u0444\u0456\u043a\u0430\u0442\u043e\u0440 - \" {auth_id} \"",
-                "title": "\u0410\u0432\u0442\u043e\u043c\u0430\u0442\u0438\u0447\u043d\u043e \u0441\u0442\u0432\u043e\u0440\u0438\u0442\u0438 \u043d\u043e\u0432\u0438\u0439 \u0442\u043e\u043a\u0435\u043d \u0430\u0443\u0442\u0435\u043d\u0442\u0438\u0444\u0456\u043a\u0430\u0446\u0456\u0457"
+                "description": "Натисніть ** Підтвердити ** нижче, щоб отримати новий токен аутентифікації. Ви будете перенаправлені в інтерфейс користувача HyperHDR для підтвердження запиту. Переконайтеся, що показаний ідентифікатор - \" {auth_id} \"",
+                "title": "Автоматично створити новий токен аутентифікації"
             },
             "create_token_external": {
-                "title": "\u041f\u0440\u0438\u0439\u043d\u044f\u0442\u0438 \u043d\u043e\u0432\u0438\u0439 \u0442\u043e\u043a\u0435\u043d \u0432 \u0456\u043d\u0442\u0435\u0440\u0444\u0435\u0439\u0441\u0456 HyperHDR"
+                "title": "Прийняти новий токен в інтерфейсі HyperHDR"
             },
             "user": {
                 "data": {
-                    "host": "\u0425\u043e\u0441\u0442",
-                    "port": "\u041f\u043e\u0440\u0442"
+                    "host": "Хост",
+                    "port": "Порт"
                 }
             }
         }
@@ -45,7 +46,8 @@
         "step": {
             "init": {
                 "data": {
-                    "priority": "\u041f\u0440\u0456\u043e\u0440\u0438\u0442\u0435\u0442 HyperHDR \u0434\u043b\u044f \u043a\u043e\u043b\u044c\u043e\u0440\u0456\u0432 \u0456 \u0435\u0444\u0435\u043a\u0442\u0456\u0432"
+                    "effect_show_list": "HyperHDR effects to show",
+                    "priority": "Пріоритет HyperHDR для кольорів і ефектів"
                 }
             }
         }
@@ -53,36 +55,78 @@
     "entity": {
         "switch": {
             "all": {
-                "name": "Component All"
+                "name": "Усі компоненти",
+                "icon": "mdi:power"
             },
             "smoothing": {
-                "name": "Component Smoothing"
+                "name": "Компонент згладжування",
+                "icon": "mdi:blur"
             },
             "blackbar_detection": {
-                "name": "Component Blackbar Detection"
+                "name": "Компонент виявлення чорних смуг",
+                "icon": "mdi:crop-free"
             },
             "forwarder": {
-                "name": "Component Forwarder"
+                "name": "Компонент пересилання",
+                "icon": "mdi:send"
             },
             "boblight_server": {
-                "name": "Component Boblight Server"
+                "name": "Компонент сервера Boblight",
+                "icon": "mdi:server"
             },
             "platform_capture": {
-                "name": "Component Platform Capture"
+                "name": "Компонент захоплення платформи",
+                "icon": "mdi:video-input-antenna"
             },
             "led_device": {
-                "name": "Component LED Device"
+                "name": "Компонент LED-пристрою",
+                "icon": "mdi:lightbulb-multiple"
             },
             "usb_capture": {
-                "name": "Component USB Capture"
+                "name": "Компонент захоплення USB",
+                "icon": "mdi:usb"
             },
             "hdr_tone_mapping": {
-                "name": "Component HDR Tone Mapping"
+                "name": "Компонент HDR тон-мапінгу",
+                "icon": "mdi:contrast-box"
+            }
+        },
+        "number": {
+            "smoothing_time": {
+                "name": "Час згладжування"
+            },
+            "smoothing_decay": {
+                "name": "Затухання згладжування"
+            },
+            "smoothing_update_freq": {
+                "name": "Частота оновлення згладжування"
+            },
+            "hdr_tone_mapping": {
+                "name": "HDR тон-мапінг"
+            }
+        },
+        "select": {
+            "smoothing_type": {
+                "name": "Тип згладжування"
+            },
+            "color_engine": {
+                "name": "Движок кольору"
             }
         },
         "sensor": {
             "visible_priority": {
                 "name": "Visible Priority"
+            },
+            "average_color": {
+                "name": "Середній колір"
+            }
+        },
+        "light": {
+            "hyperhdr_light": {
+                "name": "Світло"
+            },
+            "hyperhdr_priority_light": {
+                "name": "Пріоритетне світло"
             }
         }
     }
