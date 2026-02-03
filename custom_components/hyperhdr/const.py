@@ -8,7 +8,6 @@ CONF_ON_UNLOAD = "ON_UNLOAD"
 CONF_PORT_WS = "port_ws"
 CONF_PRIORITY = "priority"
 CONF_ROOT_CLIENT = "ROOT_CLIENT"
-
 CONF_EFFECT_HIDE_LIST = "effect_hide_list"
 CONF_EFFECT_SHOW_LIST = "effect_show_list"
 
@@ -35,6 +34,7 @@ SIGNAL_ENTITY_REMOVE = f"{DOMAIN}_entity_remove_signal.{{}}"
 
 TYPE_HYPERHDR_CAMERA = "hyperhdr_camera"
 TYPE_HYPERHDR_LED_CAMERA = "hyperhdr_led_camera"
+TYPE_HYPERHDR_LED_GRADIENT_CAMERA = "hyperhdr_led_gradient_camera"
 TYPE_HYPERHDR_LIGHT = "hyperhdr_light"
 TYPE_HYPERHDR_PRIORITY_LIGHT = "hyperhdr_priority_light"
 TYPE_HYPERHDR_COMPONENT_SWITCH_BASE = "hyperhdr_component_switch"
