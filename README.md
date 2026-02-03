@@ -147,6 +147,14 @@ The camera entity provides a live video stream when available:
 - Stream behavior depends on active HyperHDR priority source
 - **Performance**: The camera is disabled by default to avoid unnecessary stream overhead
 
+### LED Colors Camera (Binary Stream)
+
+A second camera entity named **"LED Colors"** is also created. This entity uses a dedicated binary WebSocket stream (`ledcolors` command) to visualize the output.
+
+- **Purpose**: Designed for **PicCap** instances where the standard MJPEG stream may not work, or for visualizing the exact LED colors.
+- **Disabled by Default**: Like the standard camera, this entity is **disabled by default**. You must enable it in Home Assistant settings.
+- **Stream Type**: Consumes raw binary data directly from the HyperHDR WebSocket.
+
 <!-- ***
 
 [integration_blueprint]: https://github.com/custom-components/integration_blueprint
