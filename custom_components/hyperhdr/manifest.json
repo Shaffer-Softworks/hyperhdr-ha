@@ -1,7 +1,7 @@
 {
   "domain": "hyperhdr",
   "name": "HyperHDR",
-  "codeowners": ["@mjoshd"],
+  "codeowners": ["@mjoshd", "@sickkick"],
   "config_flow": true,
   "documentation": "https://github.com/mjoshd/hyperhdr-ha#readme",
   "homeassistant": "2024.4.0",
@@ -15,5 +15,5 @@
     }
   ],
   "issue_tracker": "https://github.com/mjoshd/hyperhdr-ha/issues",
-  "version": "0.0.8"
+  "version": "0.1.2"
 }
