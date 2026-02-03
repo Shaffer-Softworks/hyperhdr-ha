@@ -37,8 +37,10 @@ from .const import (
     CONF_CREATE_TOKEN,
     CONF_EFFECT_HIDE_LIST,
     CONF_EFFECT_SHOW_LIST,
+    CONF_PORT_WS,
     CONF_PRIORITY,
     DEFAULT_ORIGIN,
+    DEFAULT_PORT_WS,
     DEFAULT_PRIORITY,
     DOMAIN,
 )
@@ -245,6 +247,7 @@ class HyperHDRConfigFlow(ConfigFlow, domain=DOMAIN):
                 {
                     vol.Required(CONF_HOST): str,
                     vol.Optional(CONF_PORT, default=const.DEFAULT_PORT_JSON): int,
+                    vol.Optional(CONF_PORT_WS, default=DEFAULT_PORT_WS): int,
                 }
             ),
             errors=errors,
