@@ -18,8 +18,7 @@
             "auth": {
                 "data": {
                     "create_token": "Maak automatisch een nieuw token aan",
-                    "token": "Of geef een reeds bestaand token op",
-                    "password": "Wachtwoord (indien nodig)"
+                    "token": "Of geef een reeds bestaand token op"
                 },
                 "description": "Configureer autorisatie voor uw HyperHDR Ambilight-server"
             },

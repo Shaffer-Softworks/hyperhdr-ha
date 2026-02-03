@@ -18,8 +18,7 @@
             "auth": {
                 "data": {
                     "create_token": "Új token automatikus létrehozása",
-                    "token": "Vagy adjon meg már létező tokent",
-                    "password": "Jelszó (ha szükséges)"
+                    "token": "Vagy adjon meg már létező tokent"
                 },
                 "description": "Konfigurálja a jogosultságot a HyperHDR Ambilight kiszolgálóhoz"
             },
