@@ -18,8 +18,7 @@
             "auth": {
                 "data": {
                     "create_token": "自動新創權杖",
-                    "token": "或提供現有權杖",
-                    "password": "密碼（如需要）"
+                    "token": "或提供現有權杖"
                 },
                 "description": "設定 HyperHDR Ambilight 伺服器認證"
             },

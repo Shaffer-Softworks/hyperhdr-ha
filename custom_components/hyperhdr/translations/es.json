@@ -18,8 +18,7 @@
             "auth": {
                 "data": {
                     "create_token": "Crea un nuevo token automáticamente",
-                    "token": "O proporcionar un token preexistente",
-                    "password": "Contraseña (si es necesario)"
+                    "token": "O proporcionar un token preexistente"
                 },
                 "description": "Configurar autorización a tu servidor HyperHDR Ambilight"
             },

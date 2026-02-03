@@ -18,8 +18,7 @@
             "auth": {
                 "data": {
                     "create_token": "Buat token baru secara otomatis",
-                    "token": "Atau berikan token yang sudah ada sebelumnya",
-                    "password": "Kata sandi (jika diperlukan)"
+                    "token": "Atau berikan token yang sudah ada sebelumnya"
                 },
                 "description": "Konfigurasikan otorisasi ke server HyperHDR Ambilight Anda"
             },

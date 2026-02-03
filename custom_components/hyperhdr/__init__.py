@@ -5,6 +5,7 @@ from __future__ import annotations
 import asyncio
 from collections.abc import Callable
 from contextlib import suppress
+import inspect
 import logging
 from typing import Any, cast
 
@@ -97,7 +98,25 @@ def create_hyperhdr_client(
     **kwargs: Any,
 ) -> client.HyperHDRClient:
     """Create a HyperHDR Client."""
-    return client.HyperHDRClient(*args, **kwargs)
+    if kwargs:
+        try:
+            signature = inspect.signature(client.HyperHDRClient)
+        except (TypeError, ValueError):
+            signature = None
+        if signature is not None and not any(
+            param.kind == inspect.Parameter.VAR_KEYWORD
+            for param in signature.parameters.values()
+        ):
+            supported = signature.parameters.keys()
+            kwargs = {key: value for key, value in kwargs.items() if key in supported}
+    try:
+        return client.HyperHDRClient(*args, **kwargs)
+    except TypeError as err:
+        if "unexpected keyword argument 'password'" in str(err):
+            kwargs = dict(kwargs)
+            kwargs.pop("password", None)
+            return client.HyperHDRClient(*args, **kwargs)
+        raise
 
 
 async def async_create_connect_hyperhdr_client(

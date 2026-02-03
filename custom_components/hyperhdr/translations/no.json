@@ -18,8 +18,7 @@
             "auth": {
                 "data": {
                     "create_token": "Opprett nytt token automatisk",
-                    "token": "Eller oppgi eksisterende token",
-                    "password": "Passord (hvis nødvendig)"
+                    "token": "Eller oppgi eksisterende token"
                 },
                 "description": "Konfigurer autorisasjon til HyperHDR Ambilight-serveren"
             },
