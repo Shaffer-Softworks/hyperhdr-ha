@@ -109,14 +109,7 @@ def create_hyperhdr_client(
         ):
             supported = signature.parameters.keys()
             kwargs = {key: value for key, value in kwargs.items() if key in supported}
-    try:
-        return client.HyperHDRClient(*args, **kwargs)
-    except TypeError as err:
-        if "unexpected keyword argument 'password'" in str(err):
-            kwargs = dict(kwargs)
-            kwargs.pop("password", None)
-            return client.HyperHDRClient(*args, **kwargs)
-        raise
+    return client.HyperHDRClient(*args, **kwargs)
 
 
 async def async_create_connect_hyperhdr_client(
@@ -161,10 +154,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     host = entry.data[CONF_HOST]
     port = entry.data[CONF_PORT]
     token = entry.data.get(CONF_TOKEN)
-    password = entry.data.get("password")
 
     hyperhdr_client = await async_create_connect_hyperhdr_client(
-        host, port, token=token, password=password, raw_connection=True
+        host, port, token=token, raw_connection=True
     )
 
     # Client won't connect? => Not ready.
