@@ -109,7 +109,25 @@ def create_hyperhdr_client(
         ):
             supported = signature.parameters.keys()
             kwargs = {key: value for key, value in kwargs.items() if key in supported}
-    return client.HyperHDRClient(*args, **kwargs)
+    while True:
+        try:
+            return client.HyperHDRClient(*args, **kwargs)
+        except TypeError as exc:
+            msg = str(exc)
+            if "unexpected keyword argument" not in msg:
+                raise
+            if "'" not in msg:
+                raise
+            parts = msg.split("'")
+            if len(parts) < 3:
+                raise
+            unexpected = parts[1]
+            if unexpected not in kwargs:
+                raise
+            _LOGGER.debug(
+                "Dropping unsupported HyperHDRClient argument: %s", unexpected
+            )
+            kwargs = {key: value for key, value in kwargs.items() if key != unexpected}
 
 
 async def async_create_connect_hyperhdr_client(
