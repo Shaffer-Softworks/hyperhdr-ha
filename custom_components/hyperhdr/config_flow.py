@@ -33,6 +33,7 @@ import homeassistant.helpers.config_validation as cv
 
 from . import create_hyperhdr_client
 from .const import (
+    CONF_ADMIN_PASSWORD,
     CONF_AUTH_ID,
     CONF_CREATE_TOKEN,
     CONF_EFFECT_HIDE_LIST,
@@ -248,6 +249,7 @@ class HyperHDRConfigFlow(ConfigFlow, domain=DOMAIN):
                     vol.Required(CONF_HOST): str,
                     vol.Optional(CONF_PORT, default=const.DEFAULT_PORT_JSON): int,
                     vol.Optional(CONF_PORT_WS, default=DEFAULT_PORT_WS): int,
+                    vol.Optional(CONF_ADMIN_PASSWORD): str,
                 }
             ),
             errors=errors,
@@ -464,6 +466,15 @@ class HyperHDROptionsFlow(OptionsFlow):
         # so we inverse the meaning prior to storage.
 
         if user_input is not None:
+            # Pull out admin_password and persist it on config_entry.data so
+            # camera entities (which read from data, not options) can access it.
+            admin_password = user_input.pop(CONF_ADMIN_PASSWORD, None)
+            if admin_password is not None:
+                new_data = {**self._config_entry.data, CONF_ADMIN_PASSWORD: admin_password}
+                self.hass.config_entries.async_update_entry(
+                    self._config_entry, data=new_data
+                )
+
             effect_show_list = user_input.pop(CONF_EFFECT_SHOW_LIST)
             user_input[CONF_EFFECT_HIDE_LIST] = sorted(
                 set(effects) - set(effect_show_list)
@@ -489,6 +500,14 @@ class HyperHDROptionsFlow(OptionsFlow):
                         CONF_EFFECT_SHOW_LIST,
                         default=default_effect_show_list,
                     ): cv.multi_select(effects),
+                    vol.Optional(
+                        CONF_ADMIN_PASSWORD,
+                        description={
+                            "suggested_value": self._config_entry.data.get(
+                                CONF_ADMIN_PASSWORD, ""
+                            )
+                        },
+                    ): str,
                 }
             ),
         )

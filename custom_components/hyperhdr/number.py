@@ -331,19 +331,35 @@ class HyperHDRHDRToneMappingNumber(HyperHDRNumber):
         self._attr_unique_id = _number_unique_id(
             server_id, instance_num, TYPE_HYPERHDR_NUMBER_HDR_TONE_MAPPING
         )
-        self._client_callbacks = {
-            f"{hyperhdr_const.KEY_HDR_TONE_MAPPING}-{hyperhdr_const.KEY_UPDATE}": self._update_value
+        # Subscribe to both the legacy hdrToneMappingMode and the new videomodehdr
+        # update events so the entity stays in sync regardless of HyperHDR version.
+        self._client_callbacks: dict[str, Any] = {
+            f"{hyperhdr_const.KEY_HDR_TONE_MAPPING}-{hyperhdr_const.KEY_UPDATE}": self._update_value,
         }
+        _key_videomode_hdr = getattr(hyperhdr_const, "KEY_VIDEOMODE_HDR", None)
+        if _key_videomode_hdr:
+            self._client_callbacks[
+                f"{_key_videomode_hdr}-{hyperhdr_const.KEY_UPDATE}"
+            ] = self._update_value
 
     @callback
     def _update_value(self, _: dict[str, Any] | None = None) -> None:
         """Update HDR tone mapping value."""
-        # Note: The client may provide this via properties; adjust based on actual API
         if hasattr(self._client, "hdr_mode"):
             self._attr_native_value = self._client.hdr_mode
         self.async_write_ha_state()
 
     async def async_set_native_value(self, value: float) -> None:
-        """Set HDR tone mapping value."""
-        # The actual method signature may vary; adjust as needed
-        await self._client.async_set_hdr_tone_mapping(value=value)
+        """Set HDR tone mapping value.
+
+        Uses the new videomodehdr/HDR command path when available, falling back
+        to the legacy hdrToneMappingMode parameter.
+        """
+        if hasattr(hyperhdr_const, "KEY_HDR"):
+            await self._client.async_set_hdr_tone_mapping(
+                **{hyperhdr_const.KEY_HDR: int(value)}
+            )
+        else:
+            await self._client.async_set_hdr_tone_mapping(
+                **{hyperhdr_const.KEY_HDR_TONE_MAPPING_MODE: int(value)}
+            )

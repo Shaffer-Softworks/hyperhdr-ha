@@ -1,5 +1,6 @@
 """Constants for HyperHDR integration."""
 
+CONF_ADMIN_PASSWORD = "admin_password"
 CONF_AUTH_ID = "auth_id"
 CONF_CREATE_TOKEN = "create_token"
 CONF_INSTANCE = "instance"
