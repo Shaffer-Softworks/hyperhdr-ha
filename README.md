@@ -59,7 +59,7 @@ HyperHDR is an open source bias lighting implementation which runs on many platf
 - Download the [latest release](https://github.com/mjoshd/hyperhdr-ha/releases) as a **zip file** then extract it and move the `hyperhdr` folder into the `custom_components` folder in your Home Assistant installation.
 - Restart Home Assistant to load the integration.
 
-**Dependencies**: This integration requires `hyperhdr-py-sickkick==0.1.0`. When installing via HACS, the package is installed automatically. For manual installation, ensure your Home Assistant environment has this package available.
+**Dependencies**: This integration requires `hyperhdr-py-sickkick==0.2.0`. When installing via HACS, the package is installed automatically. For manual installation, ensure your Home Assistant environment has this package available.
 
 ## Configuration
 
@@ -68,7 +68,17 @@ HyperHDR is an open source bias lighting implementation which runs on many platf
 1. Search for `HyperHDR`.
 1. If you cannot find `HyperHDR` in the list then be sure to clear your browser cache and/or perform a hard-refresh of the page.
 1. Enter the IP address of your HyperHDR instance.
+1. *(Optional)* Enter your **Admin Password** if your HyperHDR instance has Local API Authentication enabled.
 1. Click the `Submit` button.
+
+### Admin Password
+
+If your HyperHDR instance has **Local API Authentication** enabled (`adminRequired: true`), the LED camera streams require authentication to receive frames. You can provide the admin password in two places:
+
+- **During initial setup** — enter it in the optional "Admin Password" field on the connection form.
+- **After setup** — go to the integration's **Options** (gear icon) and add or change the admin password there.
+
+When configured, the LED Colors and LED Gradient camera streams will first attempt token-based authentication. If that fails (or no token is available), they automatically fall back to admin password login over the WebSocket connection. If your HyperHDR instance does not require authentication, you can leave this field blank.
 
 ## Advanced Features
 
@@ -147,13 +157,23 @@ The camera entity provides a live video stream when available:
 - Stream behavior depends on active HyperHDR priority source
 - **Performance**: The camera is disabled by default to avoid unnecessary stream overhead
 
-### LED Colors Camera (Binary Stream)
+### LED Colors Camera
 
-A second camera entity named **"LED Colors"** is also created. This entity uses a dedicated binary WebSocket stream (`ledcolors` command) to visualize the output.
+A second camera entity named **"LED Colors"** is also created. This entity streams the HyperHDR imagestream over a dedicated WebSocket connection.
 
-- **Purpose**: Designed for **PicCap** instances where the standard MJPEG stream may not work, or for visualizing the exact LED colors.
+- **Purpose**: Designed for **PicCap** instances where the standard MJPEG stream may not work, or for visualizing the exact LED output.
 - **Disabled by Default**: Like the standard camera, this entity is **disabled by default**. You must enable it in Home Assistant settings.
-- **Stream Type**: Consumes raw binary data directly from the HyperHDR WebSocket.
+- **Stream Type**: Uses `HyperHDRLedColorsStream` from `hyperhdr.stream` with automatic reconnection, token authentication, and admin password fallback.
+- **Authentication**: Supports token-based and admin password authentication for instances with Local API Authentication enabled.
+
+### LED Gradient Camera
+
+A third camera entity named **"LED Gradient"** visualizes the raw per-LED color data as a gradient image.
+
+- **Purpose**: Displays a JPEG image representing the current color of each LED, stretched to a visible height. Useful for monitoring individual LED output in real time.
+- **Disabled by Default**: This entity is **disabled by default**. Enable it in Home Assistant settings if desired.
+- **Stream Type**: Uses `HyperHDRLedGradientStream` from `hyperhdr.stream` with built-in RGB-to-JPEG conversion (via Pillow), automatic reconnection, and the same authentication support as the LED Colors camera.
+- **Image Format**: Raw binary LED data (RGB bytes) is converted into a 1-pixel-tall JPEG image scaled to 20px height for visibility.
 
 <!-- ***
 

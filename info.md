@@ -26,6 +26,15 @@
 
 <!-- {% if installed %} -->
 <!-- {% if installed %} -->
+# Integration v0.1.4
+
+**Stream API & Admin Password Authentication:**
+- Refactored LED Colors and LED Gradient cameras to use the new `HyperHDRLedColorsStream` and `HyperHDRLedGradientStream` classes from `hyperhdr.stream`, replacing inline WebSocket code with the library's streaming layer
+- Added **admin password** as an optional configuration field (available during setup and in the Options flow) for authenticating LED camera streams when HyperHDR has Local API Authentication enabled
+- Stream authentication now tries token auth first, then automatically falls back to admin password login
+- Updated HDR Tone Mapping number entity to support the new `videomodehdr` command path alongside the legacy `hdrToneMappingMode`
+- Bumped `hyperhdr-py-sickkick` dependency to `0.2.0`
+
 # Integration v0.0.9
 
 **Major Features Added:**
