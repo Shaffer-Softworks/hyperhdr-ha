@@ -56,40 +56,31 @@
     "entity": {
         "switch": {
             "all": {
-                "name": "Усі",
-                "icon": "mdi:power"
+                "name": "Усі"
             },
             "smoothing": {
-                "name": "Згладжування",
-                "icon": "mdi:blur"
+                "name": "Згладжування"
             },
             "blackbar_detection": {
-                "name": "Виявлення чорних смуг",
-                "icon": "mdi:crop-free"
+                "name": "Виявлення чорних смуг"
             },
             "forwarder": {
-                "name": "Пересилання",
-                "icon": "mdi:send"
+                "name": "Пересилання"
             },
             "boblight_server": {
-                "name": "Сервер Boblight",
-                "icon": "mdi:server"
+                "name": "Сервер Boblight"
             },
             "platform_capture": {
-                "name": "Захоплення платформи",
-                "icon": "mdi:video-input-antenna"
+                "name": "Захоплення платформи"
             },
             "led_device": {
-                "name": "LED-пристрій",
-                "icon": "mdi:lightbulb-multiple"
+                "name": "LED-пристрій"
             },
             "usb_capture": {
-                "name": "Захоплення USB",
-                "icon": "mdi:usb"
+                "name": "Захоплення USB"
             },
             "hdr_tone_mapping": {
-                "name": "HDR тон-мапінг",
-                "icon": "mdi:contrast-box"
+                "name": "HDR тон-мапінг"
             }
         },
         "number": {

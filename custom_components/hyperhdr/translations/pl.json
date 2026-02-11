@@ -56,40 +56,31 @@
     "entity": {
         "switch": {
             "all": {
-                "name": "Wszystkie",
-                "icon": "mdi:power"
+                "name": "Wszystkie"
             },
             "smoothing": {
-                "name": "Wygładzanie",
-                "icon": "mdi:blur"
+                "name": "Wygładzanie"
             },
             "blackbar_detection": {
-                "name": "Wykrywanie czarnych pasków",
-                "icon": "mdi:crop-free"
+                "name": "Wykrywanie czarnych pasków"
             },
             "forwarder": {
-                "name": "Przekazywanie",
-                "icon": "mdi:send"
+                "name": "Przekazywanie"
             },
             "boblight_server": {
-                "name": "Serwer Boblight",
-                "icon": "mdi:server"
+                "name": "Serwer Boblight"
             },
             "platform_capture": {
-                "name": "Przechwytywanie platformy",
-                "icon": "mdi:video-input-antenna"
+                "name": "Przechwytywanie platformy"
             },
             "led_device": {
-                "name": "Urządzenie LED",
-                "icon": "mdi:lightbulb-multiple"
+                "name": "Urządzenie LED"
             },
             "usb_capture": {
-                "name": "Przechwytywanie USB",
-                "icon": "mdi:usb"
+                "name": "Przechwytywanie USB"
             },
             "hdr_tone_mapping": {
-                "name": "Mapowanie tonów HDR",
-                "icon": "mdi:contrast-box"
+                "name": "Mapowanie tonów HDR"
             }
         },
         "number": {

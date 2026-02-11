@@ -56,40 +56,31 @@
     "entity": {
         "switch": {
             "all": {
-                "name": "الكل",
-                "icon": "mdi:power"
+                "name": "الكل"
             },
             "smoothing": {
-                "name": "التنعيم",
-                "icon": "mdi:blur"
+                "name": "التنعيم"
             },
             "blackbar_detection": {
-                "name": "كشف الأشرطة السوداء",
-                "icon": "mdi:crop-free"
+                "name": "كشف الأشرطة السوداء"
             },
             "forwarder": {
-                "name": "إعادة التوجيه",
-                "icon": "mdi:send"
+                "name": "إعادة التوجيه"
             },
             "boblight_server": {
-                "name": "خادم Boblight",
-                "icon": "mdi:server"
+                "name": "خادم Boblight"
             },
             "platform_capture": {
-                "name": "التقاط المنصة",
-                "icon": "mdi:video-input-antenna"
+                "name": "التقاط المنصة"
             },
             "led_device": {
-                "name": "جهاز LED",
-                "icon": "mdi:lightbulb-multiple"
+                "name": "جهاز LED"
             },
             "usb_capture": {
-                "name": "التقاط USB",
-                "icon": "mdi:usb"
+                "name": "التقاط USB"
             },
             "hdr_tone_mapping": {
-                "name": "تعيين النغمة HDR",
-                "icon": "mdi:contrast-box"
+                "name": "تعيين النغمة HDR"
             }
         },
         "number": {

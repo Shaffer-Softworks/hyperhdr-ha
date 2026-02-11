@@ -56,40 +56,31 @@
     "entity": {
         "switch": {
             "all": {
-                "name": "Kõik",
-                "icon": "mdi:power"
+                "name": "Kõik"
             },
             "smoothing": {
-                "name": "Silumine",
-                "icon": "mdi:blur"
+                "name": "Silumine"
             },
             "blackbar_detection": {
-                "name": "Mustade ribade tuvastus",
-                "icon": "mdi:crop-free"
+                "name": "Mustade ribade tuvastus"
             },
             "forwarder": {
-                "name": "Edastamine",
-                "icon": "mdi:send"
+                "name": "Edastamine"
             },
             "boblight_server": {
-                "name": "Boblight server",
-                "icon": "mdi:server"
+                "name": "Boblight server"
             },
             "platform_capture": {
-                "name": "Platvormi jäädvustamine",
-                "icon": "mdi:video-input-antenna"
+                "name": "Platvormi jäädvustamine"
             },
             "led_device": {
-                "name": "LED-seade",
-                "icon": "mdi:lightbulb-multiple"
+                "name": "LED-seade"
             },
             "usb_capture": {
-                "name": "USB-jäädvustus",
-                "icon": "mdi:usb"
+                "name": "USB-jäädvustus"
             },
             "hdr_tone_mapping": {
-                "name": "HDR toonikaardistus",
-                "icon": "mdi:contrast-box"
+                "name": "HDR toonikaardistus"
             }
         },
         "number": {

@@ -56,40 +56,31 @@
     "entity": {
         "switch": {
             "all": {
-                "name": "전체",
-                "icon": "mdi:power"
+                "name": "전체"
             },
             "smoothing": {
-                "name": "스무딩",
-                "icon": "mdi:blur"
+                "name": "스무딩"
             },
             "blackbar_detection": {
-                "name": "블랙바 감지",
-                "icon": "mdi:crop-free"
+                "name": "블랙바 감지"
             },
             "forwarder": {
-                "name": "포워더",
-                "icon": "mdi:send"
+                "name": "포워더"
             },
             "boblight_server": {
-                "name": "Boblight 서버",
-                "icon": "mdi:server"
+                "name": "Boblight 서버"
             },
             "platform_capture": {
-                "name": "플랫폼 캡처",
-                "icon": "mdi:video-input-antenna"
+                "name": "플랫폼 캡처"
             },
             "led_device": {
-                "name": "LED 장치",
-                "icon": "mdi:lightbulb-multiple"
+                "name": "LED 장치"
             },
             "usb_capture": {
-                "name": "USB 캡처",
-                "icon": "mdi:usb"
+                "name": "USB 캡처"
             },
             "hdr_tone_mapping": {
-                "name": "HDR 톤 매핑",
-                "icon": "mdi:contrast-box"
+                "name": "HDR 톤 매핑"
             }
         },
         "number": {

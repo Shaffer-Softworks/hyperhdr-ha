@@ -56,40 +56,31 @@
     "entity": {
         "switch": {
             "all": {
-                "name": "General",
-                "icon": "mdi:power"
+                "name": "General"
             },
             "smoothing": {
-                "name": "Suavitzat",
-                "icon": "mdi:blur"
+                "name": "Suavitzat"
             },
             "blackbar_detection": {
-                "name": "Detecció de bandes negres",
-                "icon": "mdi:crop-free"
+                "name": "Detecció de bandes negres"
             },
             "forwarder": {
-                "name": "Reenviament",
-                "icon": "mdi:send"
+                "name": "Reenviament"
             },
             "boblight_server": {
-                "name": "Servidor Boblight",
-                "icon": "mdi:server"
+                "name": "Servidor Boblight"
             },
             "platform_capture": {
-                "name": "Captura de plataforma",
-                "icon": "mdi:video-input-antenna"
+                "name": "Captura de plataforma"
             },
             "led_device": {
-                "name": "Dispositiu LED",
-                "icon": "mdi:lightbulb-multiple"
+                "name": "Dispositiu LED"
             },
             "usb_capture": {
-                "name": "Captura USB",
-                "icon": "mdi:usb"
+                "name": "Captura USB"
             },
             "hdr_tone_mapping": {
-                "name": "Mapatge de to HDR",
-                "icon": "mdi:contrast-box"
+                "name": "Mapatge de to HDR"
             }
         },
         "number": {

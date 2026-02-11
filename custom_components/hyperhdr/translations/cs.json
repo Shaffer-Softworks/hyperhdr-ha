@@ -56,40 +56,31 @@
     "entity": {
         "switch": {
             "all": {
-                "name": "Vše",
-                "icon": "mdi:power"
+                "name": "Vše"
             },
             "smoothing": {
-                "name": "Vyhlazování",
-                "icon": "mdi:blur"
+                "name": "Vyhlazování"
             },
             "blackbar_detection": {
-                "name": "Detekce černých pruhů",
-                "icon": "mdi:crop-free"
+                "name": "Detekce černých pruhů"
             },
             "forwarder": {
-                "name": "Přeposílání",
-                "icon": "mdi:send"
+                "name": "Přeposílání"
             },
             "boblight_server": {
-                "name": "Server Boblight",
-                "icon": "mdi:server"
+                "name": "Server Boblight"
             },
             "platform_capture": {
-                "name": "Zachytávání platformy",
-                "icon": "mdi:video-input-antenna"
+                "name": "Zachytávání platformy"
             },
             "led_device": {
-                "name": "LED zařízení",
-                "icon": "mdi:lightbulb-multiple"
+                "name": "LED zařízení"
             },
             "usb_capture": {
-                "name": "Zachytávání USB",
-                "icon": "mdi:usb"
+                "name": "Zachytávání USB"
             },
             "hdr_tone_mapping": {
-                "name": "Mapování tónu HDR",
-                "icon": "mdi:contrast-box"
+                "name": "Mapování tónu HDR"
             }
         },
         "number": {

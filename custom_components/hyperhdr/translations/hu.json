@@ -56,40 +56,31 @@
     "entity": {
         "switch": {
             "all": {
-                "name": "Összes",
-                "icon": "mdi:power"
+                "name": "Összes"
             },
             "smoothing": {
-                "name": "Simítás",
-                "icon": "mdi:blur"
+                "name": "Simítás"
             },
             "blackbar_detection": {
-                "name": "Fekete sáv felismerés",
-                "icon": "mdi:crop-free"
+                "name": "Fekete sáv felismerés"
             },
             "forwarder": {
-                "name": "Továbbítás",
-                "icon": "mdi:send"
+                "name": "Továbbítás"
             },
             "boblight_server": {
-                "name": "Boblight szerver",
-                "icon": "mdi:server"
+                "name": "Boblight szerver"
             },
             "platform_capture": {
-                "name": "Platform rögzítés",
-                "icon": "mdi:video-input-antenna"
+                "name": "Platform rögzítés"
             },
             "led_device": {
-                "name": "LED eszköz",
-                "icon": "mdi:lightbulb-multiple"
+                "name": "LED eszköz"
             },
             "usb_capture": {
-                "name": "USB rögzítés",
-                "icon": "mdi:usb"
+                "name": "USB rögzítés"
             },
             "hdr_tone_mapping": {
-                "name": "HDR tónusleképezés",
-                "icon": "mdi:contrast-box"
+                "name": "HDR tónusleképezés"
             }
         },
         "number": {
