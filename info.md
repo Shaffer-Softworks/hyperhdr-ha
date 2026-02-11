@@ -15,6 +15,8 @@
 
 ## Configuration
 
+HyperHDR instances are automatically discovered via **SSDP**. When found, a notification appears in Integrations — click **Configure** to confirm. You can also set up manually:
+
 1. In Home Assistant navigate to `Configuration` -> `Devices & Services` -> `Integrations`.
 1. Click the `+ Add Integration` button.
 1. Search for `HyperHDR`.

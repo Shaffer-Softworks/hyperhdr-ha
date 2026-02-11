@@ -36,6 +36,7 @@ HyperHDR is an open source bias lighting implementation which runs on many platf
 - **Smoothing Type Selection** *(conditional)*: Choose from multiple smoothing interpolation algorithms — only created when smoothing data is available.
 - **Component Switches**: Enable/disable HyperHDR components (advanced users).
 - **Automatic Entity Cleanup**: Stale entities from removed features (old camera, color engine, unsupported smoothing) are automatically pruned from the entity registry on integration load.
+- **SSDP Auto-Discovery**: HyperHDR instances on your network are automatically discovered via SSDP/UPnP — no manual IP entry required.
 
 ![hyperhdr-logo](https://github.com/mjoshd/hyperhdr-ha/blob/master/hyperhdr-logo.png)
 
@@ -62,6 +63,12 @@ HyperHDR is an open source bias lighting implementation which runs on many platf
 **Dependencies**: This integration requires `hyperhdr-py-sickkick==0.2.0`. When installing via HACS, the package is installed automatically. For manual installation, ensure your Home Assistant environment has this package available.
 
 ## Configuration
+
+### Automatic Discovery (SSDP)
+
+HyperHDR instances on your local network are automatically discovered via **SSDP** (Simple Service Discovery Protocol). When a new instance is found, a notification appears in Home Assistant's Integrations page — just click **Configure** and confirm to set it up. The host, JSON API port, and WebSocket port are all populated automatically from the discovery data.
+
+### Manual Setup
 
 1. In Home Assistant navigate to `Configuration` -> `Devices & Services` -> `Integrations`.
 1. Click the `+ Add Integration` button.
