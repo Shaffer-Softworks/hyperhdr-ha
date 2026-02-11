@@ -36,7 +36,8 @@
             "user": {
                 "data": {
                     "host": "المضيف",
-                    "port": "المنفذ"
+                    "port": "المنفذ",
+                    "port_ws": "منفذ WebSocket (لبث LED)"
                 }
             }
         }
@@ -46,7 +47,8 @@
             "init": {
                 "data": {
                     "effect_show_list": "تأثيرات HyperHDR المعروضة",
-                    "priority": "أولوية HyperHDR المستخدمة للألوان والتأثيرات"
+                    "priority": "أولوية HyperHDR المستخدمة للألوان والتأثيرات",
+                    "port_ws": "منفذ WebSocket (لبث LED)"
                 }
             }
         }
@@ -54,39 +56,39 @@
     "entity": {
         "switch": {
             "all": {
-                "name": "كل المكونات",
+                "name": "الكل",
                 "icon": "mdi:power"
             },
             "smoothing": {
-                "name": "مكون التنعيم",
+                "name": "التنعيم",
                 "icon": "mdi:blur"
             },
             "blackbar_detection": {
-                "name": "مكون كشف الأشرطة السوداء",
+                "name": "كشف الأشرطة السوداء",
                 "icon": "mdi:crop-free"
             },
             "forwarder": {
-                "name": "مكون إعادة التوجيه",
+                "name": "إعادة التوجيه",
                 "icon": "mdi:send"
             },
             "boblight_server": {
-                "name": "مكون خادم Boblight",
+                "name": "خادم Boblight",
                 "icon": "mdi:server"
             },
             "platform_capture": {
-                "name": "مكون التقاط المنصة",
+                "name": "التقاط المنصة",
                 "icon": "mdi:video-input-antenna"
             },
             "led_device": {
-                "name": "مكون جهاز LED",
+                "name": "جهاز LED",
                 "icon": "mdi:lightbulb-multiple"
             },
             "usb_capture": {
-                "name": "مكون التقاط USB",
+                "name": "التقاط USB",
                 "icon": "mdi:usb"
             },
             "hdr_tone_mapping": {
-                "name": "مكون تعيين النغمة HDR",
+                "name": "تعيين النغمة HDR",
                 "icon": "mdi:contrast-box"
             }
         },
@@ -107,9 +109,6 @@
         "select": {
             "smoothing_type": {
                 "name": "نوع التنعيم"
-            },
-            "color_engine": {
-                "name": "محرك الألوان"
             }
         },
         "sensor": {

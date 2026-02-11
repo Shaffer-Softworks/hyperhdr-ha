@@ -1,0 +1,132 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "El servei ja està configurat",
+            "already_in_progress": "El flux de configuració ja està en curs",
+            "auth_new_token_not_granted_error": "El nou token creat no està aprovat a HyperHDR UI",
+            "auth_new_token_not_work_error": "No s'ha pogut autenticar amb el nou token creat",
+            "auth_required_error": "No s'ha pogut determinar si cal autorització",
+            "cannot_connect": "Ha fallat la connexió",
+            "no_id": "La instància d'HyperHDR Ambilight no ha retornat el seu ID",
+            "reauth_successful": "Re-autenticació realitzada correctament"
+        },
+        "error": {
+            "cannot_connect": "Ha fallat la connexió",
+            "invalid_access_token": "Token d'accés no vàlid"
+        },
+        "step": {
+            "auth": {
+                "data": {
+                    "create_token": "Crea un nou token automàticament",
+                    "token": "O proporciona un token ja existent"
+                },
+                "description": "Configura l'autorització amb el teu servidor HyperHDR Ambilight"
+            },
+            "confirm": {
+                "description": "Vols afegir el següent HyperHDR Ambilight a Home Assistant?\n\n**Host:** {host}\n**Port:** {port}\n**ID**: {id}",
+                "title": "Confirma l'addició del servei HyperHDR Ambilight"
+            },
+            "create_token": {
+                "description": "Selecciona **Envia** a continuació per sol·licitar un token d'autenticació nou. Seràs redirigit a la interfície d'usuari d'HyperHDR perquè puguis aprovar la sol·licitud. Verifica que l'identificador que es mostra és \"{auth_id}\"",
+                "title": "Crea un nou token d'autenticació automàticament"
+            },
+            "create_token_external": {
+                "title": "Accepta el nou token a la IU d'HyperHDR"
+            },
+            "user": {
+                "data": {
+                    "host": "Amfitrió",
+                    "port": "Port"
+                }
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "effect_show_list": "Efectes d'HyperHDR a mostrar",
+                    "priority": "Prioritat HyperHDR a utilitzar per als colors i efectes"
+                }
+            }
+        }
+    },
+    "entity": {
+        "switch": {
+            "all": {
+                "name": "Component general",
+                "icon": "mdi:power"
+            },
+            "smoothing": {
+                "name": "Component de suavitzat",
+                "icon": "mdi:blur"
+            },
+            "blackbar_detection": {
+                "name": "Component de detecció de bandes negres",
+                "icon": "mdi:crop-free"
+            },
+            "forwarder": {
+                "name": "Component de reenviament",
+                "icon": "mdi:send"
+            },
+            "boblight_server": {
+                "name": "Component servidor Boblight",
+                "icon": "mdi:server"
+            },
+            "platform_capture": {
+                "name": "Component de captura de plataforma",
+                "icon": "mdi:video-input-antenna"
+            },
+            "led_device": {
+                "name": "Component dispositiu LED",
+                "icon": "mdi:lightbulb-multiple"
+            },
+            "usb_capture": {
+                "name": "Component de captura USB",
+                "icon": "mdi:usb"
+            },
+            "hdr_tone_mapping": {
+                "name": "Component de mapatge de to HDR",
+                "icon": "mdi:contrast-box"
+            }
+        },
+        "number": {
+            "smoothing_time": {
+                "name": "Temps de suavitzat"
+            },
+            "smoothing_decay": {
+                "name": "Decaïment del suavitzat"
+            },
+            "smoothing_update_freq": {
+                "name": "Freqüència d'actualització del suavitzat"
+            },
+            "hdr_tone_mapping": {
+                "name": "Mapatge de to HDR"
+            }
+        },
+        "select": {
+            "smoothing_type": {
+                "name": "Tipus de suavitzat"
+            },
+            "color_engine": {
+                "name": "Motor de color"
+            }
+        },
+        "sensor": {
+            "visible_priority": {
+                "name": "Prioritat visible"
+            },
+            "average_color": {
+                "name": "Color mitjà"
+            }
+        },
+        "light": {
+            "hyperhdr_light": {
+                "name": "Llum"
+            },
+            "hyperhdr_priority_light": {
+                "name": "Llum de prioritat"
+            }
+        }
+    }
+}

@@ -1,0 +1,132 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "서비스가 이미 구성되었습니다",
+            "already_in_progress": "기기 구성이 이미 진행 중입니다",
+            "auth_new_token_not_granted_error": "새로 생성된 토큰이 HyperHDR UI에서 승인되지 않았습니다",
+            "auth_new_token_not_work_error": "새로 생성된 토큰을 사용하여 인증하지 못했습니다",
+            "auth_required_error": "인증이 필요한지 확인하지 못했습니다",
+            "cannot_connect": "연결하지 못했습니다",
+            "no_id": "HyperHDR Amblight 인스턴스가 해당 ID를 보고하지 않았습니다",
+            "reauth_successful": "재인증에 성공했습니다"
+        },
+        "error": {
+            "cannot_connect": "연결하지 못했습니다",
+            "invalid_access_token": "액세스 토큰이 잘못되었습니다"
+        },
+        "step": {
+            "auth": {
+                "data": {
+                    "create_token": "새로운 토큰을 자동으로 생성하기",
+                    "token": "또는 기존 토큰 제공하기"
+                },
+                "description": "HyperHDR Amblight 서버에 대한 권한 구성하기"
+            },
+            "confirm": {
+                "description": "이 HyperHDR Amblight를 Home Assistant에 추가하시겠습니까?\n\n**호스트**: {host}\n**포트**: {port}\n**ID**: {id}",
+                "title": "HyperHDR Amblight 서비스 추가 확인하기"
+            },
+            "create_token": {
+                "description": "아래 **확인**을 선택하여 새로운 인증 토큰을 요청해주세요. 요청을 승인하도록 HyperHDR UI로 리디렉션됩니다. 표시된 ID가 \"{auth_id}\"인지 확인해주세요",
+                "title": "새로운 인증 토큰을 자동으로 생성하기"
+            },
+            "create_token_external": {
+                "title": "HyperHDR UI에서 새로운 토큰 수락하기"
+            },
+            "user": {
+                "data": {
+                    "host": "호스트",
+                    "port": "포트"
+                }
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "effect_show_list": "출력할 HyperHDR 효과",
+                    "priority": "색상 및 효과에 사용할 HyperHDR 우선 순위"
+                }
+            }
+        }
+    },
+    "entity": {
+        "switch": {
+            "all": {
+                "name": "전체 구성요소",
+                "icon": "mdi:power"
+            },
+            "smoothing": {
+                "name": "스무딩 구성요소",
+                "icon": "mdi:blur"
+            },
+            "blackbar_detection": {
+                "name": "블랙바 감지 구성요소",
+                "icon": "mdi:crop-free"
+            },
+            "forwarder": {
+                "name": "포워더 구성요소",
+                "icon": "mdi:send"
+            },
+            "boblight_server": {
+                "name": "Boblight 서버 구성요소",
+                "icon": "mdi:server"
+            },
+            "platform_capture": {
+                "name": "플랫폼 캡처 구성요소",
+                "icon": "mdi:video-input-antenna"
+            },
+            "led_device": {
+                "name": "LED 장치 구성요소",
+                "icon": "mdi:lightbulb-multiple"
+            },
+            "usb_capture": {
+                "name": "USB 캡처 구성요소",
+                "icon": "mdi:usb"
+            },
+            "hdr_tone_mapping": {
+                "name": "HDR 톤 매핑 구성요소",
+                "icon": "mdi:contrast-box"
+            }
+        },
+        "number": {
+            "smoothing_time": {
+                "name": "스무딩 시간"
+            },
+            "smoothing_decay": {
+                "name": "스무딩 감쇠"
+            },
+            "smoothing_update_freq": {
+                "name": "스무딩 업데이트 주기"
+            },
+            "hdr_tone_mapping": {
+                "name": "HDR 톤 매핑"
+            }
+        },
+        "select": {
+            "smoothing_type": {
+                "name": "스무딩 유형"
+            },
+            "color_engine": {
+                "name": "컬러 엔진"
+            }
+        },
+        "sensor": {
+            "visible_priority": {
+                "name": "Visible Priority"
+            },
+            "average_color": {
+                "name": "평균 색상"
+            }
+        },
+        "light": {
+            "hyperhdr_light": {
+                "name": "조명"
+            },
+            "hyperhdr_priority_light": {
+                "name": "우선 조명"
+            }
+        }
+    }
+}

@@ -1,0 +1,132 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "A szolgáltatás már konfigurálva van",
+            "already_in_progress": "A konfiguráció már folyamatban van.",
+            "auth_new_token_not_granted_error": "Az újonnan létrehozott tokent nem hagyták jóvá a HyperHDR felhasználói felületén",
+            "auth_new_token_not_work_error": "Nem sikerült hitelesíteni az újonnan létrehozott token használatával",
+            "auth_required_error": "Nem sikerült meghatározni, hogy szükséges-e engedély",
+            "cannot_connect": "Sikertelen csatlakozás",
+            "no_id": "A HyperHDR Ambilight példány nem szolgáltatja az azonosítóját",
+            "reauth_successful": "Az újrahitelesítés sikeres volt"
+        },
+        "error": {
+            "cannot_connect": "Sikertelen csatlakozás",
+            "invalid_access_token": "Érvénytelen hozzáférési token"
+        },
+        "step": {
+            "auth": {
+                "data": {
+                    "create_token": "Új token automatikus létrehozása",
+                    "token": "Vagy adjon meg már létező tokent"
+                },
+                "description": "Konfigurálja a jogosultságot a HyperHDR Ambilight kiszolgálóhoz"
+            },
+            "confirm": {
+                "description": "Hozzá szeretné adni ezt a HyperHDR Ambilight-ot az Otthoni asszisztenshez? \n\n ** Host: ** {host}\n ** Port: ** {port}\n ** azonosító **: {id}",
+                "title": "Erősítse meg a HyperHDR Ambilight szolgáltatás hozzáadását"
+            },
+            "create_token": {
+                "description": "Az alábbiakban válassza a ** Küldés ** lehetőséget új hitelesítési token kéréséhez. A kérelem jóváhagyásához átirányítunk a HyperHDR felhasználói felületre. Kérjük, ellenőrizze, hogy a megjelenített azonosító \" {auth_id} \"",
+                "title": "Új hitelesítési token automatikus létrehozása"
+            },
+            "create_token_external": {
+                "title": "Új token elfogadása a HyperHDR felhasználói felületen"
+            },
+            "user": {
+                "data": {
+                    "host": "Hoszt",
+                    "port": "Port"
+                }
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "effect_show_list": "Megjelenítendő HyperHDR effektusok",
+                    "priority": "HyperHDR prioritás a színekhez és effektekhez"
+                }
+            }
+        }
+    },
+    "entity": {
+        "switch": {
+            "all": {
+                "name": "Összes komponens",
+                "icon": "mdi:power"
+            },
+            "smoothing": {
+                "name": "Simítás komponens",
+                "icon": "mdi:blur"
+            },
+            "blackbar_detection": {
+                "name": "Fekete sáv felismerő komponens",
+                "icon": "mdi:crop-free"
+            },
+            "forwarder": {
+                "name": "Továbbító komponens",
+                "icon": "mdi:send"
+            },
+            "boblight_server": {
+                "name": "Boblight szerver komponens",
+                "icon": "mdi:server"
+            },
+            "platform_capture": {
+                "name": "Platform rögzítő komponens",
+                "icon": "mdi:video-input-antenna"
+            },
+            "led_device": {
+                "name": "LED eszköz komponens",
+                "icon": "mdi:lightbulb-multiple"
+            },
+            "usb_capture": {
+                "name": "USB rögzítő komponens",
+                "icon": "mdi:usb"
+            },
+            "hdr_tone_mapping": {
+                "name": "HDR tónusleképező komponens",
+                "icon": "mdi:contrast-box"
+            }
+        },
+        "number": {
+            "smoothing_time": {
+                "name": "Simítás ideje"
+            },
+            "smoothing_decay": {
+                "name": "Simítás lecsengése"
+            },
+            "smoothing_update_freq": {
+                "name": "Simítás frissítési gyakorisága"
+            },
+            "hdr_tone_mapping": {
+                "name": "HDR tónusleképezés"
+            }
+        },
+        "select": {
+            "smoothing_type": {
+                "name": "Simítás típusa"
+            },
+            "color_engine": {
+                "name": "Színmotor"
+            }
+        },
+        "sensor": {
+            "visible_priority": {
+                "name": "Visible Priority"
+            },
+            "average_color": {
+                "name": "Átlagos szín"
+            }
+        },
+        "light": {
+            "hyperhdr_light": {
+                "name": "Fény"
+            },
+            "hyperhdr_priority_light": {
+                "name": "Prioritás fény"
+            }
+        }
+    }
+}

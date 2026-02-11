@@ -16,12 +16,12 @@ from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_HOST, CONF_PORT, CONF_TOKEN, Platform
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.exceptions import ConfigEntryAuthFailed, ConfigEntryNotReady
-from homeassistant.helpers import device_registry as dr
+from homeassistant.helpers import device_registry as dr, entity_registry as er
 from homeassistant.helpers.dispatcher import (
     async_dispatcher_connect,
     async_dispatcher_send,
 )
-import voluptuous as vol
+
 
 from .const import (
     CONF_INSTANCE_CLIENTS,
@@ -33,6 +33,12 @@ from .const import (
     HYPERHDR_VERSION_WARN_CUTOFF,
     SIGNAL_INSTANCE_ADD,
     SIGNAL_INSTANCE_REMOVE,
+    TYPE_HYPERHDR_NUMBER_BASE,
+    TYPE_HYPERHDR_NUMBER_SMOOTHING_DECAY,
+    TYPE_HYPERHDR_NUMBER_SMOOTHING_TIME,
+    TYPE_HYPERHDR_NUMBER_SMOOTHING_UPDATE_FREQ,
+    TYPE_HYPERHDR_SELECT_BASE,
+    TYPE_HYPERHDR_SELECT_SMOOTHING_TYPE,
 )
 
 ### HyperHDR v0.0.8
@@ -167,6 +173,76 @@ def listen_for_instance_updates(
     )
 
 
+# Entity unique-id suffixes for features that have been permanently removed.
+# These are cleaned from the entity registry on every load so stale entries
+# never linger in the UI.
+_PERMANENTLY_REMOVED_SUFFIXES = (
+    # Old JSON-API camera removed in v0.1.5.
+    "hyperhdr_camera",
+    # Color Engine select removed in v0.1.5.
+    f"{TYPE_HYPERHDR_SELECT_BASE}_color_engine",
+)
+
+# Smoothing entity suffixes — removed from the registry when the connected
+# HyperHDR server does not expose smoothing data.
+_SMOOTHING_SUFFIXES = (
+    f"{TYPE_HYPERHDR_NUMBER_BASE}_{TYPE_HYPERHDR_NUMBER_SMOOTHING_TIME}",
+    f"{TYPE_HYPERHDR_NUMBER_BASE}_{TYPE_HYPERHDR_NUMBER_SMOOTHING_DECAY}",
+    f"{TYPE_HYPERHDR_NUMBER_BASE}_{TYPE_HYPERHDR_NUMBER_SMOOTHING_UPDATE_FREQ}",
+    f"{TYPE_HYPERHDR_SELECT_BASE}_{TYPE_HYPERHDR_SELECT_SMOOTHING_TYPE}",
+)
+
+
+def _async_cleanup_stale_entities(
+    hass: HomeAssistant, entry: ConfigEntry
+) -> None:
+    """Remove stale entity-registry entries left over from removed features.
+
+    Permanently removed entities (old camera, color engine) are always pruned.
+    Smoothing entities are pruned per-instance when the connected HyperHDR
+    server does not expose smoothing data.
+    """
+    ent_reg = er.async_get(hass)
+    instance_clients = hass.data[DOMAIN][entry.entry_id][CONF_INSTANCE_CLIENTS]
+
+    for entity_entry in er.async_entries_for_config_entry(ent_reg, entry.entry_id):
+        uid = entity_entry.unique_id
+
+        # Always remove permanently deleted features.
+        if any(uid.endswith(f"_{suffix}") for suffix in _PERMANENTLY_REMOVED_SUFFIXES):
+            _LOGGER.debug("Removing stale entity %s (%s)", entity_entry.entity_id, uid)
+            ent_reg.async_remove(entity_entry.entity_id)
+            continue
+
+        # Remove smoothing entities for instances whose server lacks smoothing.
+        if any(uid.endswith(f"_{suffix}") for suffix in _SMOOTHING_SUFFIXES):
+            parts = split_hyperhdr_unique_id(uid)
+            if parts is not None:
+                _, instance_num, _ = parts
+                inst_client = instance_clients.get(instance_num)
+                if inst_client is not None and inst_client.smoothing is None:
+                    _LOGGER.debug(
+                        "Removing unsupported smoothing entity %s (%s)",
+                        entity_entry.entity_id,
+                        uid,
+                    )
+                    ent_reg.async_remove(entity_entry.entity_id)
+
+
+async def async_migrate_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
+    """Migrate a config entry to a newer version.
+
+    Version 1 → 2: No data-schema changes; entity-registry cleanup of removed
+    features (old camera, color engine, smoothing) is handled at load time in
+    async_setup_entry.
+    """
+    _LOGGER.debug("Migrating config entry from version %s", entry.version)
+    # No data transformations needed — just accept the bump.
+    hass.config_entries.async_update_entry(entry, version=2)
+    _LOGGER.debug("Migration to version 2 successful")
+    return True
+
+
 async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     """Set up HyperHDR from a config entry."""
     host = entry.data[CONF_HOST]
@@ -180,19 +256,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     # Client won't connect? => Not ready.
     if not hyperhdr_client:
         raise ConfigEntryNotReady
-    version = await hyperhdr_client.async_sysinfo_version()
-    if version is not None:
-        with suppress(ValueError):
-            if AwesomeVersion(version) < AwesomeVersion(HYPERHDR_VERSION_WARN_CUTOFF):
-                _LOGGER.warning(
-                    (
-                        "Using a HyperHDR server version < %s is not recommended --"
-                        " some features may be unavailable or may not function"
-                        " correctly. Please consider upgrading: %s"
-                    ),
-                    HYPERHDR_VERSION_WARN_CUTOFF,
-                    HYPERHDR_RELEASES_URL,
-                )
 
     # Client needs authentication, but no token provided? => Reauth.
     auth_resp = await hyperhdr_client.async_is_auth_required()
@@ -212,6 +275,21 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         await hyperhdr_client.async_client_disconnect()
         raise ConfigEntryAuthFailed
 
+    # Now that we are authenticated, check the server version.
+    version = await hyperhdr_client.async_sysinfo_version()
+    if version is not None:
+        with suppress(ValueError):
+            if AwesomeVersion(version) < AwesomeVersion(HYPERHDR_VERSION_WARN_CUTOFF):
+                _LOGGER.warning(
+                    (
+                        "Using a HyperHDR server version < %s is not recommended --"
+                        " some features may be unavailable or may not function"
+                        " correctly. Please consider upgrading: %s"
+                    ),
+                    HYPERHDR_VERSION_WARN_CUTOFF,
+                    HYPERHDR_RELEASES_URL,
+                )
+
     # Cannot switch instance or cannot load state? => Not ready.
     if (
         not await hyperhdr_client.async_client_switch_instance()
@@ -229,34 +307,6 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         CONF_INSTANCE_CLIENTS: {},
         CONF_ON_UNLOAD: [],
     }
-
-    # Register a helper service to send arbitrary colorEngine payloads to HyperHDR.
-    # This allows exposing Infinite Color Engine controls via automations or the
-    # developer services UI without adding a full entity at this time.
-    async def async_handle_set_color_engine(service_call: "ServiceCall") -> None:  # type: ignore[name-defined]
-        instance = service_call.data.get("instance")
-        payload = service_call.data.get("data") or {}
-        if instance is None:
-            client_target = hass.data[DOMAIN][entry.entry_id][CONF_ROOT_CLIENT]
-            if client_target:
-                await client_target.async_set_color(**payload)
-            return
-
-        client_target = hass.data[DOMAIN][entry.entry_id][CONF_INSTANCE_CLIENTS].get(instance)
-        if client_target:
-            await client_target.async_set_color(**payload)
-
-    hass.services.async_register(
-        DOMAIN,
-        "set_color_engine",
-        async_handle_set_color_engine,
-        schema=vol.Schema({vol.Optional("instance"): int, vol.Required("data"): dict}),
-    )
-
-    # Ensure service is removed when this entry is unloaded.
-    hass.data[DOMAIN][entry.entry_id][CONF_ON_UNLOAD].append(
-        lambda: hass.services.async_remove(DOMAIN, "set_color_engine")
-    )
 
     async def async_instances_to_clients(response: dict[str, Any]) -> None:
         """Convert instances to HyperHDR clients."""
@@ -336,6 +386,10 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     assert hyperhdr_client
     if hyperhdr_client.instances is not None:
         await async_instances_to_clients_raw(hyperhdr_client.instances)
+
+    # Prune stale entity-registry entries left from removed features.
+    _async_cleanup_stale_entities(hass, entry)
+
     hass.data[DOMAIN][entry.entry_id][CONF_ON_UNLOAD].append(
         entry.add_update_listener(_async_entry_updated)
     )

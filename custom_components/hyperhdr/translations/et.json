@@ -36,7 +36,8 @@
             "user": {
                 "data": {
                     "host": "",
-                    "port": ""
+                    "port": "",
+                    "port_ws": "WebSocket port (LED-voogedastuseks)"
                 }
             }
         }
@@ -46,7 +47,8 @@
             "init": {
                 "data": {
                     "effect_show_list": "Kuvatavad HyperHDRi efektid",
-                    "priority": "Värvide ja efektide puhul on kasutatavad HyperHDRi eelistused"
+                    "priority": "Värvide ja efektide puhul on kasutatavad HyperHDRi eelistused",
+                    "port_ws": "WebSocket port (LED-voogedastuseks)"
                 }
             }
         }
@@ -54,39 +56,39 @@
     "entity": {
         "switch": {
             "all": {
-                "name": "Kõik komponendid",
+                "name": "Kõik",
                 "icon": "mdi:power"
             },
             "smoothing": {
-                "name": "Silumise komponent",
+                "name": "Silumine",
                 "icon": "mdi:blur"
             },
             "blackbar_detection": {
-                "name": "Mustade ribade tuvastuse komponent",
+                "name": "Mustade ribade tuvastus",
                 "icon": "mdi:crop-free"
             },
             "forwarder": {
-                "name": "Edastamise komponent",
+                "name": "Edastamine",
                 "icon": "mdi:send"
             },
             "boblight_server": {
-                "name": "Boblight serveri komponent",
+                "name": "Boblight server",
                 "icon": "mdi:server"
             },
             "platform_capture": {
-                "name": "Platvormi jäädvustamise komponent",
+                "name": "Platvormi jäädvustamine",
                 "icon": "mdi:video-input-antenna"
             },
             "led_device": {
-                "name": "LED-seadme komponent",
+                "name": "LED-seade",
                 "icon": "mdi:lightbulb-multiple"
             },
             "usb_capture": {
-                "name": "USB-jäädvustuse komponent",
+                "name": "USB-jäädvustus",
                 "icon": "mdi:usb"
             },
             "hdr_tone_mapping": {
-                "name": "HDR toonikaardistuse komponent",
+                "name": "HDR toonikaardistus",
                 "icon": "mdi:contrast-box"
             }
         },
@@ -107,9 +109,6 @@
         "select": {
             "smoothing_type": {
                 "name": "Silumise tüüp"
-            },
-            "color_engine": {
-                "name": "Värvimootor"
             }
         },
         "sensor": {

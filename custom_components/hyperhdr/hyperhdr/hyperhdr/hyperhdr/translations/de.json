@@ -1,0 +1,132 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Der Dienst ist bereits konfiguriert",
+            "already_in_progress": "Der Konfigurationsablauf wird bereits ausgeführt",
+            "auth_new_token_not_granted_error": "Neu erstellter Token wurde auf der HyperHDR-Benutzeroberfläche nicht genehmigt",
+            "auth_new_token_not_work_error": "Authentifizierung mit neu erstelltem Token fehlgeschlagen",
+            "auth_required_error": "Es konnte nicht festgestellt werden, ob eine Autorisierung erforderlich ist",
+            "cannot_connect": "Verbindung fehlgeschlagen",
+            "no_id": "Die HyperHDR Ambilight-Instanz hat ihre ID nicht gemeldet",
+            "reauth_successful": "Die erneute Authentifizierung war erfolgreich"
+        },
+        "error": {
+            "cannot_connect": "Verbindung fehlgeschlagen",
+            "invalid_access_token": "Ungültiger Zugriffs-Token"
+        },
+        "step": {
+            "auth": {
+                "data": {
+                    "create_token": "Automatisch neuen Authentifizierungs-Token erstellen",
+                    "token": "Oder stelle einen bereits vorhandenen Token bereit"
+                },
+                "description": "Konfiguriere die Autorisierung für den HyperHDR-Ambilight-Server"
+            },
+            "confirm": {
+                "description": "Soll dieses HyperHDR Ambilight zu Home Assistant hinzugefügt werden? \n\n ** Host: ** {host}\n ** Port: ** {port}\n ** ID **: {id}",
+                "title": "Bestätige das Hinzufügen des HyperHDR-Ambilight-Dienstes"
+            },
+            "create_token": {
+                "description": "Wähle **Submit**, um einen neuen Authentifizierungs-Token anzufordern. Du wirst zur HyperHDR-Benutzeroberfläche weitergeleitet, um die Anforderung zu bestätigen. Bitte überprüfe, ob die angezeigte ID \"{auth_id}\" lautet.",
+                "title": "Automatisch neuen Authentifizierungs-Token erstellen"
+            },
+            "create_token_external": {
+                "title": "Neuen Token in HyperHDR UI akzeptieren"
+            },
+            "user": {
+                "data": {
+                    "host": "Host",
+                    "port": "Port"
+                }
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "effect_show_list": "HyperHDR-Effekte zum Anzeigen",
+                    "priority": "HyperHDR-Priorität für Farben und Effekte"
+                }
+            }
+        }
+    },
+    "entity": {
+        "switch": {
+            "all": {
+                "name": "Alle Komponenten",
+                "icon": "mdi:power"
+            },
+            "smoothing": {
+                "name": "Komponente Glättung",
+                "icon": "mdi:blur"
+            },
+            "blackbar_detection": {
+                "name": "Komponente Balkenerkennung",
+                "icon": "mdi:crop-free"
+            },
+            "forwarder": {
+                "name": "Komponente Weiterleitung",
+                "icon": "mdi:send"
+            },
+            "boblight_server": {
+                "name": "Komponente Boblight-Server",
+                "icon": "mdi:server"
+            },
+            "platform_capture": {
+                "name": "Komponente Plattformaufnahme",
+                "icon": "mdi:video-input-antenna"
+            },
+            "led_device": {
+                "name": "Komponente LED-Gerät",
+                "icon": "mdi:lightbulb-multiple"
+            },
+            "usb_capture": {
+                "name": "Komponente USB-Aufnahme",
+                "icon": "mdi:usb"
+            },
+            "hdr_tone_mapping": {
+                "name": "Komponente HDR-Tonemapping",
+                "icon": "mdi:contrast-box"
+            }
+        },
+        "number": {
+            "smoothing_time": {
+                "name": "Glättungszeit"
+            },
+            "smoothing_decay": {
+                "name": "Glättungsabfall"
+            },
+            "smoothing_update_freq": {
+                "name": "Aktualisierungsrate der Glättung"
+            },
+            "hdr_tone_mapping": {
+                "name": "HDR-Tonemapping"
+            }
+        },
+        "select": {
+            "smoothing_type": {
+                "name": "Glättungstyp"
+            },
+            "color_engine": {
+                "name": "Farb-Engine"
+            }
+        },
+        "sensor": {
+            "visible_priority": {
+                "name": "Visible Priority"
+            },
+            "average_color": {
+                "name": "Durchschnittsfarbe"
+            }
+        },
+        "light": {
+            "hyperhdr_light": {
+                "name": "Licht"
+            },
+            "hyperhdr_priority_light": {
+                "name": "Prioritätslicht"
+            }
+        }
+    }
+}

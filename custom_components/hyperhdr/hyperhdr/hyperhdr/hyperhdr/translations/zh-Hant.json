@@ -1,0 +1,132 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "服務已經設定完成",
+            "already_in_progress": "設定已經進行中",
+            "auth_new_token_not_granted_error": "新創權杖未獲得 HyperHDR UI 核准",
+            "auth_new_token_not_work_error": "使用新創權杖認證失敗",
+            "auth_required_error": "無法判定是否需要驗證",
+            "cannot_connect": "連線失敗",
+            "no_id": "HyperHDR Ambilight 實體未回報其 ID",
+            "reauth_successful": "重新認證成功"
+        },
+        "error": {
+            "cannot_connect": "連線失敗",
+            "invalid_access_token": "存取權杖無效"
+        },
+        "step": {
+            "auth": {
+                "data": {
+                    "create_token": "自動新創權杖",
+                    "token": "或提供現有權杖"
+                },
+                "description": "設定 HyperHDR Ambilight 伺服器認證"
+            },
+            "confirm": {
+                "description": "是否要將 HyperHDR Ambilight 新增至 Home Assistant？\n\n**主機端：** {host}\n**通訊埠：** {port}\n**ID**： {id}",
+                "title": "確認附加 HyperHDR Ambilight 服務"
+            },
+            "create_token": {
+                "description": "點選下方 **傳送** 以請求新認證權杖。將會重新導向至 HyperHDR UI 以核准要求。請確認顯示 ID 為 \"{auth_id}\"",
+                "title": "自動新創認證權杖"
+            },
+            "create_token_external": {
+                "title": "接受 HyperHDR UI 中的新權杖"
+            },
+            "user": {
+                "data": {
+                    "host": "主機端",
+                    "port": "通訊埠"
+                }
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "effect_show_list": "顯示 HyperHDR 效應",
+                    "priority": "HyperHDR 優先使用之色溫與特效"
+                }
+            }
+        }
+    },
+    "entity": {
+        "switch": {
+            "all": {
+                "name": "全部元件",
+                "icon": "mdi:power"
+            },
+            "smoothing": {
+                "name": "平滑元件",
+                "icon": "mdi:blur"
+            },
+            "blackbar_detection": {
+                "name": "黑邊偵測元件",
+                "icon": "mdi:crop-free"
+            },
+            "forwarder": {
+                "name": "轉送元件",
+                "icon": "mdi:send"
+            },
+            "boblight_server": {
+                "name": "Boblight 伺服器元件",
+                "icon": "mdi:server"
+            },
+            "platform_capture": {
+                "name": "平台擷取元件",
+                "icon": "mdi:video-input-antenna"
+            },
+            "led_device": {
+                "name": "LED 裝置元件",
+                "icon": "mdi:lightbulb-multiple"
+            },
+            "usb_capture": {
+                "name": "USB 擷取元件",
+                "icon": "mdi:usb"
+            },
+            "hdr_tone_mapping": {
+                "name": "HDR 色調映射元件",
+                "icon": "mdi:contrast-box"
+            }
+        },
+        "number": {
+            "smoothing_time": {
+                "name": "平滑時間"
+            },
+            "smoothing_decay": {
+                "name": "平滑衰減"
+            },
+            "smoothing_update_freq": {
+                "name": "平滑更新頻率"
+            },
+            "hdr_tone_mapping": {
+                "name": "HDR 色調映射"
+            }
+        },
+        "select": {
+            "smoothing_type": {
+                "name": "平滑類型"
+            },
+            "color_engine": {
+                "name": "色彩引擎"
+            }
+        },
+        "sensor": {
+            "visible_priority": {
+                "name": "Visible Priority"
+            },
+            "average_color": {
+                "name": "平均顏色"
+            }
+        },
+        "light": {
+            "hyperhdr_light": {
+                "name": "燈光"
+            },
+            "hyperhdr_priority_light": {
+                "name": "優先燈光"
+            }
+        }
+    }
+}

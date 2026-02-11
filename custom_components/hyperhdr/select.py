@@ -30,12 +30,10 @@ from .const import (
     SIGNAL_ENTITY_REMOVE,
     TYPE_HYPERHDR_SELECT_BASE,
     TYPE_HYPERHDR_SELECT_SMOOTHING_TYPE,
-    TYPE_HYPERHDR_SELECT_COLOR_ENGINE,
 )
 
 SELECT_ENTITIES = [
     TYPE_HYPERHDR_SELECT_SMOOTHING_TYPE,
-    TYPE_HYPERHDR_SELECT_COLOR_ENGINE,
 ]
 
 SMOOTHING_TYPE_OPTIONS = [
@@ -46,22 +44,10 @@ SMOOTHING_TYPE_OPTIONS = [
     hyperhdr_const.SMOOTHING_TYPE_YUV,
 ]
 
-COLOR_ENGINE_OPTIONS = [
-    "infinite",
-    "linear",
-    "hybrid",
-]
-
 SMOOTHING_TYPE_DESCRIPTION = SelectEntityDescription(
     key="smoothing_type",
     translation_key="smoothing_type",
     icon="mdi:sine-wave",
-)
-
-COLOR_ENGINE_DESCRIPTION = SelectEntityDescription(
-    key="color_engine",
-    translation_key="color_engine",
-    icon="mdi:palette-advanced",
 )
 
 
@@ -87,24 +73,23 @@ async def async_setup_entry(
     def instance_add(instance_num: int, instance_name: str) -> None:
         """Add entities for a new HyperHDR instance."""
         assert server_id
-        entities = [
-            HyperHDRSmoothingTypeSelect(
-                server_id,
-                instance_num,
-                instance_name,
-                entry_data[CONF_INSTANCE_CLIENTS][instance_num],
-                SMOOTHING_TYPE_DESCRIPTION,
-            ),
-            HyperHDRColorEngineSelect(
-                server_id,
-                instance_num,
-                instance_name,
-                entry_data[CONF_INSTANCE_CLIENTS][instance_num],
-                COLOR_ENGINE_DESCRIPTION,
-            ),
-        ]
+        hyperhdr_client = entry_data[CONF_INSTANCE_CLIENTS][instance_num]
 
-        async_add_entities(entities)
+        # Only create smoothing entities if the server exposes smoothing data.
+        if hyperhdr_client.smoothing is None:
+            return
+
+        async_add_entities(
+            [
+                HyperHDRSmoothingTypeSelect(
+                    server_id,
+                    instance_num,
+                    instance_name,
+                    hyperhdr_client,
+                    SMOOTHING_TYPE_DESCRIPTION,
+                ),
+            ]
+        )
 
     @callback
     def instance_remove(instance_num: int) -> None:
@@ -176,7 +161,11 @@ class HyperHDRSelect(SelectEntity):
 
 
 class HyperHDRSmoothingTypeSelect(HyperHDRSelect):
-    """Select entity for smoothing type."""
+    """Select entity for smoothing type.
+
+    The HyperHDR smoothing API is not available on all server versions.
+    If ``self._client.smoothing`` is None the entity reports unavailable.
+    """
 
     _attr_options = SMOOTHING_TYPE_OPTIONS
 
@@ -199,6 +188,16 @@ class HyperHDRSmoothingTypeSelect(HyperHDRSelect):
             f"{hyperhdr_const.KEY_SMOOTHING}-{hyperhdr_const.KEY_UPDATE}": self._update_smoothing_type
         }
 
+    @property
+    def available(self) -> bool:
+        """Return availability — requires smoothing data from the server."""
+        return bool(self._client.has_loaded_state and self._client.smoothing)
+
+    async def async_added_to_hass(self) -> None:
+        """Register callbacks and populate initial state."""
+        await super().async_added_to_hass()
+        self._update_smoothing_type()
+
     @callback
     def _update_smoothing_type(self, _: dict[str, Any] | None = None) -> None:
         """Update smoothing type selection."""
@@ -211,51 +210,3 @@ class HyperHDRSmoothingTypeSelect(HyperHDRSelect):
     async def async_select_option(self, option: str) -> None:
         """Set smoothing type."""
         await self._client.async_set_smoothing(smoothingType=option)
-
-
-class HyperHDRColorEngineSelect(HyperHDRSelect):
-    """Select entity for color engine (Infinite Color Engine)."""
-
-    _attr_options = COLOR_ENGINE_OPTIONS
-
-    def __init__(
-        self,
-        server_id: str,
-        instance_num: int,
-        instance_name: str,
-        hyperhdr_client: client.HyperHDRClient,
-        entity_description: SelectEntityDescription,
-    ) -> None:
-        """Initialize the select."""
-        super().__init__(
-            server_id, instance_num, instance_name, hyperhdr_client, entity_description
-        )
-        self._attr_unique_id = _select_unique_id(
-            server_id, instance_num, TYPE_HYPERHDR_SELECT_COLOR_ENGINE
-        )
-        self._current_engine = None
-        self._client_callbacks = {
-            f"{hyperhdr_const.KEY_COLOR_ENGINE}-{hyperhdr_const.KEY_UPDATE}": self._update_color_engine
-        }
-
-    @callback
-    def _update_color_engine(self, _: dict[str, Any] | None = None) -> None:
-        """Update color engine selection."""
-        # Try to read current engine from client properties if available
-        if hasattr(self._client, "color_engine") and self._client.color_engine:
-            engine_data = self._client.color_engine
-            if isinstance(engine_data, dict):
-                engine_type = engine_data.get("type") or engine_data.get("colorEngine")
-                if engine_type:
-                    self._attr_current_option = engine_type.lower()
-        self.async_write_ha_state()
-
-    async def async_select_option(self, option: str) -> None:
-        """Set color engine."""
-        # Send the color engine payload to the client
-        await self._client.async_set_color(
-            **{hyperhdr_const.KEY_COLOR_ENGINE: {
-                "type": option,
-                "colorEngine": option,
-            }}
-        )

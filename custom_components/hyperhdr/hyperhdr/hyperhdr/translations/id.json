@@ -1,0 +1,132 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Layanan sudah dikonfigurasi",
+            "already_in_progress": "Alur konfigurasi sedang berlangsung",
+            "auth_new_token_not_granted_error": "Token yang baru dibuat tidak disetujui di antarmuka HyperHDR",
+            "auth_new_token_not_work_error": "Gagal mengautentikasi menggunakan token yang baru dibuat",
+            "auth_required_error": "Gagal menentukan apakah otorisasi diperlukan",
+            "cannot_connect": "Gagal terhubung",
+            "no_id": "Instans HyperHDR Ambilight tidak melaporkan ID-nya",
+            "reauth_successful": "Autentikasi ulang berhasil"
+        },
+        "error": {
+            "cannot_connect": "Gagal terhubung",
+            "invalid_access_token": "Token akses tidak valid"
+        },
+        "step": {
+            "auth": {
+                "data": {
+                    "create_token": "Buat token baru secara otomatis",
+                    "token": "Atau berikan token yang sudah ada sebelumnya"
+                },
+                "description": "Konfigurasikan otorisasi ke server HyperHDR Ambilight Anda"
+            },
+            "confirm": {
+                "description": "Apakah Anda ingin menambahkan HyperHDR Ambilight ini ke Home Assistant?\n\n**Host:** {host}\n**Port:** {port}\n**ID**: {id}",
+                "title": "Konfirmasikan penambahan layanan HyperHDR Ambilight"
+            },
+            "create_token": {
+                "description": "Pilih **Kirim** di bawah ini untuk meminta token autentikasi baru. Anda akan diarahkan ke antarmuka HyperHDR untuk menyetujui permintaan. Pastikan ID yang ditampilkan adalah \"{auth_id}\"",
+                "title": "Buat token autentikasi baru secara otomatis"
+            },
+            "create_token_external": {
+                "title": "Terima token baru di antarmuka HyperHDR"
+            },
+            "user": {
+                "data": {
+                    "host": "Host",
+                    "port": "Port"
+                }
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "effect_show_list": "Efek hyperhdr untuk ditampilkan",
+                    "priority": "Prioritas hyperhdr digunakan untuk warna dan efek"
+                }
+            }
+        }
+    },
+    "entity": {
+        "switch": {
+            "all": {
+                "name": "Semua komponen",
+                "icon": "mdi:power"
+            },
+            "smoothing": {
+                "name": "Komponen penghalusan",
+                "icon": "mdi:blur"
+            },
+            "blackbar_detection": {
+                "name": "Komponen deteksi bar hitam",
+                "icon": "mdi:crop-free"
+            },
+            "forwarder": {
+                "name": "Komponen penerus",
+                "icon": "mdi:send"
+            },
+            "boblight_server": {
+                "name": "Komponen server Boblight",
+                "icon": "mdi:server"
+            },
+            "platform_capture": {
+                "name": "Komponen tangkap platform",
+                "icon": "mdi:video-input-antenna"
+            },
+            "led_device": {
+                "name": "Komponen perangkat LED",
+                "icon": "mdi:lightbulb-multiple"
+            },
+            "usb_capture": {
+                "name": "Komponen tangkap USB",
+                "icon": "mdi:usb"
+            },
+            "hdr_tone_mapping": {
+                "name": "Komponen pemetaan nada HDR",
+                "icon": "mdi:contrast-box"
+            }
+        },
+        "number": {
+            "smoothing_time": {
+                "name": "Waktu penghalusan"
+            },
+            "smoothing_decay": {
+                "name": "Pelemahan penghalusan"
+            },
+            "smoothing_update_freq": {
+                "name": "Frekuensi pembaruan penghalusan"
+            },
+            "hdr_tone_mapping": {
+                "name": "Pemetaan nada HDR"
+            }
+        },
+        "select": {
+            "smoothing_type": {
+                "name": "Jenis penghalusan"
+            },
+            "color_engine": {
+                "name": "Mesin warna"
+            }
+        },
+        "sensor": {
+            "visible_priority": {
+                "name": "Visible Priority"
+            },
+            "average_color": {
+                "name": "Warna rata-rata"
+            }
+        },
+        "light": {
+            "hyperhdr_light": {
+                "name": "Lampu"
+            },
+            "hyperhdr_priority_light": {
+                "name": "Lampu prioritas"
+            }
+        }
+    }
+}

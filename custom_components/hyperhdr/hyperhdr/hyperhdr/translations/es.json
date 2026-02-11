@@ -1,0 +1,132 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "El servicio ya está configurado",
+            "already_in_progress": "El flujo de configuración ya está en proceso",
+            "auth_new_token_not_granted_error": "El token recién creado no se aprobó en la interfaz de usuario de HyperHDR",
+            "auth_new_token_not_work_error": "Error al autenticarse con el token recién creado",
+            "auth_required_error": "No se pudo determinar si se requiere autorización",
+            "cannot_connect": "No se pudo conectar",
+            "no_id": "La instancia de HyperHDR Ambilight no informó su identificación",
+            "reauth_successful": "La reautenticación se realizó correctamente"
+        },
+        "error": {
+            "cannot_connect": "No se pudo conectar",
+            "invalid_access_token": "Token de acceso no válido"
+        },
+        "step": {
+            "auth": {
+                "data": {
+                    "create_token": "Crea un nuevo token automáticamente",
+                    "token": "O proporcionar un token preexistente"
+                },
+                "description": "Configurar autorización a tu servidor HyperHDR Ambilight"
+            },
+            "confirm": {
+                "description": "¿Quieres añadir este HyperHDR Ambilight a Home Assistant?\n\n**Host:** {host}\n**Puerto:** {port}\n**Identificación**: {id}",
+                "title": "Confirmar la adición del servicio HyperHDR Ambilight"
+            },
+            "create_token": {
+                "description": "Elige ** Enviar ** a continuación para solicitar un nuevo token de autenticación. Se te redirigirá a la interfaz de usuario de HyperHDR para aprobar la solicitud. Verifica que la identificación que se muestra sea \"{auth_id}\"",
+                "title": "Crear automáticamente un nuevo token de autenticación"
+            },
+            "create_token_external": {
+                "title": "Aceptar nuevo token en la interfaz de usuario de HyperHDR"
+            },
+            "user": {
+                "data": {
+                    "host": "Host",
+                    "port": "Puerto"
+                }
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "effect_show_list": "Efectos de HyperHDR a mostrar",
+                    "priority": "Prioridad de HyperHDR a usar para colores y efectos"
+                }
+            }
+        }
+    },
+    "entity": {
+        "switch": {
+            "all": {
+                "name": "Componente general",
+                "icon": "mdi:power"
+            },
+            "smoothing": {
+                "name": "Componente de suavizado",
+                "icon": "mdi:blur"
+            },
+            "blackbar_detection": {
+                "name": "Componente de detección de barras negras",
+                "icon": "mdi:crop-free"
+            },
+            "forwarder": {
+                "name": "Componente de reenvío",
+                "icon": "mdi:send"
+            },
+            "boblight_server": {
+                "name": "Componente servidor Boblight",
+                "icon": "mdi:server"
+            },
+            "platform_capture": {
+                "name": "Componente de captura de plataforma",
+                "icon": "mdi:video-input-antenna"
+            },
+            "led_device": {
+                "name": "Componente dispositivo LED",
+                "icon": "mdi:lightbulb-multiple"
+            },
+            "usb_capture": {
+                "name": "Componente de captura USB",
+                "icon": "mdi:usb"
+            },
+            "hdr_tone_mapping": {
+                "name": "Componente de mapeo de tono HDR",
+                "icon": "mdi:contrast-box"
+            }
+        },
+        "number": {
+            "smoothing_time": {
+                "name": "Tiempo de suavizado"
+            },
+            "smoothing_decay": {
+                "name": "Decaimiento del suavizado"
+            },
+            "smoothing_update_freq": {
+                "name": "Frecuencia de actualización del suavizado"
+            },
+            "hdr_tone_mapping": {
+                "name": "Mapeo de tono HDR"
+            }
+        },
+        "select": {
+            "smoothing_type": {
+                "name": "Tipo de suavizado"
+            },
+            "color_engine": {
+                "name": "Motor de color"
+            }
+        },
+        "sensor": {
+            "visible_priority": {
+                "name": "Visible Priority"
+            },
+            "average_color": {
+                "name": "Color promedio"
+            }
+        },
+        "light": {
+            "hyperhdr_light": {
+                "name": "Luz"
+            },
+            "hyperhdr_priority_light": {
+                "name": "Luz de prioridad"
+            }
+        }
+    }
+}

@@ -19,23 +19,23 @@ HyperHDR is an open source bias lighting implementation which runs on many platf
 
 | Platform | Description |
 |----------|-------------|
-| `camera` | Live video stream from HyperHDR (when available from video/USB capture). |
+| `camera` | Live LED Colors and LED Gradient camera streams via WebSocket. |
 | `light` | Control HyperHDR lighting with color, brightness, and effects. |
 | `sensor` | Monitor visible priority and average color information. |
 | `switch` | Toggle HyperHDR components (smoothing, HDR tone mapping, blackborder detection, etc.). |
-| `number` | Adjust smoothing parameters (time, decay, update frequency) and HDR tone mapping intensity. |
-| `select` | Choose smoothing type (linear, exponential, inertia, hybrid, yuv) and color engine mode (infinite, linear, hybrid). |
+| `number` | Adjust HDR tone mapping intensity. Smoothing parameters (time, decay, update frequency) are available when the server exposes smoothing data. |
+| `select` | Choose smoothing type (linear, exponential, inertia, hybrid, yuv) when the server exposes smoothing data. |
 
 ### Key Features
 
-- **Average Color Sensor**: Real-time average color display with hex value and RGB attributes.
-- **Smoothing Controls**: Fine-tune smoothing behavior via number entities for time, decay, and update frequency.
-- **HDR Tone Mapping**: Adjust HDR tone mapping intensity with a dedicated number entity.
-- **Color Engine Selection**: Switch between infinite, linear, and hybrid color engine modes via select entity.
-- **Smoothing Type Selection**: Choose from multiple smoothing interpolation algorithms.
-- **Service Integration**: Use the `hyperhdr.set_color_engine` service for advanced color engine control via automations.
+- **LED Colors Camera**: Live WebSocket stream of the HyperHDR imagestream output — ideal for PicCap instances or visualizing exact LED output.
+- **LED Gradient Camera**: Real-time per-LED gradient visualization rendered as a JPEG image from raw RGB data.
+- **Average Color Sensor**: Real-time average color display with hex value and RGB attributes (computed from LED stream data with throttled updates).
+- **HDR Tone Mapping**: Adjust HDR tone mapping intensity with a dedicated number entity. Supports both legacy `hdrToneMappingMode` and the newer `videomodehdr` command paths.
+- **Smoothing Controls** *(conditional)*: Number entities for time, decay, and update frequency — only created when the connected HyperHDR server exposes smoothing data.
+- **Smoothing Type Selection** *(conditional)*: Choose from multiple smoothing interpolation algorithms — only created when smoothing data is available.
 - **Component Switches**: Enable/disable HyperHDR components (advanced users).
-- **Live Camera Stream**: View real-time video from USB capture or video grabber sources.
+- **Automatic Entity Cleanup**: Stale entities from removed features (old camera, color engine, unsupported smoothing) are automatically pruned from the entity registry on integration load.
 
 ![hyperhdr-logo](https://github.com/mjoshd/hyperhdr-ha/blob/master/hyperhdr-logo.png)
 
@@ -68,112 +68,88 @@ HyperHDR is an open source bias lighting implementation which runs on many platf
 1. Search for `HyperHDR`.
 1. If you cannot find `HyperHDR` in the list then be sure to clear your browser cache and/or perform a hard-refresh of the page.
 1. Enter the IP address of your HyperHDR instance.
+1. *(Optional)* Enter the **WebSocket Port** (defaults to `8090`) if your HyperHDR UI/WebSocket runs on a non-standard port.
 1. *(Optional)* Enter your **Admin Password** if your HyperHDR instance has Local API Authentication enabled.
 1. Click the `Submit` button.
 
 ### Admin Password
 
-If your HyperHDR instance has **Local API Authentication** enabled (`adminRequired: true`), the LED camera streams require authentication to receive frames. You can provide the admin password in two places:
+If your HyperHDR instance has **Local API Authentication** enabled, the LED camera streams require authentication to receive frames. You can provide the admin password in two places:
 
 - **During initial setup** — enter it in the optional "Admin Password" field on the connection form.
 - **After setup** — go to the integration's **Options** (gear icon) and add or change the admin password there.
 
-When configured, the LED Colors and LED Gradient camera streams will first attempt token-based authentication. If that fails (or no token is available), they automatically fall back to admin password login over the WebSocket connection. If your HyperHDR instance does not require authentication, you can leave this field blank.
+When configured, the LED Colors and LED Gradient camera streams authenticate using the admin password over the WebSocket connection. If a token is also configured, the admin password takes priority for stream authentication (tokens do not grant the admin privileges required by `imagestream-start`). If your HyperHDR instance does not require authentication, you can leave this field blank.
+
+### Options Flow
+
+After the integration is set up, you can adjust the following via **Options** (gear icon on the integration card):
+
+| Option | Description |
+|--------|-------------|
+| **Priority** | Default priority level for light commands (0–255). |
+| **Effect Show List** | Select which effects to expose in Home Assistant. |
+| **WebSocket Port** | Port for LED camera streams (default `8090`). |
+| **Admin Password** | Password for LED stream authentication. |
 
 ## Advanced Features
 
-### Using the Color Engine Service
-
-For advanced automation and control, you can use the `hyperhdr.set_color_engine` service to send custom color engine payloads:
-
-```yaml
-service: hyperhdr.set_color_engine
-data:
-  instance: 0
-  data:
-    colorEngine:
-      type: infinite
-```
-
 ### Entity Discovery
 
-Most entities are created automatically for each HyperHDR instance. Some entities (like smoothing and HDR controls) are disabled by default for advanced users. Enable them in Home Assistant's entity settings if needed.
+Entities are created automatically for each running HyperHDR instance:
 
-### Camera Live Preview
+- **Always created**: Light, Priority Light, Component Switches, HDR Tone Mapping, Visible Priority Sensor, Average Color Sensor, LED Colors Camera, LED Gradient Camera.
+- **Conditionally created**: Smoothing Time, Smoothing Decay, Smoothing Update Frequency, and Smoothing Type entities are only created when the connected HyperHDR server exposes smoothing data in its `serverinfo` response. If the server does not expose this data, these entities are not created at all.
+- **Disabled by default**: Camera entities and most number/select entities are disabled by default to avoid unnecessary overhead. Enable them in Home Assistant's entity settings if needed.
 
-The camera entity is **disabled by default** due to performance considerations. To enable live camera preview:
+### Automatic Stale Entity Cleanup
 
-1. Go to **Settings** → **Devices & Services** → **Entities**
-2. Search for `HyperHDR` camera entity
-3. Click the entity to open its details
-4. Click the toggle switch to **enable** the camera
-5. The live preview will now appear in the Lovelace UI
+When upgrading from older versions, the integration automatically removes stale entities from the Home Assistant entity registry:
 
-**Requirements for live preview:**
-- HyperHDR instance must have a **video/USB capture source** active (not color priority)
-- The camera will only display frames when an image stream is available
-- Stream quality depends on the active HyperHDR priority source
+- **Permanently removed**: The old JSON-API camera entity and the Color Engine select entity are always cleaned up.
+- **Conditionally removed**: Smoothing entities (time, decay, update frequency, type) are removed for any instance whose server does not expose smoothing data.
 
-**Viewing options in Home Assistant:**
-- **Lovelace** - Add a camera card to your dashboard for live preview
-- **Developer Tools** - Use the Camera entity to view current snapshot
-- **Mobile App** - View live stream in Home Assistant mobile application
-- **MJPEG Stream** - Access raw stream at `/api/camera_proxy_stream/camera.hyperhdr_<instance>`
-
-**Troubleshooting - Getting only screenshots instead of live video:**
-
-If you're seeing only still images instead of a continuous live stream:
-
-1. **Enable debug logging** to diagnose the issue:
-   - Go to **Developer Tools** → **Logs**
-   - Add this to your Home Assistant `configuration.yaml`:
-     ```yaml
-     logger:
-       logs:
-         custom_components.hyperhdr.camera: debug
-     ```
-   - Restart Home Assistant and check the logs
-
-2. **Verify HyperHDR is streaming images**:
-   - Check that your HyperHDR instance has an **active video source** (USB Capture, Video Grabber, etc.)
-   - Color-only priorities will not produce image streams
-   - Go to HyperHDR web UI and confirm you can see live video there
-
-3. **Check Lovelace camera card configuration**:
-   - Make sure you're using the **Camera** card type (not picture entity)
-   - The card should automatically use MJPEG streaming
-   - Try refreshing your browser or clearing cache if it still shows static images
-
-4. **Network/Performance issues**:
-   - Live streaming may be slow on weak networks
-   - Check Home Assistant system logs for any errors
-   - Try accessing the raw stream: `http://<home-assistant-ip>:8123/api/camera_proxy_stream/camera.hyperhdr_<instance_number>`
-
-### Camera Stream Notes
-
-The camera entity provides a live video stream when available:
-- **Video/USB Capture sources** will stream live images
-- **Color priorities** do not stream (no image data available)
-- Stream behavior depends on active HyperHDR priority source
-- **Performance**: The camera is disabled by default to avoid unnecessary stream overhead
+No manual intervention is required — the cleanup runs on every integration load.
 
 ### LED Colors Camera
 
-A second camera entity named **"LED Colors"** is also created. This entity streams the HyperHDR imagestream over a dedicated WebSocket connection.
+The **LED Colors** camera entity streams the HyperHDR imagestream over a dedicated WebSocket connection.
 
 - **Purpose**: Designed for **PicCap** instances where the standard MJPEG stream may not work, or for visualizing the exact LED output.
-- **Disabled by Default**: Like the standard camera, this entity is **disabled by default**. You must enable it in Home Assistant settings.
-- **Stream Type**: Uses `HyperHDRLedColorsStream` from `hyperhdr.stream` with automatic reconnection, token authentication, and admin password fallback.
-- **Authentication**: Supports token-based and admin password authentication for instances with Local API Authentication enabled.
+- **Disabled by Default**: This entity is **disabled by default**. You must enable it in Home Assistant settings.
+- **Stream Type**: Uses `HyperHDRLedColorsStream` from `hyperhdr.stream` with automatic reconnection and admin password authentication.
+- **Authentication**: Requires admin password for instances with Local API Authentication enabled (token-only auth is insufficient for imagestream).
 
 ### LED Gradient Camera
 
-A third camera entity named **"LED Gradient"** visualizes the raw per-LED color data as a gradient image.
+The **LED Gradient** camera entity visualizes the raw per-LED color data as a gradient image.
 
 - **Purpose**: Displays a JPEG image representing the current color of each LED, stretched to a visible height. Useful for monitoring individual LED output in real time.
 - **Disabled by Default**: This entity is **disabled by default**. Enable it in Home Assistant settings if desired.
 - **Stream Type**: Uses `HyperHDRLedGradientStream` from `hyperhdr.stream` with built-in RGB-to-JPEG conversion (via Pillow), automatic reconnection, and the same authentication support as the LED Colors camera.
 - **Image Format**: Raw binary LED data (RGB bytes) is converted into a 1-pixel-tall JPEG image scaled to 20px height for visibility.
+- **Average Color Dispatch**: This camera computes the average RGB color from each frame and dispatches it to the Average Color sensor (throttled to every 2 seconds to avoid flooding the event bus).
+
+### Camera Troubleshooting
+
+If the camera entities are not streaming:
+
+1. **Verify authentication**: Ensure the admin password is configured correctly (check integration Options).
+2. **Enable debug logging**:
+   ```yaml
+   logger:
+     logs:
+       custom_components.hyperhdr.camera: debug
+       hyperhdr.stream: debug
+   ```
+3. **Check HyperHDR is streaming**: Confirm your HyperHDR instance has an active video source (USB Capture, Video Grabber, etc.).
+4. **Check the WebSocket port**: The default is `8090` — make sure it matches your HyperHDR configuration.
+
+**Viewing options in Home Assistant:**
+- **Lovelace** — Add a camera card to your dashboard for live preview.
+- **Developer Tools** — Use the Camera entity to view the current snapshot.
+- **Mobile App** — View the live stream in the Home Assistant mobile application.
+- **MJPEG Stream** — Access the raw stream at `/api/camera_proxy_stream/camera.<entity_id>`.
 
 <!-- ***
 
@@ -195,5 +171,3 @@ A third camera entity named **"LED Gradient"** visualizes the raw per-LED color 
 [releases-shield]: https://img.shields.io/github/release/custom-components/integration_blueprint.svg?style=for-the-badge
 [releases]: https://github.com/custom-components/integration_blueprint/releases
 [user_profile]: https://github.com/ludeeus -->
-
-
