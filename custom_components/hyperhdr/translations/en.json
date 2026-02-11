@@ -58,40 +58,31 @@
     "entity": {
         "switch": {
             "all": {
-                "name": "All",
-                "icon": "mdi:power"
+                "name": "All"
             },
             "smoothing": {
-                "name": "Smoothing",
-                "icon": "mdi:blur"
+                "name": "Smoothing"
             },
             "blackbar_detection": {
-                "name": "Blackbar Detection",
-                "icon": "mdi:crop-free"
+                "name": "Blackbar Detection"
             },
             "forwarder": {
-                "name": "Forwarder",
-                "icon": "mdi:send"
+                "name": "Forwarder"
             },
             "boblight_server": {
-                "name": "Boblight Server",
-                "icon": "mdi:server"
+                "name": "Boblight Server"
             },
             "platform_capture": {
-                "name": "Platform Capture",
-                "icon": "mdi:video-input-antenna"
+                "name": "Platform Capture"
             },
             "led_device": {
-                "name": "LED Device",
-                "icon": "mdi:lightbulb-multiple"
+                "name": "LED Device"
             },
             "usb_capture": {
-                "name": "USB Capture",
-                "icon": "mdi:usb"
+                "name": "USB Capture"
             },
             "hdr_tone_mapping": {
-                "name": "HDR Tone Mapping",
-                "icon": "mdi:contrast-box"
+                "name": "HDR Tone Mapping"
             }
         },
         "number": {

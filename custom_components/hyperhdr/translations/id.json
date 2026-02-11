@@ -56,40 +56,31 @@
     "entity": {
         "switch": {
             "all": {
-                "name": "Semua",
-                "icon": "mdi:power"
+                "name": "Semua"
             },
             "smoothing": {
-                "name": "Penghalusan",
-                "icon": "mdi:blur"
+                "name": "Penghalusan"
             },
             "blackbar_detection": {
-                "name": "Deteksi bar hitam",
-                "icon": "mdi:crop-free"
+                "name": "Deteksi bar hitam"
             },
             "forwarder": {
-                "name": "Penerus",
-                "icon": "mdi:send"
+                "name": "Penerus"
             },
             "boblight_server": {
-                "name": "Server Boblight",
-                "icon": "mdi:server"
+                "name": "Server Boblight"
             },
             "platform_capture": {
-                "name": "Tangkap platform",
-                "icon": "mdi:video-input-antenna"
+                "name": "Tangkap platform"
             },
             "led_device": {
-                "name": "Perangkat LED",
-                "icon": "mdi:lightbulb-multiple"
+                "name": "Perangkat LED"
             },
             "usb_capture": {
-                "name": "Tangkap USB",
-                "icon": "mdi:usb"
+                "name": "Tangkap USB"
             },
             "hdr_tone_mapping": {
-                "name": "Pemetaan nada HDR",
-                "icon": "mdi:contrast-box"
+                "name": "Pemetaan nada HDR"
             }
         },
         "number": {

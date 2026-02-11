@@ -56,40 +56,31 @@
     "entity": {
         "switch": {
             "all": {
-                "name": "全部",
-                "icon": "mdi:power"
+                "name": "全部"
             },
             "smoothing": {
-                "name": "平滑",
-                "icon": "mdi:blur"
+                "name": "平滑"
             },
             "blackbar_detection": {
-                "name": "黑邊偵測",
-                "icon": "mdi:crop-free"
+                "name": "黑邊偵測"
             },
             "forwarder": {
-                "name": "轉送",
-                "icon": "mdi:send"
+                "name": "轉送"
             },
             "boblight_server": {
-                "name": "Boblight 伺服器",
-                "icon": "mdi:server"
+                "name": "Boblight 伺服器"
             },
             "platform_capture": {
-                "name": "平台擷取",
-                "icon": "mdi:video-input-antenna"
+                "name": "平台擷取"
             },
             "led_device": {
-                "name": "LED 裝置",
-                "icon": "mdi:lightbulb-multiple"
+                "name": "LED 裝置"
             },
             "usb_capture": {
-                "name": "USB 擷取",
-                "icon": "mdi:usb"
+                "name": "USB 擷取"
             },
             "hdr_tone_mapping": {
-                "name": "HDR 色調映射",
-                "icon": "mdi:contrast-box"
+                "name": "HDR 色調映射"
             }
         },
         "number": {

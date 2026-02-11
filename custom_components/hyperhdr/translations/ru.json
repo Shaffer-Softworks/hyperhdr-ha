@@ -56,40 +56,31 @@
     "entity": {
         "switch": {
             "all": {
-                "name": "Все",
-                "icon": "mdi:power"
+                "name": "Все"
             },
             "smoothing": {
-                "name": "Сглаживание",
-                "icon": "mdi:blur"
+                "name": "Сглаживание"
             },
             "blackbar_detection": {
-                "name": "Обнаружение чёрных полос",
-                "icon": "mdi:crop-free"
+                "name": "Обнаружение чёрных полос"
             },
             "forwarder": {
-                "name": "Пересылка",
-                "icon": "mdi:send"
+                "name": "Пересылка"
             },
             "boblight_server": {
-                "name": "Сервер Boblight",
-                "icon": "mdi:server"
+                "name": "Сервер Boblight"
             },
             "platform_capture": {
-                "name": "Захват платформы",
-                "icon": "mdi:video-input-antenna"
+                "name": "Захват платформы"
             },
             "led_device": {
-                "name": "LED-устройство",
-                "icon": "mdi:lightbulb-multiple"
+                "name": "LED-устройство"
             },
             "usb_capture": {
-                "name": "Захват USB",
-                "icon": "mdi:usb"
+                "name": "Захват USB"
             },
             "hdr_tone_mapping": {
-                "name": "Тон-маппинг HDR",
-                "icon": "mdi:contrast-box"
+                "name": "Тон-маппинг HDR"
             }
         },
         "number": {

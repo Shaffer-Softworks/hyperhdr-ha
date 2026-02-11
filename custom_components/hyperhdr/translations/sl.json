@@ -56,40 +56,31 @@
     "entity": {
         "switch": {
             "all": {
-                "name": "Vse",
-                "icon": "mdi:power"
+                "name": "Vse"
             },
             "smoothing": {
-                "name": "Glajenje",
-                "icon": "mdi:blur"
+                "name": "Glajenje"
             },
             "blackbar_detection": {
-                "name": "Zaznavanje črnih pasov",
-                "icon": "mdi:crop-free"
+                "name": "Zaznavanje črnih pasov"
             },
             "forwarder": {
-                "name": "Posredovanje",
-                "icon": "mdi:send"
+                "name": "Posredovanje"
             },
             "boblight_server": {
-                "name": "Strežnik Boblight",
-                "icon": "mdi:server"
+                "name": "Strežnik Boblight"
             },
             "platform_capture": {
-                "name": "Zajem platforme",
-                "icon": "mdi:video-input-antenna"
+                "name": "Zajem platforme"
             },
             "led_device": {
-                "name": "LED naprava",
-                "icon": "mdi:lightbulb-multiple"
+                "name": "LED naprava"
             },
             "usb_capture": {
-                "name": "USB zajem",
-                "icon": "mdi:usb"
+                "name": "USB zajem"
             },
             "hdr_tone_mapping": {
-                "name": "Preslikava tona HDR",
-                "icon": "mdi:contrast-box"
+                "name": "Preslikava tona HDR"
             }
         },
         "number": {

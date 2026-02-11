@@ -56,40 +56,31 @@
     "entity": {
         "switch": {
             "all": {
-                "name": "הכל",
-                "icon": "mdi:power"
+                "name": "הכל"
             },
             "smoothing": {
-                "name": "החלקה",
-                "icon": "mdi:blur"
+                "name": "החלקה"
             },
             "blackbar_detection": {
-                "name": "זיהוי פסי שחור",
-                "icon": "mdi:crop-free"
+                "name": "זיהוי פסי שחור"
             },
             "forwarder": {
-                "name": "העברה",
-                "icon": "mdi:send"
+                "name": "העברה"
             },
             "boblight_server": {
-                "name": "שרת Boblight",
-                "icon": "mdi:server"
+                "name": "שרת Boblight"
             },
             "platform_capture": {
-                "name": "לכידת פלטפורמה",
-                "icon": "mdi:video-input-antenna"
+                "name": "לכידת פלטפורמה"
             },
             "led_device": {
-                "name": "התקן LED",
-                "icon": "mdi:lightbulb-multiple"
+                "name": "התקן LED"
             },
             "usb_capture": {
-                "name": "לכידת USB",
-                "icon": "mdi:usb"
+                "name": "לכידת USB"
             },
             "hdr_tone_mapping": {
-                "name": "מיפוי טון HDR",
-                "icon": "mdi:contrast-box"
+                "name": "מיפוי טון HDR"
             }
         },
         "number": {

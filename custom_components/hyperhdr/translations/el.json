@@ -56,40 +56,31 @@
     "entity": {
         "switch": {
             "all": {
-                "name": "Όλα",
-                "icon": "mdi:power"
+                "name": "Όλα"
             },
             "smoothing": {
-                "name": "Εξομάλυνση",
-                "icon": "mdi:blur"
+                "name": "Εξομάλυνση"
             },
             "blackbar_detection": {
-                "name": "Ανίχνευση μαύρων γραμμών",
-                "icon": "mdi:crop-free"
+                "name": "Ανίχνευση μαύρων γραμμών"
             },
             "forwarder": {
-                "name": "Προώθηση",
-                "icon": "mdi:send"
+                "name": "Προώθηση"
             },
             "boblight_server": {
-                "name": "Διακομιστής Boblight",
-                "icon": "mdi:server"
+                "name": "Διακομιστής Boblight"
             },
             "platform_capture": {
-                "name": "Λήψη πλατφόρμας",
-                "icon": "mdi:video-input-antenna"
+                "name": "Λήψη πλατφόρμας"
             },
             "led_device": {
-                "name": "Συσκευή LED",
-                "icon": "mdi:lightbulb-multiple"
+                "name": "Συσκευή LED"
             },
             "usb_capture": {
-                "name": "Λήψη USB",
-                "icon": "mdi:usb"
+                "name": "Λήψη USB"
             },
             "hdr_tone_mapping": {
-                "name": "Αντιστοίχιση τόνου HDR",
-                "icon": "mdi:contrast-box"
+                "name": "Αντιστοίχιση τόνου HDR"
             }
         },
         "number": {

@@ -56,40 +56,31 @@
     "entity": {
         "switch": {
             "all": {
-                "name": "Tümü",
-                "icon": "mdi:power"
+                "name": "Tümü"
             },
             "smoothing": {
-                "name": "Yumuşatma",
-                "icon": "mdi:blur"
+                "name": "Yumuşatma"
             },
             "blackbar_detection": {
-                "name": "Siyah çubuk algılama",
-                "icon": "mdi:crop-free"
+                "name": "Siyah çubuk algılama"
             },
             "forwarder": {
-                "name": "Yönlendirme",
-                "icon": "mdi:send"
+                "name": "Yönlendirme"
             },
             "boblight_server": {
-                "name": "Boblight sunucu",
-                "icon": "mdi:server"
+                "name": "Boblight sunucu"
             },
             "platform_capture": {
-                "name": "Platform yakalama",
-                "icon": "mdi:video-input-antenna"
+                "name": "Platform yakalama"
             },
             "led_device": {
-                "name": "LED aygıt",
-                "icon": "mdi:lightbulb-multiple"
+                "name": "LED aygıt"
             },
             "usb_capture": {
-                "name": "USB yakalama",
-                "icon": "mdi:usb"
+                "name": "USB yakalama"
             },
             "hdr_tone_mapping": {
-                "name": "HDR ton eşleme",
-                "icon": "mdi:contrast-box"
+                "name": "HDR ton eşleme"
             }
         },
         "number": {
