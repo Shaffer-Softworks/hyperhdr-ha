@@ -36,7 +36,8 @@
             "user": {
                 "data": {
                     "host": "מארח",
-                    "port": "פתחה"
+                    "port": "פתחה",
+                    "port_ws": "פורט WebSocket (לזרימת LED)"
                 }
             }
         }
@@ -46,7 +47,8 @@
             "init": {
                 "data": {
                     "effect_show_list": "HyperHDR effects to show",
-                    "priority": "HyperHDR priority to use for colors and effects"
+                    "priority": "HyperHDR priority to use for colors and effects",
+                    "port_ws": "פורט WebSocket (לזרימת LED)"
                 }
             }
         }
@@ -54,39 +56,39 @@
     "entity": {
         "switch": {
             "all": {
-                "name": "כל הרכיבים",
+                "name": "הכל",
                 "icon": "mdi:power"
             },
             "smoothing": {
-                "name": "רכיב החלקה",
+                "name": "החלקה",
                 "icon": "mdi:blur"
             },
             "blackbar_detection": {
-                "name": "רכיב זיהוי פסי שחור",
+                "name": "זיהוי פסי שחור",
                 "icon": "mdi:crop-free"
             },
             "forwarder": {
-                "name": "רכיב העברה",
+                "name": "העברה",
                 "icon": "mdi:send"
             },
             "boblight_server": {
-                "name": "רכיב שרת Boblight",
+                "name": "שרת Boblight",
                 "icon": "mdi:server"
             },
             "platform_capture": {
-                "name": "רכיב לכידת פלטפורמה",
+                "name": "לכידת פלטפורמה",
                 "icon": "mdi:video-input-antenna"
             },
             "led_device": {
-                "name": "רכיב התקן LED",
+                "name": "התקן LED",
                 "icon": "mdi:lightbulb-multiple"
             },
             "usb_capture": {
-                "name": "רכיב לכידת USB",
+                "name": "לכידת USB",
                 "icon": "mdi:usb"
             },
             "hdr_tone_mapping": {
-                "name": "רכיב מיפוי טון HDR",
+                "name": "מיפוי טון HDR",
                 "icon": "mdi:contrast-box"
             }
         },
@@ -107,9 +109,6 @@
         "select": {
             "smoothing_type": {
                 "name": "סוג החלקה"
-            },
-            "color_engine": {
-                "name": "מנוע צבע"
             }
         },
         "sensor": {

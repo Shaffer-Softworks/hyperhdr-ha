@@ -36,7 +36,8 @@
             "user": {
                 "data": {
                     "host": "Κεντρικός υπολογιστής",
-                    "port": "Θύρα"
+                    "port": "Θύρα",
+                    "port_ws": "Θύρα WebSocket (για ροή LED)"
                 }
             }
         }
@@ -46,7 +47,8 @@
             "init": {
                 "data": {
                     "effect_show_list": "Εφέ HyperHDR για εμφάνιση",
-                    "priority": "HyperHDR priority to use for colors and effects"
+                    "priority": "HyperHDR priority to use for colors and effects",
+                    "port_ws": "Θύρα WebSocket (για ροή LED)"
                 }
             }
         }
@@ -54,39 +56,39 @@
     "entity": {
         "switch": {
             "all": {
-                "name": "Όλα τα στοιχεία",
+                "name": "Όλα",
                 "icon": "mdi:power"
             },
             "smoothing": {
-                "name": "Στοιχείο εξομάλυνσης",
+                "name": "Εξομάλυνση",
                 "icon": "mdi:blur"
             },
             "blackbar_detection": {
-                "name": "Στοιχείο ανίχνευσης μαύρων γραμμών",
+                "name": "Ανίχνευση μαύρων γραμμών",
                 "icon": "mdi:crop-free"
             },
             "forwarder": {
-                "name": "Στοιχείο προώθησης",
+                "name": "Προώθηση",
                 "icon": "mdi:send"
             },
             "boblight_server": {
-                "name": "Στοιχείο διακομιστή Boblight",
+                "name": "Διακομιστής Boblight",
                 "icon": "mdi:server"
             },
             "platform_capture": {
-                "name": "Στοιχείο λήψης πλατφόρμας",
+                "name": "Λήψη πλατφόρμας",
                 "icon": "mdi:video-input-antenna"
             },
             "led_device": {
-                "name": "Στοιχείο συσκευής LED",
+                "name": "Συσκευή LED",
                 "icon": "mdi:lightbulb-multiple"
             },
             "usb_capture": {
-                "name": "Στοιχείο λήψης USB",
+                "name": "Λήψη USB",
                 "icon": "mdi:usb"
             },
             "hdr_tone_mapping": {
-                "name": "Στοιχείο αντιστοίχισης τόνου HDR",
+                "name": "Αντιστοίχιση τόνου HDR",
                 "icon": "mdi:contrast-box"
             }
         },
@@ -107,9 +109,6 @@
         "select": {
             "smoothing_type": {
                 "name": "Τύπος εξομάλυνσης"
-            },
-            "color_engine": {
-                "name": "Μηχανή χρωμάτων"
             }
         },
         "sensor": {

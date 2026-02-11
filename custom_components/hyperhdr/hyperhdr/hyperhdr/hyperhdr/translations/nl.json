@@ -1,0 +1,132 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Service is al geconfigureerd",
+            "already_in_progress": "De configuratiestroom is al aan de gang",
+            "auth_new_token_not_granted_error": "Nieuw aangemaakte token is niet goedgekeurd in HyperHDR UI",
+            "auth_new_token_not_work_error": "Verificatie met nieuw aangemaakt token mislukt",
+            "auth_required_error": "Kan niet bepalen of autorisatie vereist is",
+            "cannot_connect": "Kan geen verbinding maken",
+            "no_id": "De HyperHDR Ambilight instantie heeft zijn id niet gerapporteerd",
+            "reauth_successful": "Herauthenticatie was succesvol"
+        },
+        "error": {
+            "cannot_connect": "Kan geen verbinding maken",
+            "invalid_access_token": "Ongeldig toegangstoken"
+        },
+        "step": {
+            "auth": {
+                "data": {
+                    "create_token": "Maak automatisch een nieuw token aan",
+                    "token": "Of geef een reeds bestaand token op"
+                },
+                "description": "Configureer autorisatie voor uw HyperHDR Ambilight-server"
+            },
+            "confirm": {
+                "description": "Wilt u deze HyperHDR Ambilight toevoegen aan Home Assistant? \n\n ** Host: ** {host}\n ** Poort: ** {port}\n ** ID **: {id}",
+                "title": "Bevestig de toevoeging van HyperHDR Ambilight-service"
+            },
+            "create_token": {
+                "description": "Kies **Submit** hieronder om een nieuw authenticatie token aan te vragen. U wordt doorgestuurd naar de HyperHDR UI om de aanvraag goed te keuren. Controleer of de getoonde id \"{auth_id}\" is.",
+                "title": "Automatisch nieuw authenticatie token aanmaken"
+            },
+            "create_token_external": {
+                "title": "Accepteer nieuwe token in HyperHDR UI"
+            },
+            "user": {
+                "data": {
+                    "host": "Host",
+                    "port": "Poort"
+                }
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "effect_show_list": "HyperHDR-effecten om te laten zien",
+                    "priority": "HyperHDR prioriteit te gebruiken voor kleuren en effecten"
+                }
+            }
+        }
+    },
+    "entity": {
+        "switch": {
+            "all": {
+                "name": "Alle componenten",
+                "icon": "mdi:power"
+            },
+            "smoothing": {
+                "name": "Component voor smoothing",
+                "icon": "mdi:blur"
+            },
+            "blackbar_detection": {
+                "name": "Component zwartebalkdetectie",
+                "icon": "mdi:crop-free"
+            },
+            "forwarder": {
+                "name": "Component doorsturen",
+                "icon": "mdi:send"
+            },
+            "boblight_server": {
+                "name": "Component Boblight-server",
+                "icon": "mdi:server"
+            },
+            "platform_capture": {
+                "name": "Component platform-capture",
+                "icon": "mdi:video-input-antenna"
+            },
+            "led_device": {
+                "name": "Component LED-apparaat",
+                "icon": "mdi:lightbulb-multiple"
+            },
+            "usb_capture": {
+                "name": "Component USB-capture",
+                "icon": "mdi:usb"
+            },
+            "hdr_tone_mapping": {
+                "name": "Component HDR-tonemapping",
+                "icon": "mdi:contrast-box"
+            }
+        },
+        "number": {
+            "smoothing_time": {
+                "name": "Smoothing-tijd"
+            },
+            "smoothing_decay": {
+                "name": "Smoothing-verval"
+            },
+            "smoothing_update_freq": {
+                "name": "Smoothing-updatefrequentie"
+            },
+            "hdr_tone_mapping": {
+                "name": "HDR-tonemapping"
+            }
+        },
+        "select": {
+            "smoothing_type": {
+                "name": "Smoothing-type"
+            },
+            "color_engine": {
+                "name": "Kleurenengine"
+            }
+        },
+        "sensor": {
+            "visible_priority": {
+                "name": "Visible Priority"
+            },
+            "average_color": {
+                "name": "Gemiddelde kleur"
+            }
+        },
+        "light": {
+            "hyperhdr_light": {
+                "name": "Licht"
+            },
+            "hyperhdr_priority_light": {
+                "name": "Prioriteitslicht"
+            }
+        }
+    }
+}

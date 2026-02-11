@@ -36,7 +36,8 @@
             "user": {
                 "data": {
                     "host": "Host",
-                    "port": "Port"
+                    "port": "Port",
+                    "port_ws": "Port WebSocket (untuk streaming LED)"
                 }
             }
         }
@@ -46,7 +47,8 @@
             "init": {
                 "data": {
                     "effect_show_list": "Efek hyperhdr untuk ditampilkan",
-                    "priority": "Prioritas hyperhdr digunakan untuk warna dan efek"
+                    "priority": "Prioritas hyperhdr digunakan untuk warna dan efek",
+                    "port_ws": "Port WebSocket (untuk streaming LED)"
                 }
             }
         }
@@ -54,39 +56,39 @@
     "entity": {
         "switch": {
             "all": {
-                "name": "Semua komponen",
+                "name": "Semua",
                 "icon": "mdi:power"
             },
             "smoothing": {
-                "name": "Komponen penghalusan",
+                "name": "Penghalusan",
                 "icon": "mdi:blur"
             },
             "blackbar_detection": {
-                "name": "Komponen deteksi bar hitam",
+                "name": "Deteksi bar hitam",
                 "icon": "mdi:crop-free"
             },
             "forwarder": {
-                "name": "Komponen penerus",
+                "name": "Penerus",
                 "icon": "mdi:send"
             },
             "boblight_server": {
-                "name": "Komponen server Boblight",
+                "name": "Server Boblight",
                 "icon": "mdi:server"
             },
             "platform_capture": {
-                "name": "Komponen tangkap platform",
+                "name": "Tangkap platform",
                 "icon": "mdi:video-input-antenna"
             },
             "led_device": {
-                "name": "Komponen perangkat LED",
+                "name": "Perangkat LED",
                 "icon": "mdi:lightbulb-multiple"
             },
             "usb_capture": {
-                "name": "Komponen tangkap USB",
+                "name": "Tangkap USB",
                 "icon": "mdi:usb"
             },
             "hdr_tone_mapping": {
-                "name": "Komponen pemetaan nada HDR",
+                "name": "Pemetaan nada HDR",
                 "icon": "mdi:contrast-box"
             }
         },
@@ -107,9 +109,6 @@
         "select": {
             "smoothing_type": {
                 "name": "Jenis penghalusan"
-            },
-            "color_engine": {
-                "name": "Mesin warna"
             }
         },
         "sensor": {

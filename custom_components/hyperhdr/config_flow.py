@@ -47,7 +47,6 @@ from .const import (
 )
 
 _LOGGER = logging.getLogger(__name__)
-_LOGGER.setLevel(logging.DEBUG)
 
 #  +------------------+ +------------------+ +--------------------+ +--------------------+
 #  |Step: SSDP        | |Step: user        | |Step: import        | |Step: reauth        |
@@ -112,7 +111,7 @@ _LOGGER.setLevel(logging.DEBUG)
 class HyperHDRConfigFlow(ConfigFlow, domain=DOMAIN):
     """Handle a HyperHDR config flow."""
 
-    VERSION = 1
+    VERSION = 2
 
     def __init__(self) -> None:
         """Instantiate config flow."""
@@ -466,11 +465,17 @@ class HyperHDROptionsFlow(OptionsFlow):
         # so we inverse the meaning prior to storage.
 
         if user_input is not None:
-            # Pull out admin_password and persist it on config_entry.data so
-            # camera entities (which read from data, not options) can access it.
+            # Pull out connection-level settings and persist them on
+            # config_entry.data so camera entities (which read from data,
+            # not options) can access them.
+            new_data = {**self._config_entry.data}
             admin_password = user_input.pop(CONF_ADMIN_PASSWORD, None)
             if admin_password is not None:
-                new_data = {**self._config_entry.data, CONF_ADMIN_PASSWORD: admin_password}
+                new_data[CONF_ADMIN_PASSWORD] = admin_password
+            port_ws = user_input.pop(CONF_PORT_WS, None)
+            if port_ws is not None:
+                new_data[CONF_PORT_WS] = port_ws
+            if new_data != self._config_entry.data:
                 self.hass.config_entries.async_update_entry(
                     self._config_entry, data=new_data
                 )
@@ -500,6 +505,12 @@ class HyperHDROptionsFlow(OptionsFlow):
                         CONF_EFFECT_SHOW_LIST,
                         default=default_effect_show_list,
                     ): cv.multi_select(effects),
+                    vol.Optional(
+                        CONF_PORT_WS,
+                        default=self._config_entry.data.get(
+                            CONF_PORT_WS, DEFAULT_PORT_WS
+                        ),
+                    ): vol.All(vol.Coerce(int), vol.Range(min=1, max=65535)),
                     vol.Optional(
                         CONF_ADMIN_PASSWORD,
                         description={

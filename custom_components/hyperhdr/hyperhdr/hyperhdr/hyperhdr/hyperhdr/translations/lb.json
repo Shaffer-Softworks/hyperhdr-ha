@@ -1,0 +1,132 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Service ass scho konfiguréiert",
+            "already_in_progress": "Konfiguratioun's Oflaf ass schon am gaang",
+            "auth_new_token_not_granted_error": "Nei erstallte Jeton ass net an der HyperHDR UI accordéiert",
+            "auth_new_token_not_work_error": "Feeler bei der Authentifikatioun mam nei erstallte Jeton",
+            "auth_required_error": "Feeler beim bestëmmen ob Autorisatioun erfuerderlech ass",
+            "cannot_connect": "Feeler beim verbannen",
+            "no_id": "Dës HyperHDR Ambilight Instanz huet seng ID net gemellt.",
+            "reauth_successful": "Re-authentication was successful"
+        },
+        "error": {
+            "cannot_connect": "Feeler beim verbannen",
+            "invalid_access_token": "Ongëltegen Accès Jeton"
+        },
+        "step": {
+            "auth": {
+                "data": {
+                    "create_token": "Neie Jeton automatesch erstellen",
+                    "token": "oder scho bestehenden Jeton uginn"
+                },
+                "description": "Autorisatioun mat dengem HyperHDR Ambilight Server konfiguréieren"
+            },
+            "confirm": {
+                "description": "Soll dësen HyperHDR Ambilight am Home Assistant dobäi gesaat ginn?\n\n**Host:** {host}\n**Port:** {port}\n**ID**: {id}",
+                "title": "Dobäisetzen vum HyperHDR Ambilight Service bestätegen"
+            },
+            "create_token": {
+                "description": "Klick **Ofschécken** fir een neien Authentifikatioun's Jeton unzefroen. Du gëss dann an HyperHDR UI weidergeleet fir d'Ufro z'accordéieren. Iwwerpréif dass déi ugewisen id \"{auth_id}\" ass.",
+                "title": "Neien Authentifikatioun's Jeton automatesch erstellen"
+            },
+            "create_token_external": {
+                "title": "Neie Jeton an der HyperHDR UI accordéieren"
+            },
+            "user": {
+                "data": {
+                    "host": "Host",
+                    "port": "Port"
+                }
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "effect_show_list": "HyperHDR effects to show",
+                    "priority": "HyperHDR Prioritéit fir Faarwen an Effekter"
+                }
+            }
+        }
+    },
+    "entity": {
+        "switch": {
+            "all": {
+                "name": "All Komponente",
+                "icon": "mdi:power"
+            },
+            "smoothing": {
+                "name": "Glättungs-Komponent",
+                "icon": "mdi:blur"
+            },
+            "blackbar_detection": {
+                "name": "Schwaarzbar-Detektioun Komponent",
+                "icon": "mdi:crop-free"
+            },
+            "forwarder": {
+                "name": "Weiderleedungs-Komponent",
+                "icon": "mdi:send"
+            },
+            "boblight_server": {
+                "name": "Boblight-Server Komponent",
+                "icon": "mdi:server"
+            },
+            "platform_capture": {
+                "name": "Plattform-Opnam Komponent",
+                "icon": "mdi:video-input-antenna"
+            },
+            "led_device": {
+                "name": "LED-Gerät Komponent",
+                "icon": "mdi:lightbulb-multiple"
+            },
+            "usb_capture": {
+                "name": "USB-Opnam Komponent",
+                "icon": "mdi:usb"
+            },
+            "hdr_tone_mapping": {
+                "name": "HDR-Tonmapping Komponent",
+                "icon": "mdi:contrast-box"
+            }
+        },
+        "number": {
+            "smoothing_time": {
+                "name": "Glättungszäit"
+            },
+            "smoothing_decay": {
+                "name": "Ofhuele vun der Glättung"
+            },
+            "smoothing_update_freq": {
+                "name": "Glättungs-Aktualiséierungsfrequenz"
+            },
+            "hdr_tone_mapping": {
+                "name": "HDR-Tonmapping"
+            }
+        },
+        "select": {
+            "smoothing_type": {
+                "name": "Typ vu Glättung"
+            },
+            "color_engine": {
+                "name": "Faarw-Engine"
+            }
+        },
+        "sensor": {
+            "visible_priority": {
+                "name": "Visible Priority"
+            },
+            "average_color": {
+                "name": "Duerchschnëtts Faarf"
+            }
+        },
+        "light": {
+            "hyperhdr_light": {
+                "name": "Luucht"
+            },
+            "hyperhdr_priority_light": {
+                "name": "Prioritéitsluucht"
+            }
+        }
+    }
+}

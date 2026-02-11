@@ -1,0 +1,132 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Storitev je že nameščena",
+            "already_in_progress": "Nameščanje se že izvaja",
+            "auth_new_token_not_granted_error": "Uporabniški vmesnik HyperHDR UI ni potrdil novo ustvarjenega žetona",
+            "auth_new_token_not_work_error": "Overjanje s pomočjo novo ustvarjenega žetona ni uspelo",
+            "auth_required_error": "Ni mogoče določiti ali je overjanje potrebno",
+            "cannot_connect": "Povezovanje ni bilo uspešno",
+            "no_id": "HyperHDR Ambilight instanca ni prijavila tega id",
+            "reauth_successful": "Ponovno overjanje je uspelo."
+        },
+        "error": {
+            "cannot_connect": "Neuspelo povezovanje",
+            "invalid_access_token": "Neveljaven žeton za dostop"
+        },
+        "step": {
+            "auth": {
+                "data": {
+                    "create_token": "Samodejno ustvari nov žeton",
+                    "token": "ali zagotovite že obstoječi žeton"
+                },
+                "description": "Nastavite overitev za HyperHDR Ambilight strežnik"
+            },
+            "confirm": {
+                "description": "Želite dodati ta HyperHDR Ambilight v  Home Assistant?\n\n**Gostitelj:** {host}\n**Vrata:** {port}\n**ID**: {id}",
+                "title": "Potrdi dodajanje storitve HyperHDR Ambilight"
+            },
+            "create_token": {
+                "description": "Izberite **Posreduj*, če želite zahtevati nov overitveni žeton. Preusmerjeni boste na uporabniški vmesnik HyperHDR, da potrdite zahtevek. Prepričajte se, da je prikazani id \"{auth_id}\"",
+                "title": "Samodejno ustvari nov overitveni žeton"
+            },
+            "create_token_external": {
+                "title": "Sprejmi nov žeton v uporabniškem vmesniku HyperHDR"
+            },
+            "user": {
+                "data": {
+                    "host": "Gostitelj",
+                    "port": "Vrata"
+                }
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "effect_show_list": "HyperHDR effects to show",
+                    "priority": "Prednostna raba HyperHDRa za barve in učinke"
+                }
+            }
+        }
+    },
+    "entity": {
+        "switch": {
+            "all": {
+                "name": "Vse komponente",
+                "icon": "mdi:power"
+            },
+            "smoothing": {
+                "name": "Komponenta glajenja",
+                "icon": "mdi:blur"
+            },
+            "blackbar_detection": {
+                "name": "Komponenta zaznavanja črnih pasov",
+                "icon": "mdi:crop-free"
+            },
+            "forwarder": {
+                "name": "Komponenta posredovanja",
+                "icon": "mdi:send"
+            },
+            "boblight_server": {
+                "name": "Komponenta strežnika Boblight",
+                "icon": "mdi:server"
+            },
+            "platform_capture": {
+                "name": "Komponenta zajema platforme",
+                "icon": "mdi:video-input-antenna"
+            },
+            "led_device": {
+                "name": "Komponenta LED naprave",
+                "icon": "mdi:lightbulb-multiple"
+            },
+            "usb_capture": {
+                "name": "Komponenta USB zajema",
+                "icon": "mdi:usb"
+            },
+            "hdr_tone_mapping": {
+                "name": "Komponenta preslikave tona HDR",
+                "icon": "mdi:contrast-box"
+            }
+        },
+        "number": {
+            "smoothing_time": {
+                "name": "Čas glajenja"
+            },
+            "smoothing_decay": {
+                "name": "Upad glajenja"
+            },
+            "smoothing_update_freq": {
+                "name": "Frekvenca posodobitve glajenja"
+            },
+            "hdr_tone_mapping": {
+                "name": "Preslikava tona HDR"
+            }
+        },
+        "select": {
+            "smoothing_type": {
+                "name": "Vrsta glajenja"
+            },
+            "color_engine": {
+                "name": "Barvni pogon"
+            }
+        },
+        "sensor": {
+            "visible_priority": {
+                "name": "Visible Priority"
+            },
+            "average_color": {
+                "name": "Povprečna barva"
+            }
+        },
+        "light": {
+            "hyperhdr_light": {
+                "name": "Luč"
+            },
+            "hyperhdr_priority_light": {
+                "name": "Prednostna luč"
+            }
+        }
+    }
+}

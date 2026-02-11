@@ -215,6 +215,9 @@ class HyperHDRComponentSwitch(SwitchEntity):
 
         self._client.add_callbacks(self._client_callbacks)
 
+        # Populate initial state from already-loaded client data.
+        self._update_components()
+
     async def async_will_remove_from_hass(self) -> None:
         """Cleanup prior to hass removal."""
         self._client.remove_callbacks(self._client_callbacks)

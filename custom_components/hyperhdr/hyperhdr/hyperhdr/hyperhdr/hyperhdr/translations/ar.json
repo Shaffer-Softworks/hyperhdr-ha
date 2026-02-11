@@ -1,0 +1,132 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "تم تكوين الخدمة بالفعل",
+            "already_in_progress": "تدفق الإعداد قيد التقدم بالفعل",
+            "auth_new_token_not_granted_error": "لم تتم الموافقة على الرمز المميز الذي تم إنشاؤه حديثًا في واجهة HyperHDR",
+            "auth_new_token_not_work_error": "فشلت المصادقة باستخدام الرمز المميز الذي تم إنشاؤه حديثًا",
+            "auth_required_error": "تعذر تحديد ما إذا كانت هناك حاجة إلى تفويض",
+            "cannot_connect": "فشل الاتصال",
+            "no_id": "لم تقم نسخة HyperHDR Ambilight بالإبلاغ عن معرفها",
+            "reauth_successful": "أُعيدت المصادقة بنجاح"
+        },
+        "error": {
+            "cannot_connect": "فشل الاتصال",
+            "invalid_access_token": "رمز وصول غير صالح"
+        },
+        "step": {
+            "auth": {
+                "data": {
+                    "create_token": "إنشاء رمز جديد تلقائيًا",
+                    "token": "أو قدِّم رمزًا موجودًا مسبقًا"
+                },
+                "description": "اضبط الإذن لخادم HyperHDR Ambilight لديك"
+            },
+            "confirm": {
+                "description": "هل تريد إضافة HyperHDR Ambilight إلى Home Assistant؟ \n\n ** المضيف: ** {host}\n ** المنفذ: ** {port}\n ** المعرف **: {id}",
+                "title": "تأكيد إضافة خدمة HyperHDR Ambilight"
+            },
+            "create_token": {
+                "description": "اختر **إرسال** بالأسفل لطلب رمز مصادقة جديد. ستتم إعادة توجيهك إلى واجهة HyperHDR للموافقة على الطلب. يرجى التحقق من أن المعرّف المعروض هو \"{auth_id}\"",
+                "title": "إنشاء رمز مصادقة جديد تلقائيًا"
+            },
+            "create_token_external": {
+                "title": "اقبل الرمز الجديد في واجهة HyperHDR"
+            },
+            "user": {
+                "data": {
+                    "host": "المضيف",
+                    "port": "المنفذ"
+                }
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "effect_show_list": "تأثيرات HyperHDR المعروضة",
+                    "priority": "أولوية HyperHDR المستخدمة للألوان والتأثيرات"
+                }
+            }
+        }
+    },
+    "entity": {
+        "switch": {
+            "all": {
+                "name": "كل المكونات",
+                "icon": "mdi:power"
+            },
+            "smoothing": {
+                "name": "مكون التنعيم",
+                "icon": "mdi:blur"
+            },
+            "blackbar_detection": {
+                "name": "مكون كشف الأشرطة السوداء",
+                "icon": "mdi:crop-free"
+            },
+            "forwarder": {
+                "name": "مكون إعادة التوجيه",
+                "icon": "mdi:send"
+            },
+            "boblight_server": {
+                "name": "مكون خادم Boblight",
+                "icon": "mdi:server"
+            },
+            "platform_capture": {
+                "name": "مكون التقاط المنصة",
+                "icon": "mdi:video-input-antenna"
+            },
+            "led_device": {
+                "name": "مكون جهاز LED",
+                "icon": "mdi:lightbulb-multiple"
+            },
+            "usb_capture": {
+                "name": "مكون التقاط USB",
+                "icon": "mdi:usb"
+            },
+            "hdr_tone_mapping": {
+                "name": "مكون تعيين النغمة HDR",
+                "icon": "mdi:contrast-box"
+            }
+        },
+        "number": {
+            "smoothing_time": {
+                "name": "زمن التنعيم"
+            },
+            "smoothing_decay": {
+                "name": "تلاشي التنعيم"
+            },
+            "smoothing_update_freq": {
+                "name": "تردد تحديث التنعيم"
+            },
+            "hdr_tone_mapping": {
+                "name": "تعيين نغمة HDR"
+            }
+        },
+        "select": {
+            "smoothing_type": {
+                "name": "نوع التنعيم"
+            },
+            "color_engine": {
+                "name": "محرك الألوان"
+            }
+        },
+        "sensor": {
+            "visible_priority": {
+                "name": "Visible Priority"
+            },
+            "average_color": {
+                "name": "متوسط اللون"
+            }
+        },
+        "light": {
+            "hyperhdr_light": {
+                "name": "ضوء"
+            },
+            "hyperhdr_priority_light": {
+                "name": "ضوء الأولوية"
+            }
+        }
+    }
+}

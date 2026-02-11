@@ -36,7 +36,8 @@
             "user": {
                 "data": {
                     "host": "主機端",
-                    "port": "通訊埠"
+                    "port": "通訊埠",
+                    "port_ws": "WebSocket 連接埠（用於 LED 串流）"
                 }
             }
         }
@@ -46,7 +47,8 @@
             "init": {
                 "data": {
                     "effect_show_list": "顯示 HyperHDR 效應",
-                    "priority": "HyperHDR 優先使用之色溫與特效"
+                    "priority": "HyperHDR 優先使用之色溫與特效",
+                    "port_ws": "WebSocket 連接埠（用於 LED 串流）"
                 }
             }
         }
@@ -54,39 +56,39 @@
     "entity": {
         "switch": {
             "all": {
-                "name": "全部元件",
+                "name": "全部",
                 "icon": "mdi:power"
             },
             "smoothing": {
-                "name": "平滑元件",
+                "name": "平滑",
                 "icon": "mdi:blur"
             },
             "blackbar_detection": {
-                "name": "黑邊偵測元件",
+                "name": "黑邊偵測",
                 "icon": "mdi:crop-free"
             },
             "forwarder": {
-                "name": "轉送元件",
+                "name": "轉送",
                 "icon": "mdi:send"
             },
             "boblight_server": {
-                "name": "Boblight 伺服器元件",
+                "name": "Boblight 伺服器",
                 "icon": "mdi:server"
             },
             "platform_capture": {
-                "name": "平台擷取元件",
+                "name": "平台擷取",
                 "icon": "mdi:video-input-antenna"
             },
             "led_device": {
-                "name": "LED 裝置元件",
+                "name": "LED 裝置",
                 "icon": "mdi:lightbulb-multiple"
             },
             "usb_capture": {
-                "name": "USB 擷取元件",
+                "name": "USB 擷取",
                 "icon": "mdi:usb"
             },
             "hdr_tone_mapping": {
-                "name": "HDR 色調映射元件",
+                "name": "HDR 色調映射",
                 "icon": "mdi:contrast-box"
             }
         },
@@ -107,9 +109,6 @@
         "select": {
             "smoothing_type": {
                 "name": "平滑類型"
-            },
-            "color_engine": {
-                "name": "色彩引擎"
             }
         },
         "sensor": {

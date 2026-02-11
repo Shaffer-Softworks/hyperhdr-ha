@@ -36,7 +36,8 @@
             "user": {
                 "data": {
                     "host": "호스트",
-                    "port": "포트"
+                    "port": "포트",
+                    "port_ws": "WebSocket 포트 (LED 스트리밍용)"
                 }
             }
         }
@@ -46,7 +47,8 @@
             "init": {
                 "data": {
                     "effect_show_list": "출력할 HyperHDR 효과",
-                    "priority": "색상 및 효과에 사용할 HyperHDR 우선 순위"
+                    "priority": "색상 및 효과에 사용할 HyperHDR 우선 순위",
+                    "port_ws": "WebSocket 포트 (LED 스트리밍용)"
                 }
             }
         }
@@ -54,39 +56,39 @@
     "entity": {
         "switch": {
             "all": {
-                "name": "전체 구성요소",
+                "name": "전체",
                 "icon": "mdi:power"
             },
             "smoothing": {
-                "name": "스무딩 구성요소",
+                "name": "스무딩",
                 "icon": "mdi:blur"
             },
             "blackbar_detection": {
-                "name": "블랙바 감지 구성요소",
+                "name": "블랙바 감지",
                 "icon": "mdi:crop-free"
             },
             "forwarder": {
-                "name": "포워더 구성요소",
+                "name": "포워더",
                 "icon": "mdi:send"
             },
             "boblight_server": {
-                "name": "Boblight 서버 구성요소",
+                "name": "Boblight 서버",
                 "icon": "mdi:server"
             },
             "platform_capture": {
-                "name": "플랫폼 캡처 구성요소",
+                "name": "플랫폼 캡처",
                 "icon": "mdi:video-input-antenna"
             },
             "led_device": {
-                "name": "LED 장치 구성요소",
+                "name": "LED 장치",
                 "icon": "mdi:lightbulb-multiple"
             },
             "usb_capture": {
-                "name": "USB 캡처 구성요소",
+                "name": "USB 캡처",
                 "icon": "mdi:usb"
             },
             "hdr_tone_mapping": {
-                "name": "HDR 톤 매핑 구성요소",
+                "name": "HDR 톤 매핑",
                 "icon": "mdi:contrast-box"
             }
         },
@@ -107,9 +109,6 @@
         "select": {
             "smoothing_type": {
                 "name": "스무딩 유형"
-            },
-            "color_engine": {
-                "name": "컬러 엔진"
             }
         },
         "sensor": {

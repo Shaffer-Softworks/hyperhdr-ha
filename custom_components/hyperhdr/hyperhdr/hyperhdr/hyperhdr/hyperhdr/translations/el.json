@@ -1,0 +1,132 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Η υπηρεσία έχει ήδη ρυθμιστεί",
+            "already_in_progress": "Η διαδικασία ρύθμισης βρίσκεται ήδη σε εξέλιξη",
+            "auth_new_token_not_granted_error": "Το νέο διακριτικό δεν εγκρίθηκε στο περιβάλλον χρήστη HyperHDR",
+            "auth_new_token_not_work_error": "Αποτυχία ελέγχου ταυτότητας με το νέο διακριτικό",
+            "auth_required_error": "Αδυναμία προσδιορισμού αν απαιτείται εξουσιοδότηση",
+            "cannot_connect": "Αποτυχία σύνδεσης",
+            "no_id": "Το HyperHDR Ambilight δεν ανέφερε το αναγνωριστικό του",
+            "reauth_successful": "Η επανεξουσιοδότηση ήταν επιτυχής"
+        },
+        "error": {
+            "cannot_connect": "Αποτυχία σύνδεσης",
+            "invalid_access_token": "Μη έγκυρο διακριτικό πρόσβασης"
+        },
+        "step": {
+            "auth": {
+                "data": {
+                    "create_token": "Δημιουργία νέου διακριτικού αυτόματα",
+                    "token": "Ή παροχή υπάρχοντος διακριτικού"
+                },
+                "description": "Ρυθμίστε την εξουσιοδότηση στον διακομιστή HyperHDR Ambilight σας"
+            },
+            "confirm": {
+                "description": "Θέλετε να προσθέσετε αυτό το HyperHDR Ambilight στο Home Assistant;\n\n**Κεντρικός υπολογιστής:** {host}\n**Θύρα:** {port}\n**ID**: {id}",
+                "title": "Επιβεβαίωση προσθήκης υπηρεσίας HyperHDR Ambilight"
+            },
+            "create_token": {
+                "description": "Επιλέξτε **Υποβολή** παρακάτω για να ζητήσετε ένα νέο διακριτικό ελέγχου ταυτότητας. Θα μεταφερθείτε στο περιβάλλον χρήστη HyperHDR για να εγκρίνετε το αίτημα. Επαληθεύστε ότι το εμφανιζόμενο αναγνωριστικό είναι \"{auth_id}\"",
+                "title": "Αυτόματη δημιουργία νέου διακριτικού ελέγχου ταυτότητας"
+            },
+            "create_token_external": {
+                "title": "Αποδεχθείτε το νέο διακριτικό στο UI του HyperHDR"
+            },
+            "user": {
+                "data": {
+                    "host": "Κεντρικός υπολογιστής",
+                    "port": "Θύρα"
+                }
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "effect_show_list": "Εφέ HyperHDR για εμφάνιση",
+                    "priority": "HyperHDR priority to use for colors and effects"
+                }
+            }
+        }
+    },
+    "entity": {
+        "switch": {
+            "all": {
+                "name": "Όλα τα στοιχεία",
+                "icon": "mdi:power"
+            },
+            "smoothing": {
+                "name": "Στοιχείο εξομάλυνσης",
+                "icon": "mdi:blur"
+            },
+            "blackbar_detection": {
+                "name": "Στοιχείο ανίχνευσης μαύρων γραμμών",
+                "icon": "mdi:crop-free"
+            },
+            "forwarder": {
+                "name": "Στοιχείο προώθησης",
+                "icon": "mdi:send"
+            },
+            "boblight_server": {
+                "name": "Στοιχείο διακομιστή Boblight",
+                "icon": "mdi:server"
+            },
+            "platform_capture": {
+                "name": "Στοιχείο λήψης πλατφόρμας",
+                "icon": "mdi:video-input-antenna"
+            },
+            "led_device": {
+                "name": "Στοιχείο συσκευής LED",
+                "icon": "mdi:lightbulb-multiple"
+            },
+            "usb_capture": {
+                "name": "Στοιχείο λήψης USB",
+                "icon": "mdi:usb"
+            },
+            "hdr_tone_mapping": {
+                "name": "Στοιχείο αντιστοίχισης τόνου HDR",
+                "icon": "mdi:contrast-box"
+            }
+        },
+        "number": {
+            "smoothing_time": {
+                "name": "Χρόνος εξομάλυνσης"
+            },
+            "smoothing_decay": {
+                "name": "Εξασθένηση εξομάλυνσης"
+            },
+            "smoothing_update_freq": {
+                "name": "Συχνότητα ενημέρωσης εξομάλυνσης"
+            },
+            "hdr_tone_mapping": {
+                "name": "Αντιστοίχιση τόνου HDR"
+            }
+        },
+        "select": {
+            "smoothing_type": {
+                "name": "Τύπος εξομάλυνσης"
+            },
+            "color_engine": {
+                "name": "Μηχανή χρωμάτων"
+            }
+        },
+        "sensor": {
+            "visible_priority": {
+                "name": "Visible Priority"
+            },
+            "average_color": {
+                "name": "Μέσο χρώμα"
+            }
+        },
+        "light": {
+            "hyperhdr_light": {
+                "name": "Φως"
+            },
+            "hyperhdr_priority_light": {
+                "name": "Φως προτεραιότητας"
+            }
+        }
+    }
+}

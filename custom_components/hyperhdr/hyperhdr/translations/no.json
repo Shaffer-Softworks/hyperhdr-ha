@@ -1,0 +1,132 @@
+{
+    "config": {
+        "abort": {
+            "already_configured": "Tjenesten er allerede konfigurert",
+            "already_in_progress": "Konfigurasjonsflyten pågår allerede",
+            "auth_new_token_not_granted_error": "Nyopprettet token ble ikke godkjent på HyperHDR UI",
+            "auth_new_token_not_work_error": "Kunne ikke godkjenne ved hjelp av nylig opprettet token",
+            "auth_required_error": "Kan ikke fastslå om autorisasjon er nødvendig",
+            "cannot_connect": "Tilkobling mislyktes",
+            "no_id": "HyperHDR Ambilight-forekomsten rapporterte ikke ID-en",
+            "reauth_successful": "Godkjenning på nytt var vellykket"
+        },
+        "error": {
+            "cannot_connect": "Tilkobling mislyktes",
+            "invalid_access_token": "Ugyldig tilgangstoken"
+        },
+        "step": {
+            "auth": {
+                "data": {
+                    "create_token": "Opprett nytt token automatisk",
+                    "token": "Eller oppgi eksisterende token"
+                },
+                "description": "Konfigurer autorisasjon til HyperHDR Ambilight-serveren"
+            },
+            "confirm": {
+                "description": "Vil du legge til denne HyperHDR Ambilight i Home Assistant? \n\n ** Vert: ** {host}\n ** Port: ** {port}\n ** ID **: {id}",
+                "title": "Bekreft tillegg av HyperHDR Ambilight-tjenesten"
+            },
+            "create_token": {
+                "description": "Velg **Send** nedenfor for å be om et nytt godkjenningstoken. Du vil bli omdirigert til HyperHDR UI for å godkjenne forespørselen. Kontroller at den viste IDen er {auth_id}.",
+                "title": "Opprett nytt godkjenningstoken automatisk"
+            },
+            "create_token_external": {
+                "title": "Godta nytt token i HyperHDR UI"
+            },
+            "user": {
+                "data": {
+                    "host": "Vert",
+                    "port": "Port"
+                }
+            }
+        }
+    },
+    "options": {
+        "step": {
+            "init": {
+                "data": {
+                    "effect_show_list": "HyperHDR-effekter å vise",
+                    "priority": "HyperHDR-prioritet for bruke til farger og effekter"
+                }
+            }
+        }
+    },
+    "entity": {
+        "switch": {
+            "all": {
+                "name": "Alle komponenter",
+                "icon": "mdi:power"
+            },
+            "smoothing": {
+                "name": "Utjevningskomponent",
+                "icon": "mdi:blur"
+            },
+            "blackbar_detection": {
+                "name": "Komponent for svarte felter",
+                "icon": "mdi:crop-free"
+            },
+            "forwarder": {
+                "name": "Videresendingskomponent",
+                "icon": "mdi:send"
+            },
+            "boblight_server": {
+                "name": "Boblight-serverkomponent",
+                "icon": "mdi:server"
+            },
+            "platform_capture": {
+                "name": "Plattformopptakskomponent",
+                "icon": "mdi:video-input-antenna"
+            },
+            "led_device": {
+                "name": "LED-enhetskomponent",
+                "icon": "mdi:lightbulb-multiple"
+            },
+            "usb_capture": {
+                "name": "USB-opptakskomponent",
+                "icon": "mdi:usb"
+            },
+            "hdr_tone_mapping": {
+                "name": "HDR tone-mapping-komponent",
+                "icon": "mdi:contrast-box"
+            }
+        },
+        "number": {
+            "smoothing_time": {
+                "name": "Utjevningstid"
+            },
+            "smoothing_decay": {
+                "name": "Utjevningsnedgang"
+            },
+            "smoothing_update_freq": {
+                "name": "Oppdateringsfrekvens for utjevning"
+            },
+            "hdr_tone_mapping": {
+                "name": "HDR tone mapping"
+            }
+        },
+        "select": {
+            "smoothing_type": {
+                "name": "Type utjevning"
+            },
+            "color_engine": {
+                "name": "Fargemotor"
+            }
+        },
+        "sensor": {
+            "visible_priority": {
+                "name": "Visible Priority"
+            },
+            "average_color": {
+                "name": "Gjennomsnittsfarge"
+            }
+        },
+        "light": {
+            "hyperhdr_light": {
+                "name": "Lys"
+            },
+            "hyperhdr_priority_light": {
+                "name": "Prioritetslys"
+            }
+        }
+    }
+}
