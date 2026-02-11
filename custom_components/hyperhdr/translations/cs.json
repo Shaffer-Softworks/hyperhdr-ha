@@ -36,7 +36,8 @@
             "user": {
                 "data": {
                     "host": "Hostitel",
-                    "port": "Port"
+                    "port": "Port",
+                    "port_ws": "WebSocket port (pro LED streaming)"
                 }
             }
         }
@@ -46,7 +47,8 @@
             "init": {
                 "data": {
                     "effect_show_list": "HyperHDR effects to show",
-                    "priority": "HyperHDR priority to use for colors and effects"
+                    "priority": "HyperHDR priority to use for colors and effects",
+                    "port_ws": "WebSocket port (pro LED streaming)"
                 }
             }
         }
@@ -54,39 +56,39 @@
     "entity": {
         "switch": {
             "all": {
-                "name": "Všechny komponenty",
+                "name": "Vše",
                 "icon": "mdi:power"
             },
             "smoothing": {
-                "name": "Komponenta vyhlazování",
+                "name": "Vyhlazování",
                 "icon": "mdi:blur"
             },
             "blackbar_detection": {
-                "name": "Komponenta detekce černých pruhů",
+                "name": "Detekce černých pruhů",
                 "icon": "mdi:crop-free"
             },
             "forwarder": {
-                "name": "Komponenta přeposílání",
+                "name": "Přeposílání",
                 "icon": "mdi:send"
             },
             "boblight_server": {
-                "name": "Komponenta serveru Boblight",
+                "name": "Server Boblight",
                 "icon": "mdi:server"
             },
             "platform_capture": {
-                "name": "Komponenta zachytávání platformy",
+                "name": "Zachytávání platformy",
                 "icon": "mdi:video-input-antenna"
             },
             "led_device": {
-                "name": "Komponenta LED zařízení",
+                "name": "LED zařízení",
                 "icon": "mdi:lightbulb-multiple"
             },
             "usb_capture": {
-                "name": "Komponenta zachytávání USB",
+                "name": "Zachytávání USB",
                 "icon": "mdi:usb"
             },
             "hdr_tone_mapping": {
-                "name": "Komponenta mapování tónu HDR",
+                "name": "Mapování tónu HDR",
                 "icon": "mdi:contrast-box"
             }
         },
@@ -107,9 +109,6 @@
         "select": {
             "smoothing_type": {
                 "name": "Typ vyhlazování"
-            },
-            "color_engine": {
-                "name": "Barevný engine"
             }
         },
         "sensor": {

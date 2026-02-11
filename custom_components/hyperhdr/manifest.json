@@ -7,7 +7,7 @@
   "homeassistant": "2024.4.0",
   "iot_class": "local_push",
   "loggers": ["hyperhdr"],
-  "requirements": ["hyperhdr-py-sickkick==0.1.0"],
+  "requirements": ["hyperhdr-py-sickkick==0.2.0"],
   "ssdp": [
     {
       "manufacturer": "HyperHDR Open Source Ambient Lighting",
@@ -15,5 +15,5 @@
     }
   ],
   "issue_tracker": "https://github.com/mjoshd/hyperhdr-ha/issues",
-  "version": "0.1.3"
+  "version": "0.1.6"
 }

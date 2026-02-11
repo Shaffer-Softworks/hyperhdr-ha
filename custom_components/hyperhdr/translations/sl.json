@@ -36,7 +36,8 @@
             "user": {
                 "data": {
                     "host": "Gostitelj",
-                    "port": "Vrata"
+                    "port": "Vrata",
+                    "port_ws": "WebSocket vrata (za LED pretakanje)"
                 }
             }
         }
@@ -46,7 +47,8 @@
             "init": {
                 "data": {
                     "effect_show_list": "HyperHDR effects to show",
-                    "priority": "Prednostna raba HyperHDRa za barve in učinke"
+                    "priority": "Prednostna raba HyperHDRa za barve in učinke",
+                    "port_ws": "WebSocket vrata (za LED pretakanje)"
                 }
             }
         }
@@ -54,39 +56,39 @@
     "entity": {
         "switch": {
             "all": {
-                "name": "Vse komponente",
+                "name": "Vse",
                 "icon": "mdi:power"
             },
             "smoothing": {
-                "name": "Komponenta glajenja",
+                "name": "Glajenje",
                 "icon": "mdi:blur"
             },
             "blackbar_detection": {
-                "name": "Komponenta zaznavanja črnih pasov",
+                "name": "Zaznavanje črnih pasov",
                 "icon": "mdi:crop-free"
             },
             "forwarder": {
-                "name": "Komponenta posredovanja",
+                "name": "Posredovanje",
                 "icon": "mdi:send"
             },
             "boblight_server": {
-                "name": "Komponenta strežnika Boblight",
+                "name": "Strežnik Boblight",
                 "icon": "mdi:server"
             },
             "platform_capture": {
-                "name": "Komponenta zajema platforme",
+                "name": "Zajem platforme",
                 "icon": "mdi:video-input-antenna"
             },
             "led_device": {
-                "name": "Komponenta LED naprave",
+                "name": "LED naprava",
                 "icon": "mdi:lightbulb-multiple"
             },
             "usb_capture": {
-                "name": "Komponenta USB zajema",
+                "name": "USB zajem",
                 "icon": "mdi:usb"
             },
             "hdr_tone_mapping": {
-                "name": "Komponenta preslikave tona HDR",
+                "name": "Preslikava tona HDR",
                 "icon": "mdi:contrast-box"
             }
         },
@@ -107,9 +109,6 @@
         "select": {
             "smoothing_type": {
                 "name": "Vrsta glajenja"
-            },
-            "color_engine": {
-                "name": "Barvni pogon"
             }
         },
         "sensor": {

@@ -33,6 +33,7 @@ import homeassistant.helpers.config_validation as cv
 
 from . import create_hyperhdr_client
 from .const import (
+    CONF_ADMIN_PASSWORD,
     CONF_AUTH_ID,
     CONF_CREATE_TOKEN,
     CONF_EFFECT_HIDE_LIST,
@@ -46,7 +47,6 @@ from .const import (
 )
 
 _LOGGER = logging.getLogger(__name__)
-_LOGGER.setLevel(logging.DEBUG)
 
 #  +------------------+ +------------------+ +--------------------+ +--------------------+
 #  |Step: SSDP        | |Step: user        | |Step: import        | |Step: reauth        |
@@ -111,7 +111,7 @@ _LOGGER.setLevel(logging.DEBUG)
 class HyperHDRConfigFlow(ConfigFlow, domain=DOMAIN):
     """Handle a HyperHDR config flow."""
 
-    VERSION = 1
+    VERSION = 2
 
     def __init__(self) -> None:
         """Instantiate config flow."""
@@ -248,6 +248,7 @@ class HyperHDRConfigFlow(ConfigFlow, domain=DOMAIN):
                     vol.Required(CONF_HOST): str,
                     vol.Optional(CONF_PORT, default=const.DEFAULT_PORT_JSON): int,
                     vol.Optional(CONF_PORT_WS, default=DEFAULT_PORT_WS): int,
+                    vol.Optional(CONF_ADMIN_PASSWORD): str,
                 }
             ),
             errors=errors,
@@ -464,6 +465,21 @@ class HyperHDROptionsFlow(OptionsFlow):
         # so we inverse the meaning prior to storage.
 
         if user_input is not None:
+            # Pull out connection-level settings and persist them on
+            # config_entry.data so camera entities (which read from data,
+            # not options) can access them.
+            new_data = {**self._config_entry.data}
+            admin_password = user_input.pop(CONF_ADMIN_PASSWORD, None)
+            if admin_password is not None:
+                new_data[CONF_ADMIN_PASSWORD] = admin_password
+            port_ws = user_input.pop(CONF_PORT_WS, None)
+            if port_ws is not None:
+                new_data[CONF_PORT_WS] = port_ws
+            if new_data != self._config_entry.data:
+                self.hass.config_entries.async_update_entry(
+                    self._config_entry, data=new_data
+                )
+
             effect_show_list = user_input.pop(CONF_EFFECT_SHOW_LIST)
             user_input[CONF_EFFECT_HIDE_LIST] = sorted(
                 set(effects) - set(effect_show_list)
@@ -489,6 +505,20 @@ class HyperHDROptionsFlow(OptionsFlow):
                         CONF_EFFECT_SHOW_LIST,
                         default=default_effect_show_list,
                     ): cv.multi_select(effects),
+                    vol.Optional(
+                        CONF_PORT_WS,
+                        default=self._config_entry.data.get(
+                            CONF_PORT_WS, DEFAULT_PORT_WS
+                        ),
+                    ): vol.All(vol.Coerce(int), vol.Range(min=1, max=65535)),
+                    vol.Optional(
+                        CONF_ADMIN_PASSWORD,
+                        description={
+                            "suggested_value": self._config_entry.data.get(
+                                CONF_ADMIN_PASSWORD, ""
+                            )
+                        },
+                    ): str,
                 }
             ),
         )

@@ -36,7 +36,8 @@
             "user": {
                 "data": {
                     "host": "Хост",
-                    "port": "Порт"
+                    "port": "Порт",
+                    "port_ws": "Порт WebSocket (для потокової передачі LED)"
                 }
             }
         }
@@ -46,7 +47,8 @@
             "init": {
                 "data": {
                     "effect_show_list": "HyperHDR effects to show",
-                    "priority": "Пріоритет HyperHDR для кольорів і ефектів"
+                    "priority": "Пріоритет HyperHDR для кольорів і ефектів",
+                    "port_ws": "Порт WebSocket (для потокової передачі LED)"
                 }
             }
         }
@@ -54,39 +56,39 @@
     "entity": {
         "switch": {
             "all": {
-                "name": "Усі компоненти",
+                "name": "Усі",
                 "icon": "mdi:power"
             },
             "smoothing": {
-                "name": "Компонент згладжування",
+                "name": "Згладжування",
                 "icon": "mdi:blur"
             },
             "blackbar_detection": {
-                "name": "Компонент виявлення чорних смуг",
+                "name": "Виявлення чорних смуг",
                 "icon": "mdi:crop-free"
             },
             "forwarder": {
-                "name": "Компонент пересилання",
+                "name": "Пересилання",
                 "icon": "mdi:send"
             },
             "boblight_server": {
-                "name": "Компонент сервера Boblight",
+                "name": "Сервер Boblight",
                 "icon": "mdi:server"
             },
             "platform_capture": {
-                "name": "Компонент захоплення платформи",
+                "name": "Захоплення платформи",
                 "icon": "mdi:video-input-antenna"
             },
             "led_device": {
-                "name": "Компонент LED-пристрою",
+                "name": "LED-пристрій",
                 "icon": "mdi:lightbulb-multiple"
             },
             "usb_capture": {
-                "name": "Компонент захоплення USB",
+                "name": "Захоплення USB",
                 "icon": "mdi:usb"
             },
             "hdr_tone_mapping": {
-                "name": "Компонент HDR тон-мапінгу",
+                "name": "HDR тон-мапінг",
                 "icon": "mdi:contrast-box"
             }
         },
@@ -107,9 +109,6 @@
         "select": {
             "smoothing_type": {
                 "name": "Тип згладжування"
-            },
-            "color_engine": {
-                "name": "Движок кольору"
             }
         },
         "sensor": {

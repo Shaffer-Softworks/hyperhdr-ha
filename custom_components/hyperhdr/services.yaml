@@ -1,21 +1,4 @@
-set_color_engine:
-  name: Set Color Engine
-  description: Send a custom color engine payload to a HyperHDR instance.
-  fields:
-    instance:
-      name: Instance
-      description: Optional HyperHDR instance number. If omitted, the root instance is used.
-      example: 0
-      selector:
-        number:
-          min: 0
-          step: 1
-          mode: box
-    data:
-      name: Data
-      description: Payload to pass to HyperHDR (for example, a colorEngine object).
-      example:
-        colorEngine:
-          type: infinite
-      selector:
-        object: {}
+# Home Assistant tries to load services.yaml for any integration that
+# registers services.  Without the file it logs:
+#   "Failed to load services.yaml…"
+# This empty file satisfies that lookup.

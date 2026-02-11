@@ -36,7 +36,8 @@
             "user": {
                 "data": {
                     "host": "Ana Bilgisayar",
-                    "port": "Port"
+                    "port": "Port",
+                    "port_ws": "WebSocket portu (LED akışı için)"
                 }
             }
         }
@@ -46,7 +47,8 @@
             "init": {
                 "data": {
                     "effect_show_list": "HyperHDR effects to show",
-                    "priority": "Renkler ve efektler için kullanılacak hyperhdr önceliği"
+                    "priority": "Renkler ve efektler için kullanılacak hyperhdr önceliği",
+                    "port_ws": "WebSocket portu (LED akışı için)"
                 }
             }
         }
@@ -54,39 +56,39 @@
     "entity": {
         "switch": {
             "all": {
-                "name": "Tüm bileşenler",
+                "name": "Tümü",
                 "icon": "mdi:power"
             },
             "smoothing": {
-                "name": "Yumuşatma bileşeni",
+                "name": "Yumuşatma",
                 "icon": "mdi:blur"
             },
             "blackbar_detection": {
-                "name": "Siyah çubuk algılama bileşeni",
+                "name": "Siyah çubuk algılama",
                 "icon": "mdi:crop-free"
             },
             "forwarder": {
-                "name": "Yönlendirme bileşeni",
+                "name": "Yönlendirme",
                 "icon": "mdi:send"
             },
             "boblight_server": {
-                "name": "Boblight sunucu bileşeni",
+                "name": "Boblight sunucu",
                 "icon": "mdi:server"
             },
             "platform_capture": {
-                "name": "Platform yakalama bileşeni",
+                "name": "Platform yakalama",
                 "icon": "mdi:video-input-antenna"
             },
             "led_device": {
-                "name": "LED aygıt bileşeni",
+                "name": "LED aygıt",
                 "icon": "mdi:lightbulb-multiple"
             },
             "usb_capture": {
-                "name": "USB yakalama bileşeni",
+                "name": "USB yakalama",
                 "icon": "mdi:usb"
             },
             "hdr_tone_mapping": {
-                "name": "HDR ton eşleme bileşeni",
+                "name": "HDR ton eşleme",
                 "icon": "mdi:contrast-box"
             }
         },
@@ -107,9 +109,6 @@
         "select": {
             "smoothing_type": {
                 "name": "Yumuşatma türü"
-            },
-            "color_engine": {
-                "name": "Renk motoru"
             }
         },
         "sensor": {

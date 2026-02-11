@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import functools
+import logging
 from typing import Any
 
 from hyperhdr import client
@@ -39,11 +40,14 @@ from .const import (
     DOMAIN,
     HYPERHDR_MANUFACTURER_NAME,
     HYPERHDR_MODEL_NAME,
+    SIGNAL_AVERAGE_COLOR,
     SIGNAL_ENTITY_REMOVE,
     TYPE_HYPERHDR_SENSOR_BASE,
     TYPE_HYPERHDR_SENSOR_VISIBLE_PRIORITY,
     TYPE_HYPERHDR_SENSOR_AVERAGE_COLOR,
 )
+
+_LOGGER = logging.getLogger(__name__)
 SENSORS = [TYPE_HYPERHDR_SENSOR_VISIBLE_PRIORITY, TYPE_HYPERHDR_SENSOR_AVERAGE_COLOR]
 PRIORITY_SENSOR_DESCRIPTION = SensorEntityDescription(
     key="visible_priority",
@@ -185,6 +189,14 @@ class HyperHDRVisiblePrioritySensor(HyperHDRSensor):
             f"{KEY_PRIORITIES}-{KEY_UPDATE}": self._update_priorities
         }
 
+    async def async_added_to_hass(self) -> None:
+        """Register callbacks and populate initial state."""
+        await super().async_added_to_hass()
+        # The initial priorities-update fires during serverinfo loading,
+        # before entity callbacks are registered.  Read the current state
+        # now so the sensor doesn't stay "unknown" until the next change.
+        self._update_priorities()
+
     @callback
     def _update_priorities(self, _: dict[str, Any] | None = None) -> None:
         """Update HyperHDR priorities."""
@@ -227,7 +239,17 @@ AVERAGE_SENSOR_DESCRIPTION = SensorEntityDescription(
 
 
 class HyperHDRAverageColorSensor(HyperHDRSensor):
-    """Class that exposes the average color for a HyperHDR instance."""
+    """Class that exposes the average color for a HyperHDR instance.
+
+    Data sources (in priority order):
+    1. LED gradient stream — real-time average computed from raw LED data
+       dispatched by HyperHDRLedGradientCamera (requires the gradient camera
+       entity to be enabled).
+    2. ``async_get_average_color()`` — server-side calculation available on
+       HyperHDR v20+.
+    3. Visible priority COLOR component — extracted from the priorities list
+       when a static color is the active source.
+    """
 
     def __init__(
         self,
@@ -250,58 +272,129 @@ class HyperHDRAverageColorSensor(HyperHDRSensor):
             server_id, instance_num, TYPE_HYPERHDR_SENSOR_AVERAGE_COLOR
         )
 
-        # Prefer dedicated average color updates from the client if available,
-        # otherwise fall back to observing priorities and deriving a representative
-        # color from visible priorities.
-        client_key = getattr(hyperhdr_const, "KEY_AVERAGE_COLOR", None)
-        if client_key:
-            self._client_callbacks = {f"{client_key}-{KEY_UPDATE}": self._update_average}
-        else:
-            self._client_callbacks = {f"{KEY_PRIORITIES}-{KEY_UPDATE}": self._update_average}
+        self._device_id = get_hyperhdr_device_id(server_id, instance_num)
+
+        # Always subscribe to priorities-update so the callback fires whenever
+        # the active source changes.  The old code tried to subscribe to
+        # "calculate-colors-update" which is a one-shot command response, not a
+        # push subscription, so it never triggered.
+        self._client_callbacks = {
+            f"{KEY_PRIORITIES}-{KEY_UPDATE}": self._update_from_priorities,
+        }
+
+        # Track whether the server supports calculate-colors (v20+).
+        self._server_supports_calc: bool | None = None
+
+    async def async_added_to_hass(self) -> None:
+        """Register callbacks and populate initial state."""
+        await super().async_added_to_hass()
+
+        # Listen for real-time average color updates from the LED gradient
+        # camera stream.
+        self.async_on_remove(
+            async_dispatcher_connect(
+                self.hass,
+                SIGNAL_AVERAGE_COLOR.format(self._device_id),
+                self._update_from_stream,
+            )
+        )
+
+        # Populate initial state from already-loaded priorities (the initial
+        # priorities-update fires before callbacks are registered).
+        self._update_from_priorities()
 
     @callback
-    def _update_average(self, _: dict[str, Any] | None = None) -> None:
-        """Update the average color value from the client."""
-        avg_value = None
+    def _update_from_stream(self, avg_rgb: list[int]) -> None:
+        """Handle average color dispatched from the LED gradient stream."""
+        if not avg_rgb or len(avg_rgb) < 3:
+            return
+
+        r, g, b = avg_rgb[0], avg_rgb[1], avg_rgb[2]
+        hex_value = "#%02x%02x%02x" % (r, g, b)
+
+        # Skip state write if the value hasn't changed.
+        if hex_value == self._attr_native_value:
+            return
+
+        self._attr_native_value = hex_value
+        self._attr_extra_state_attributes = {
+            "rgb": [r, g, b],
+            "hex": hex_value,
+            "source": "led_stream",
+        }
+        self.async_write_ha_state()
+
+    @callback
+    def _update_from_priorities(self, _: dict[str, Any] | None = None) -> None:
+        """Handle a priorities-update callback.
+
+        If the gradient stream is providing real-time data it will overwrite
+        whatever we set here on the next frame, so this mainly covers the case
+        where the gradient camera is disabled or the LED stream is not running.
+        """
+        # Schedule the async helper so we can try async_get_average_color.
+        self.hass.async_create_task(self._async_update_average())
+
+    async def _async_update_average(self) -> None:
+        """Attempt to determine the average color from available sources."""
+        avg_value: list[int] | None = None
         attrs: dict[str, Any] = {}
+        source = "unknown"
 
-        # 1) If client exposes average_color attribute, use it.
-        if hasattr(self._client, "average_color") and self._client.average_color:
-            avg = self._client.average_color
-            # Could be a dict with 'rgb' or a simple list
-            if isinstance(avg, dict):
-                avg_value = avg.get(KEY_RGB) or avg.get("rgb")
-                attrs.update(avg)
-            else:
-                avg_value = avg
+        # 1) Try the server-side calculate-colors command (v20+).
+        if self._server_supports_calc is not False and hasattr(
+            self._client, "async_get_average_color"
+        ):
+            try:
+                resp = await self._client.async_get_average_color()
+                if resp and isinstance(resp, dict) and resp.get("success"):
+                    info = resp.get("info", {})
+                    rgb = info.get("rgb") or info.get(KEY_RGB)
+                    if isinstance(rgb, (list, tuple)) and len(rgb) >= 3:
+                        avg_value = [int(rgb[0]), int(rgb[1]), int(rgb[2])]
+                        attrs.update(info)
+                        source = "calculate-colors"
+                        self._server_supports_calc = True
+                    else:
+                        self._server_supports_calc = False
+                else:
+                    self._server_supports_calc = False
+            except Exception:  # pylint: disable=broad-except
+                _LOGGER.debug(
+                    "async_get_average_color not supported on this server"
+                )
+                self._server_supports_calc = False
 
-        # 2) If hyperhdr.const defines a KEY_AVERAGE payload and the client
-        # populates it, prefer that structure (handled by callback wiring).
+        # 2) Fall back to visible priorities with a COLOR component.
         if avg_value is None:
-            # Fall back to visible priorities: prefer COLOR component values.
             for priority in self._client.priorities or []:
                 if not (KEY_VISIBLE in priority and priority[KEY_VISIBLE] is True):
                     continue
-                if priority[KEY_COMPONENTID] == "COLOR":
-                    avg_value = priority[KEY_VALUE].get(KEY_RGB)
-                    attrs = {
-                        "component_id": priority[KEY_COMPONENTID],
-                        "origin": priority.get(KEY_ORIGIN),
-                        "priority": priority.get(KEY_PRIORITY),
-                        "owner": priority.get(KEY_OWNER),
-                        "color": priority[KEY_VALUE],
-                    }
-                    break
 
-        # Update entity state
-        # Convert RGB list to hex string for better state display
+                attrs = {
+                    "component_id": priority[KEY_COMPONENTID],
+                    "origin": priority.get(KEY_ORIGIN),
+                    "priority": priority.get(KEY_PRIORITY),
+                    "owner": priority.get(KEY_OWNER),
+                }
+
+                if priority[KEY_COMPONENTID] == "COLOR":
+                    avg_value = priority.get(KEY_VALUE, {}).get(KEY_RGB)
+                    attrs["color"] = priority.get(KEY_VALUE)
+                    source = "priority_color"
+                else:
+                    source = "priority_component"
+                break
+
+        # Build hex representation if we have RGB data.
         hex_value = None
         if avg_value and isinstance(avg_value, (list, tuple)) and len(avg_value) >= 3:
-            r, g, b = avg_value[0], avg_value[1], avg_value[2]
+            r, g, b = int(avg_value[0]), int(avg_value[1]), int(avg_value[2])
             hex_value = "#%02x%02x%02x" % (r, g, b)
             attrs.setdefault("rgb", [r, g, b])
             attrs["hex"] = hex_value
 
-        self._attr_native_value = hex_value or avg_value
+        attrs["source"] = source
+        self._attr_native_value = hex_value if hex_value else None
         self._attr_extra_state_attributes = attrs
         self.async_write_ha_state()

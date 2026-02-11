@@ -20,25 +20,56 @@
 1. Search for `HyperHDR`.
 1. If you cannot find `HyperHDR` in the list then be sure to clear your browser cache and/or perform a hard-refresh of the page.
 1. Enter the IP address of your HyperHDR instance.
+1. *(Optional)* Enter the **WebSocket Port** (defaults to `8090`) for LED camera streams.
+1. *(Optional)* Enter your **Admin Password** if your HyperHDR instance has Local API Authentication enabled.
 1. Click the `Submit` button.
 
 <!-- {% endif %} -->
 
 <!-- {% if installed %} -->
 <!-- {% if installed %} -->
+# Integration v0.1.6
+
+**Entity Cleanup & Config Entry Migration:**
+- Bumped config entry VERSION to 2 — existing entries are automatically migrated
+- Added automatic **stale entity cleanup** on every integration load:
+  - Permanently removed entities (old JSON-API camera, Color Engine select) are pruned from the entity registry
+  - Smoothing entities (time, decay, update frequency, type) are pruned per-instance when the server does not expose smoothing data
+- No manual cleanup required when upgrading — stale entities are removed automatically
+
+# Integration v0.1.5
+
+**Codebase Cleanup & UI Refinements:**
+- Removed the old **JSON-API camera** (`HyperHDRCamera`) — only LED Colors and LED Gradient cameras remain
+- Removed the **Color Engine** select entity and `hyperhdr.set_color_engine` service (not supported by the connected server)
+- Smoothing entities (number and select) are now **conditionally created** only when the HyperHDR server exposes smoothing data
+- Cleaned up **switch entity names** — removed redundant "Component" prefix from all translations
+- Added **average color throttling** (2-second interval) and deduplication to reduce event bus and recorder load
+- Camera entities now correctly report **"streaming"** state (instead of "idle") when receiving frames
+- Added **initial state population** for all entities on load (visible priority, average color, switches, smoothing, HDR)
+- Updated **Options flow** to allow changing the WebSocket port after setup
+- Bumped manifest version to `0.1.5`
+
+# Integration v0.1.4
+
+**Stream API & Admin Password Authentication:**
+- Refactored LED Colors and LED Gradient cameras to use the new `HyperHDRLedColorsStream` and `HyperHDRLedGradientStream` classes from `hyperhdr.stream`, replacing inline WebSocket code with the library's streaming layer
+- Added **admin password** as an optional configuration field (available during setup and in the Options flow) for authenticating LED camera streams when HyperHDR has Local API Authentication enabled
+- Stream authentication now tries token auth first, then automatically falls back to admin password login
+- Updated HDR Tone Mapping number entity to support the new `videomodehdr` command path alongside the legacy `hdrToneMappingMode`
+- Bumped `hyperhdr-py-sickkick` dependency to `0.2.0`
+
 # Integration v0.0.9
 
 **Major Features Added:**
-- ✨ **Average Color Sensor**: Real-time color monitoring with hex display and RGB attributes
-- 🎨 **Color Engine Selection**: Switch between infinite, linear, and hybrid color engine modes via select entity
-- 🔧 **Smoothing Controls**: Number entities for adjusting smoothing time, decay, and update frequency
-- 📊 **HDR Tone Mapping**: Dedicated number entity for HDR intensity adjustment
-- 📹 **Camera Integration**: Enabled live video streaming from USB capture and video grabber sources
-- 🎛️ **Smoothing Type Selection**: Choose from linear, exponential, inertia, hybrid-rgb, and yuv smoothing types
-- 🔌 **Color Engine Service**: New `hyperhdr.set_color_engine` service for advanced automation control
+- **Average Color Sensor**: Real-time color monitoring with hex display and RGB attributes
+- **Smoothing Controls**: Number entities for adjusting smoothing time, decay, and update frequency
+- **HDR Tone Mapping**: Dedicated number entity for HDR intensity adjustment
+- **Camera Integration**: Enabled live video streaming from USB capture and video grabber sources
+- **Smoothing Type Selection**: Choose from linear, exponential, inertia, hybrid-rgb, and yuv smoothing types
 
 **Dependency Update:**
-- Updated to use `hyperhdr-py-sickkick==0.1.0` with enhanced API support for average color, color engine, and smoothing controls
+- Updated to use `hyperhdr-py-sickkick==0.1.0` with enhanced API support for average color and smoothing controls
 - All new platforms (sensor, number, select, camera) are included
 
 **Improvements:**
@@ -55,7 +86,7 @@ Update HyperHDR to version 0.0.8, adjust version warning cutoff to 21.0.0.0, and
 - Update most code to match changes present in the official Hyperion component as of 2024.07.4
 - Retained code from v0.0.6 `light.py` since updating that to match Hyperion code breaks multiple aspects of the light entity
 - Camera is still broken and remains disabled
-    - If anyoneone can fix it then please do so and create a pull request!
+    - If anyone can fix it then please do so and create a pull request!
     - See `__init__.py` for more info.
 
 # Integration v0.0.6

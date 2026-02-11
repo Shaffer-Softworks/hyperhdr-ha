@@ -36,7 +36,8 @@
             "user": {
                 "data": {
                     "host": "Host",
-                    "port": "Port"
+                    "port": "Port",
+                    "port_ws": "WebSocket-Port (für LED-Streaming)"
                 }
             }
         }
@@ -46,7 +47,8 @@
             "init": {
                 "data": {
                     "effect_show_list": "HyperHDR-Effekte zum Anzeigen",
-                    "priority": "HyperHDR-Priorität für Farben und Effekte"
+                    "priority": "HyperHDR-Priorität für Farben und Effekte",
+                    "port_ws": "WebSocket-Port (für LED-Streaming)"
                 }
             }
         }
@@ -54,39 +56,39 @@
     "entity": {
         "switch": {
             "all": {
-                "name": "Alle Komponenten",
+                "name": "Alle",
                 "icon": "mdi:power"
             },
             "smoothing": {
-                "name": "Komponente Glättung",
+                "name": "Glättung",
                 "icon": "mdi:blur"
             },
             "blackbar_detection": {
-                "name": "Komponente Balkenerkennung",
+                "name": "Balkenerkennung",
                 "icon": "mdi:crop-free"
             },
             "forwarder": {
-                "name": "Komponente Weiterleitung",
+                "name": "Weiterleitung",
                 "icon": "mdi:send"
             },
             "boblight_server": {
-                "name": "Komponente Boblight-Server",
+                "name": "Boblight-Server",
                 "icon": "mdi:server"
             },
             "platform_capture": {
-                "name": "Komponente Plattformaufnahme",
+                "name": "Plattformaufnahme",
                 "icon": "mdi:video-input-antenna"
             },
             "led_device": {
-                "name": "Komponente LED-Gerät",
+                "name": "LED-Gerät",
                 "icon": "mdi:lightbulb-multiple"
             },
             "usb_capture": {
-                "name": "Komponente USB-Aufnahme",
+                "name": "USB-Aufnahme",
                 "icon": "mdi:usb"
             },
             "hdr_tone_mapping": {
-                "name": "Komponente HDR-Tonemapping",
+                "name": "HDR-Tonemapping",
                 "icon": "mdi:contrast-box"
             }
         },
@@ -107,9 +109,6 @@
         "select": {
             "smoothing_type": {
                 "name": "Glättungstyp"
-            },
-            "color_engine": {
-                "name": "Farb-Engine"
             }
         },
         "sensor": {
