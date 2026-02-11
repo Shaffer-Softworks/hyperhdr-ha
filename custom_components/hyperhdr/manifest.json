@@ -11,7 +11,7 @@
   "ssdp": [
     {
       "manufacturer": "HyperHDR Open Source Ambient Lighting",
-      "st": "urn:github.com/mjoshd/hyperhdr-ha:device:basic:1"
+      "st": "urn:hyperhdr.eu:device:basic:1"
     }
   ],
   "issue_tracker": "https://github.com/mjoshd/hyperhdr-ha/issues",

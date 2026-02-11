@@ -160,15 +160,15 @@ class HyperHDRConfigFlow(ConfigFlow, domain=DOMAIN):
         """Handle a flow initiated by SSDP."""
         # Sample data provided by SSDP: {
         #   'ssdp_location': 'http://192.168.0.1:8090/description.xml',
-        #   'ssdp_st': 'upnp:rootdevice',
+        #   'ssdp_st': 'urn:hyperhdr.eu:device:basic:1',
         #   'deviceType': 'urn:schemas-upnp-org:device:Basic:1',
         #   'friendlyName': 'HyperHDR (192.168.0.1)',
         #   'manufacturer': 'HyperHDR Open Source Ambient Lighting',
-        #   'manufacturerURL': 'https://www.hyperhdr-project.org',
+        #   'manufacturerURL': 'http://www.hyperhdr.eu/',
         #   'modelDescription': 'HyperHDR Open Source Ambient Light',
         #   'modelName': 'HyperHDR',
-        #   'modelNumber': '2.0.0-alpha.8',
-        #   'modelURL': 'https://www.hyperhdr-project.org',
+        #   'modelNumber': '22.0.0.0',
+        #   'modelURL': 'https://github.com/awawa-dev/HyperHDR',
         #   'serialNumber': 'f9aab089-f85a-55cf-b7c1-222a72faebe9',
         #   'UDN': 'uuid:f9aab089-f85a-55cf-b7c1-222a72faebe9',
         #   'ports': {
@@ -189,7 +189,11 @@ class HyperHDRConfigFlow(ConfigFlow, domain=DOMAIN):
         #   },
         #   'ssdp_usn': 'uuid:f9aab089-f85a-55cf-b7c1-222a72faebe9',
         #   'ssdp_ext': '',
-        #   'ssdp_server': 'Raspbian GNU/Linux 10 (buster)/10 UPnP/1.0 HyperHDR/2.0.0-alpha.8'}
+        #   'ssdp_server': 'Linux/5.15 UPnP/1.0 HyperHDR/22.0.0.0',
+        #   'HYPERHDR-FBS-PORT': '19400',
+        #   'HYPERHDR-JSS-PORT': '19444',
+        #   'HYPERHDR-NAME': 'My HyperHDR'
+        # }
 
         # SSDP requires user confirmation.
         self._require_confirm = True
@@ -200,6 +204,9 @@ class HyperHDRConfigFlow(ConfigFlow, domain=DOMAIN):
             )
         except ValueError:
             self._port_ui = const.DEFAULT_PORT_UI
+
+        # The WebSocket port is the same as the web server port in HyperHDR.
+        self._data[CONF_PORT_WS] = self._port_ui
 
         try:
             self._data[CONF_PORT] = int(

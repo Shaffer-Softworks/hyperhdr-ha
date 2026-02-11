@@ -1,10 +1,27 @@
+# artifacts
 __pycache__
+.pytest*
+*.egg-info
+*/build/*
+*/dist/*
+
+# misc
+.coverage
+.vscode
+.idea
+.ruff_cache
+coverage.xml
+
+# environments
 pythonenv*
 venv
 .venv
-.coverage
-.idea
+
+# Home Assistant configuration
 config/
+
+# macOS
+.DS_Store
 
 # Prevent accidentally nesting the integration inside itself
 custom_components/hyperhdr/hyperhdr/
