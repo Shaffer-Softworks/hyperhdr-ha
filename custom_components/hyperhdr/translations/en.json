@@ -36,7 +36,9 @@
             "user": {
                 "data": {
                     "host": "Host",
-                    "port": "Port"
+                    "port": "JSON API Port",
+                    "port_ws": "WebSocket Port (for LED streaming)",
+                    "admin_password": "Admin Password (optional, for stream authentication)"
                 }
             }
         }
@@ -46,7 +48,9 @@
             "init": {
                 "data": {
                     "effect_show_list": "HyperHDR effects to show",
-                    "priority": "HyperHDR priority to use for colors and effects"
+                    "priority": "HyperHDR priority to use for colors and effects",
+                    "port_ws": "WebSocket Port (for LED streaming)",
+                    "admin_password": "Admin Password (for LED stream authentication)"
                 }
             }
         }
@@ -54,39 +58,39 @@
     "entity": {
         "switch": {
             "all": {
-                "name": "Component All",
+                "name": "All",
                 "icon": "mdi:power"
             },
             "smoothing": {
-                "name": "Component Smoothing",
+                "name": "Smoothing",
                 "icon": "mdi:blur"
             },
             "blackbar_detection": {
-                "name": "Component Blackbar Detection",
+                "name": "Blackbar Detection",
                 "icon": "mdi:crop-free"
             },
             "forwarder": {
-                "name": "Component Forwarder",
+                "name": "Forwarder",
                 "icon": "mdi:send"
             },
             "boblight_server": {
-                "name": "Component Boblight Server",
+                "name": "Boblight Server",
                 "icon": "mdi:server"
             },
             "platform_capture": {
-                "name": "Component Platform Capture",
+                "name": "Platform Capture",
                 "icon": "mdi:video-input-antenna"
             },
             "led_device": {
-                "name": "Component LED Device",
+                "name": "LED Device",
                 "icon": "mdi:lightbulb-multiple"
             },
             "usb_capture": {
-                "name": "Component USB Capture",
+                "name": "USB Capture",
                 "icon": "mdi:usb"
             },
             "hdr_tone_mapping": {
-                "name": "Component HDR Tone Mapping",
+                "name": "HDR Tone Mapping",
                 "icon": "mdi:contrast-box"
             }
         },
@@ -107,9 +111,6 @@
         "select": {
             "smoothing_type": {
                 "name": "Smoothing Type"
-            },
-            "color_engine": {
-                "name": "Color Engine"
             }
         },
         "sensor": {

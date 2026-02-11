@@ -1,5 +1,6 @@
 """Constants for HyperHDR integration."""
 
+CONF_ADMIN_PASSWORD = "admin_password"
 CONF_AUTH_ID = "auth_id"
 CONF_CREATE_TOKEN = "create_token"
 CONF_INSTANCE = "instance"
@@ -31,8 +32,8 @@ NAME_SUFFIX_HYPERHDR_PRIORITY_LIGHT = "Priority"
 SIGNAL_INSTANCE_ADD = f"{DOMAIN}_instance_add_signal.{{}}"
 SIGNAL_INSTANCE_REMOVE = f"{DOMAIN}_instance_remove_signal.{{}}"
 SIGNAL_ENTITY_REMOVE = f"{DOMAIN}_entity_remove_signal.{{}}"
+SIGNAL_AVERAGE_COLOR = f"{DOMAIN}_average_color_signal.{{}}"
 
-TYPE_HYPERHDR_CAMERA = "hyperhdr_camera"
 TYPE_HYPERHDR_LED_CAMERA = "hyperhdr_led_camera"
 TYPE_HYPERHDR_LED_GRADIENT_CAMERA = "hyperhdr_led_gradient_camera"
 TYPE_HYPERHDR_LIGHT = "hyperhdr_light"
@@ -50,4 +51,3 @@ TYPE_HYPERHDR_NUMBER_HDR_TONE_MAPPING = "hdr_tone_mapping"
 
 TYPE_HYPERHDR_SELECT_BASE = "hyperhdr_select"
 TYPE_HYPERHDR_SELECT_SMOOTHING_TYPE = "smoothing_type"
-TYPE_HYPERHDR_SELECT_COLOR_ENGINE = "color_engine"

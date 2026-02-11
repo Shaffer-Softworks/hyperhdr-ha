@@ -103,36 +103,48 @@ async def async_setup_entry(
     def instance_add(instance_num: int, instance_name: str) -> None:
         """Add entities for a new HyperHDR instance."""
         assert server_id
-        entities = [
-            HyperHDRSmoothingTimeNumber(
-                server_id,
-                instance_num,
-                instance_name,
-                entry_data[CONF_INSTANCE_CLIENTS][instance_num],
-                SMOOTHING_TIME_DESCRIPTION,
-            ),
-            HyperHDRSmoothingDecayNumber(
-                server_id,
-                instance_num,
-                instance_name,
-                entry_data[CONF_INSTANCE_CLIENTS][instance_num],
-                SMOOTHING_DECAY_DESCRIPTION,
-            ),
-            HyperHDRSmoothingUpdateFreqNumber(
-                server_id,
-                instance_num,
-                instance_name,
-                entry_data[CONF_INSTANCE_CLIENTS][instance_num],
-                SMOOTHING_UPDATE_FREQ_DESCRIPTION,
-            ),
+        hyperhdr_client = entry_data[CONF_INSTANCE_CLIENTS][instance_num]
+
+        entities: list[HyperHDRNumber] = []
+
+        # Only create smoothing entities if the server exposes smoothing data.
+        if hyperhdr_client.smoothing is not None:
+            entities.extend(
+                [
+                    HyperHDRSmoothingTimeNumber(
+                        server_id,
+                        instance_num,
+                        instance_name,
+                        hyperhdr_client,
+                        SMOOTHING_TIME_DESCRIPTION,
+                    ),
+                    HyperHDRSmoothingDecayNumber(
+                        server_id,
+                        instance_num,
+                        instance_name,
+                        hyperhdr_client,
+                        SMOOTHING_DECAY_DESCRIPTION,
+                    ),
+                    HyperHDRSmoothingUpdateFreqNumber(
+                        server_id,
+                        instance_num,
+                        instance_name,
+                        hyperhdr_client,
+                        SMOOTHING_UPDATE_FREQ_DESCRIPTION,
+                    ),
+                ]
+            )
+
+        # HDR tone mapping is always available.
+        entities.append(
             HyperHDRHDRToneMappingNumber(
                 server_id,
                 instance_num,
                 instance_name,
-                entry_data[CONF_INSTANCE_CLIENTS][instance_num],
+                hyperhdr_client,
                 HDR_TONE_MAPPING_DESCRIPTION,
             ),
-        ]
+        )
 
         async_add_entities(entities)
 
@@ -205,8 +217,39 @@ class HyperHDRNumber(NumberEntity):
         self._client.remove_callbacks(self._client_callbacks)
 
 
-class HyperHDRSmoothingTimeNumber(HyperHDRNumber):
+class _HyperHDRSmoothingNumber(HyperHDRNumber):
+    """Base class for smoothing number entities.
+
+    The HyperHDR smoothing API is not available on all server versions.
+    If ``self._client.smoothing`` is None the entity reports unavailable.
+    """
+
+    _smoothing_key: str  # Override in subclasses.
+
+    @property
+    def available(self) -> bool:
+        """Return availability — requires smoothing data from the server."""
+        return bool(self._client.has_loaded_state and self._client.smoothing)
+
+    async def async_added_to_hass(self) -> None:
+        """Register callbacks and populate initial state."""
+        await super().async_added_to_hass()
+        self._update_value()
+
+    @callback
+    def _update_value(self, _: dict[str, Any] | None = None) -> None:
+        """Update the value from the client's smoothing data."""
+        if self._client.smoothing:
+            self._attr_native_value = self._client.smoothing.get(
+                self._smoothing_key
+            )
+        self.async_write_ha_state()
+
+
+class HyperHDRSmoothingTimeNumber(_HyperHDRSmoothingNumber):
     """Number entity for smoothing time."""
+
+    _smoothing_key = hyperhdr_const.KEY_SMOOTHING_TIME
 
     def __init__(
         self,
@@ -227,22 +270,15 @@ class HyperHDRSmoothingTimeNumber(HyperHDRNumber):
             f"{hyperhdr_const.KEY_SMOOTHING}-{hyperhdr_const.KEY_UPDATE}": self._update_value
         }
 
-    @callback
-    def _update_value(self, _: dict[str, Any] | None = None) -> None:
-        """Update smoothing time value."""
-        if self._client.smoothing:
-            self._attr_native_value = self._client.smoothing.get(
-                hyperhdr_const.KEY_SMOOTHING_TIME
-            )
-        self.async_write_ha_state()
-
     async def async_set_native_value(self, value: float) -> None:
         """Set smoothing time value."""
         await self._client.async_set_smoothing(time=int(value))
 
 
-class HyperHDRSmoothingDecayNumber(HyperHDRNumber):
+class HyperHDRSmoothingDecayNumber(_HyperHDRSmoothingNumber):
     """Number entity for smoothing decay."""
+
+    _smoothing_key = hyperhdr_const.KEY_SMOOTHING_DECAY
 
     def __init__(
         self,
@@ -263,22 +299,15 @@ class HyperHDRSmoothingDecayNumber(HyperHDRNumber):
             f"{hyperhdr_const.KEY_SMOOTHING}-{hyperhdr_const.KEY_UPDATE}": self._update_value
         }
 
-    @callback
-    def _update_value(self, _: dict[str, Any] | None = None) -> None:
-        """Update smoothing decay value."""
-        if self._client.smoothing:
-            self._attr_native_value = self._client.smoothing.get(
-                hyperhdr_const.KEY_SMOOTHING_DECAY
-            )
-        self.async_write_ha_state()
-
     async def async_set_native_value(self, value: float) -> None:
         """Set smoothing decay value."""
         await self._client.async_set_smoothing(decay=value)
 
 
-class HyperHDRSmoothingUpdateFreqNumber(HyperHDRNumber):
+class HyperHDRSmoothingUpdateFreqNumber(_HyperHDRSmoothingNumber):
     """Number entity for smoothing update frequency."""
+
+    _smoothing_key = hyperhdr_const.KEY_SMOOTHING_UPDATE_FREQUENCY
 
     def __init__(
         self,
@@ -298,15 +327,6 @@ class HyperHDRSmoothingUpdateFreqNumber(HyperHDRNumber):
         self._client_callbacks = {
             f"{hyperhdr_const.KEY_SMOOTHING}-{hyperhdr_const.KEY_UPDATE}": self._update_value
         }
-
-    @callback
-    def _update_value(self, _: dict[str, Any] | None = None) -> None:
-        """Update smoothing update frequency value."""
-        if self._client.smoothing:
-            self._attr_native_value = self._client.smoothing.get(
-                hyperhdr_const.KEY_SMOOTHING_UPDATE_FREQUENCY
-            )
-        self.async_write_ha_state()
 
     async def async_set_native_value(self, value: float) -> None:
         """Set smoothing update frequency value."""
@@ -331,19 +351,40 @@ class HyperHDRHDRToneMappingNumber(HyperHDRNumber):
         self._attr_unique_id = _number_unique_id(
             server_id, instance_num, TYPE_HYPERHDR_NUMBER_HDR_TONE_MAPPING
         )
-        self._client_callbacks = {
-            f"{hyperhdr_const.KEY_HDR_TONE_MAPPING}-{hyperhdr_const.KEY_UPDATE}": self._update_value
+        # Subscribe to both the legacy hdrToneMappingMode and the new videomodehdr
+        # update events so the entity stays in sync regardless of HyperHDR version.
+        self._client_callbacks: dict[str, Any] = {
+            f"{hyperhdr_const.KEY_HDR_TONE_MAPPING}-{hyperhdr_const.KEY_UPDATE}": self._update_value,
         }
+        _key_videomode_hdr = getattr(hyperhdr_const, "KEY_VIDEOMODE_HDR", None)
+        if _key_videomode_hdr:
+            self._client_callbacks[
+                f"{_key_videomode_hdr}-{hyperhdr_const.KEY_UPDATE}"
+            ] = self._update_value
+
+    async def async_added_to_hass(self) -> None:
+        """Register callbacks and populate initial state."""
+        await super().async_added_to_hass()
+        self._update_value()
 
     @callback
     def _update_value(self, _: dict[str, Any] | None = None) -> None:
         """Update HDR tone mapping value."""
-        # Note: The client may provide this via properties; adjust based on actual API
         if hasattr(self._client, "hdr_mode"):
             self._attr_native_value = self._client.hdr_mode
         self.async_write_ha_state()
 
     async def async_set_native_value(self, value: float) -> None:
-        """Set HDR tone mapping value."""
-        # The actual method signature may vary; adjust as needed
-        await self._client.async_set_hdr_tone_mapping(value=value)
+        """Set HDR tone mapping value.
+
+        Uses the new videomodehdr/HDR command path when available, falling back
+        to the legacy hdrToneMappingMode parameter.
+        """
+        if hasattr(hyperhdr_const, "KEY_HDR"):
+            await self._client.async_set_hdr_tone_mapping(
+                **{hyperhdr_const.KEY_HDR: int(value)}
+            )
+        else:
+            await self._client.async_set_hdr_tone_mapping(
+                **{hyperhdr_const.KEY_HDR_TONE_MAPPING_MODE: int(value)}
+            )

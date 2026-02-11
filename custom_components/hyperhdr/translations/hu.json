@@ -36,7 +36,8 @@
             "user": {
                 "data": {
                     "host": "Hoszt",
-                    "port": "Port"
+                    "port": "Port",
+                    "port_ws": "WebSocket port (LED streaminghez)"
                 }
             }
         }
@@ -46,7 +47,8 @@
             "init": {
                 "data": {
                     "effect_show_list": "Megjelenítendő HyperHDR effektusok",
-                    "priority": "HyperHDR prioritás a színekhez és effektekhez"
+                    "priority": "HyperHDR prioritás a színekhez és effektekhez",
+                    "port_ws": "WebSocket port (LED streaminghez)"
                 }
             }
         }
@@ -54,39 +56,39 @@
     "entity": {
         "switch": {
             "all": {
-                "name": "Összes komponens",
+                "name": "Összes",
                 "icon": "mdi:power"
             },
             "smoothing": {
-                "name": "Simítás komponens",
+                "name": "Simítás",
                 "icon": "mdi:blur"
             },
             "blackbar_detection": {
-                "name": "Fekete sáv felismerő komponens",
+                "name": "Fekete sáv felismerés",
                 "icon": "mdi:crop-free"
             },
             "forwarder": {
-                "name": "Továbbító komponens",
+                "name": "Továbbítás",
                 "icon": "mdi:send"
             },
             "boblight_server": {
-                "name": "Boblight szerver komponens",
+                "name": "Boblight szerver",
                 "icon": "mdi:server"
             },
             "platform_capture": {
-                "name": "Platform rögzítő komponens",
+                "name": "Platform rögzítés",
                 "icon": "mdi:video-input-antenna"
             },
             "led_device": {
-                "name": "LED eszköz komponens",
+                "name": "LED eszköz",
                 "icon": "mdi:lightbulb-multiple"
             },
             "usb_capture": {
-                "name": "USB rögzítő komponens",
+                "name": "USB rögzítés",
                 "icon": "mdi:usb"
             },
             "hdr_tone_mapping": {
-                "name": "HDR tónusleképező komponens",
+                "name": "HDR tónusleképezés",
                 "icon": "mdi:contrast-box"
             }
         },
@@ -107,9 +109,6 @@
         "select": {
             "smoothing_type": {
                 "name": "Simítás típusa"
-            },
-            "color_engine": {
-                "name": "Színmotor"
             }
         },
         "sensor": {

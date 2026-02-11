@@ -4,3 +4,7 @@ venv
 .venv
 .coverage
 .idea
+config/
+
+# Prevent accidentally nesting the integration inside itself
+custom_components/hyperhdr/hyperhdr/

@@ -36,7 +36,8 @@
             "user": {
                 "data": {
                     "host": "Vert",
-                    "port": "Port"
+                    "port": "Port",
+                    "port_ws": "WebSocket-port (for LED-strømming)"
                 }
             }
         }
@@ -46,7 +47,8 @@
             "init": {
                 "data": {
                     "effect_show_list": "HyperHDR-effekter å vise",
-                    "priority": "HyperHDR-prioritet for bruke til farger og effekter"
+                    "priority": "HyperHDR-prioritet for bruke til farger og effekter",
+                    "port_ws": "WebSocket-port (for LED-strømming)"
                 }
             }
         }
@@ -54,39 +56,39 @@
     "entity": {
         "switch": {
             "all": {
-                "name": "Alle komponenter",
+                "name": "Alle",
                 "icon": "mdi:power"
             },
             "smoothing": {
-                "name": "Utjevningskomponent",
+                "name": "Utjevning",
                 "icon": "mdi:blur"
             },
             "blackbar_detection": {
-                "name": "Komponent for svarte felter",
+                "name": "Svarte felter",
                 "icon": "mdi:crop-free"
             },
             "forwarder": {
-                "name": "Videresendingskomponent",
+                "name": "Videresending",
                 "icon": "mdi:send"
             },
             "boblight_server": {
-                "name": "Boblight-serverkomponent",
+                "name": "Boblight-server",
                 "icon": "mdi:server"
             },
             "platform_capture": {
-                "name": "Plattformopptakskomponent",
+                "name": "Plattformopptak",
                 "icon": "mdi:video-input-antenna"
             },
             "led_device": {
-                "name": "LED-enhetskomponent",
+                "name": "LED-enhet",
                 "icon": "mdi:lightbulb-multiple"
             },
             "usb_capture": {
-                "name": "USB-opptakskomponent",
+                "name": "USB-opptak",
                 "icon": "mdi:usb"
             },
             "hdr_tone_mapping": {
-                "name": "HDR tone-mapping-komponent",
+                "name": "HDR tone-mapping",
                 "icon": "mdi:contrast-box"
             }
         },
@@ -107,9 +109,6 @@
         "select": {
             "smoothing_type": {
                 "name": "Type utjevning"
-            },
-            "color_engine": {
-                "name": "Fargemotor"
             }
         },
         "sensor": {
