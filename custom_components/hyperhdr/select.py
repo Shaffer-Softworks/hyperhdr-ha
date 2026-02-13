@@ -70,7 +70,7 @@ async def async_setup_entry(
     server_id = config_entry.unique_id
 
     @callback
-    def instance_add(instance_num: int, instance_name: str) -> None:
+    def instance_add(instance_num: int, instance_name: str, sysinfo: dict[str, Any]) -> None:
         """Add entities for a new HyperHDR instance."""
         assert server_id
         hyperhdr_client = entry_data[CONF_INSTANCE_CLIENTS][instance_num]
