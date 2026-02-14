@@ -117,23 +117,20 @@
             "version": {
                 "name": "Version"
             },
-            "cpuHardware": {
+            "cpu_hardware": {
                 "name": "CPU Hardware"
             },
-            "cpuModelName": {
+            "cpu_model_name": {
                 "name": "CPU Model Name"
             },
-            "cpuModelType": {
+            "cpu_model_type": {
                 "name": "CPU Model Type"
             },
-            "cpuRevision": {
+            "cpu_revision": {
                 "name": "CPU Revision"
             },
-            "kernelType": {
+            "kernel_type": {
                 "name": "Kernel Type"
-            },
-            "kernelVersion": {
-                "name": "Kernel Version"
             },
             "hostname": {
                 "name": "Hostname"
