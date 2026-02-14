@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import asyncio
 import functools
 import logging
 from typing import Any
@@ -20,6 +21,8 @@ from hyperhdr.const import (
     KEY_VISIBLE,
 )
 
+from homeassistant.const import EntityCategory
+from homeassistant.helpers.entity import DeviceInfo
 from homeassistant.components.sensor import SensorEntity, SensorEntityDescription
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.core import HomeAssistant, callback
@@ -55,6 +58,81 @@ PRIORITY_SENSOR_DESCRIPTION = SensorEntityDescription(
     icon="mdi:lava-lamp",
 )
 
+DIAGNOSTIC_SENSORS = [
+    SensorEntityDescription(
+        key="build",
+        translation_key="build",
+        icon="mdi:wrench",
+        entity_category=EntityCategory.DIAGNOSTIC,
+    ),
+    SensorEntityDescription(
+        key="version",
+        translation_key="version",
+        icon="mdi:information",
+        entity_category=EntityCategory.DIAGNOSTIC,
+    ),
+    SensorEntityDescription(
+        key="cpuHardware",
+        translation_key="cpuardware",
+        icon="mdi:chip",
+        entity_category=EntityCategory.DIAGNOSTIC,
+    ),
+    SensorEntityDescription(
+        key="cpuModelName",
+        translation_key="cpu_model_name",
+        icon="mdi:chip",
+        entity_category=EntityCategory.DIAGNOSTIC,
+    ),
+    SensorEntityDescription(
+        key="cpuModelType",
+        translation_key="cpu_model_type",
+        icon="mdi:chip",
+        entity_category=EntityCategory.DIAGNOSTIC,
+    ),
+    SensorEntityDescription(
+        key="cpuRevision",
+        translation_key="cpu_revision",
+        icon="mdi:chip",
+        entity_category=EntityCategory.DIAGNOSTIC,
+    ),
+    SensorEntityDescription(
+        key="kernelType",
+        translation_key="kernel_type",
+        icon="mdi:variable-box",
+        entity_category=EntityCategory.DIAGNOSTIC,
+    ),
+    SensorEntityDescription(
+        key="hostname",
+        translation_key="hostname",
+        icon="mdi:server",
+        entity_category=EntityCategory.DIAGNOSTIC,
+    ),
+    SensorEntityDescription(
+        key="platform",
+        translation_key="platform",
+        icon="mdi:chip",
+        entity_category=EntityCategory.DIAGNOSTIC,
+    ),
+    SensorEntityDescription(
+        key="architecture",
+        translation_key="architecture",
+        icon="mdi:cpu-64-bit",
+        entity_category=EntityCategory.DIAGNOSTIC,
+    ),
+    SensorEntityDescription(
+        key="operating_system",
+        translation_key="operating_system",
+        icon="mdi:linux",
+        entity_category=EntityCategory.DIAGNOSTIC,
+    ),
+    SensorEntityDescription(
+        key="kernel_version",
+        translation_key="kernel_version",
+        icon="mdi:cog",
+        entity_category=EntityCategory.DIAGNOSTIC,
+    ),
+]
+
 
 def _sensor_unique_id(server_id: str, instance_num: int, suffix: str) -> str:
     """Calculate a sensor's unique_id."""
@@ -75,7 +153,7 @@ async def async_setup_entry(
     server_id = config_entry.unique_id
 
     @callback
-    def instance_add(instance_num: int, instance_name: str) -> None:
+    def instance_add(instance_num: int, instance_name: str, sysinfo: dict[str, Any]) -> None:
         """Add entities for a new HyperHDR instance."""
         assert server_id
         sensors = [
@@ -85,14 +163,27 @@ async def async_setup_entry(
                 instance_name,
                 entry_data[CONF_INSTANCE_CLIENTS][instance_num],
                 PRIORITY_SENSOR_DESCRIPTION,
+                sysinfo,
             ),
             HyperHDRAverageColorSensor(
                 server_id,
                 instance_num,
                 instance_name,
                 entry_data[CONF_INSTANCE_CLIENTS][instance_num],
+                sysinfo,
             ),
         ]
+
+        sensors.extend(
+            HyperHDRDiagnosticSensor(
+                server_id,
+                instance_num,
+                instance_name,
+                sysinfo,
+                description,
+            )
+            for description in DIAGNOSTIC_SENSORS
+        )
 
         async_add_entities(sensors)
 
@@ -125,6 +216,7 @@ class HyperHDRSensor(SensorEntity):
         instance_name: str,
         hyperhdr_client: client.HyperHDRClient,
         entity_description: SensorEntityDescription,
+        sysInfo: dict[str, Any],
     ) -> None:
         """Initialize the sensor."""
         self.entity_description = entity_description
@@ -137,10 +229,13 @@ class HyperHDRSensor(SensorEntity):
         self._attr_device_info = DeviceInfo(
             identifiers={(DOMAIN, device_id)},
             manufacturer=HYPERHDR_MANUFACTURER_NAME,
-            model=HYPERHDR_MODEL_NAME,
+            model=sysInfo.get("system", {}).get("cpuModelType"),
             name=instance_name,
             configuration_url=self._client.remote_url,
+            sw_version=sysInfo.get("hyperhdr", {}).get("version"),
+            hw_version=sysInfo.get("system", {}).get("architecture"),
         )
+        
 
     @property
     def available(self) -> bool:
@@ -163,7 +258,6 @@ class HyperHDRSensor(SensorEntity):
         """Cleanup prior to hass removal."""
         self._client.remove_callbacks(self._client_callbacks)
 
-
 class HyperHDRVisiblePrioritySensor(HyperHDRSensor):
     """Class that displays the visible priority of a HyperHDR instance."""
 
@@ -174,11 +268,12 @@ class HyperHDRVisiblePrioritySensor(HyperHDRSensor):
         instance_name: str,
         hyperhdr_client: client.HyperHDRClient,
         entity_description: SensorEntityDescription,
+        sysinfo: dict[str, Any],
     ) -> None:
         """Initialize the sensor."""
 
         super().__init__(
-            server_id, instance_num, instance_name, hyperhdr_client, entity_description
+            server_id, instance_num, instance_name, hyperhdr_client, entity_description, sysinfo
         )
 
         self._attr_unique_id = _sensor_unique_id(
@@ -257,6 +352,7 @@ class HyperHDRAverageColorSensor(HyperHDRSensor):
         instance_num: int,
         instance_name: str,
         hyperhdr_client: client.HyperHDRClient,
+        sysinfo: dict[str, Any],
     ) -> None:
         """Initialize the sensor."""
 
@@ -266,6 +362,7 @@ class HyperHDRAverageColorSensor(HyperHDRSensor):
             instance_name,
             hyperhdr_client,
             AVERAGE_SENSOR_DESCRIPTION,
+            sysinfo,
         )
 
         self._attr_unique_id = _sensor_unique_id(
@@ -398,3 +495,32 @@ class HyperHDRAverageColorSensor(HyperHDRSensor):
         self._attr_native_value = hex_value if hex_value else None
         self._attr_extra_state_attributes = attrs
         self.async_write_ha_state()
+
+class HyperHDRDiagnosticSensor(SensorEntity):
+    _attr_has_entity_name = True
+    _attr_should_poll = False
+
+    def __init__(self, server_id, instance_num, instance_name, sysinfo, description):
+        self.entity_description = description
+        device_id = get_hyperhdr_device_id(server_id, instance_num)
+        self._attr_unique_id = get_hyperhdr_unique_id(
+            server_id, instance_num, f"diag_{description.key}"
+        )
+        self._attr_device_info = DeviceInfo(identifiers={(DOMAIN, device_id)})
+
+        # Map each key to its sysinfo source
+        value_map = {
+            "build": sysinfo.get("hyperhdr", {}).get("build"),
+            "version": sysinfo.get("hyperhdr", {}).get("version"),
+            "cpuHardware": sysinfo.get("system", {}).get("cpuHardware"),
+            "cpuModelName": sysinfo.get("system", {}).get("cpuModelName"),
+            "cpuModelType": sysinfo.get("system", {}).get("cpuModelType"),
+            "cpuRevision": sysinfo.get("system", {}).get("cpuRevision"),
+            "kernelType": sysinfo.get("system", {}).get("kernelType"),
+            "hostname": sysinfo.get("system", {}).get("hostName"),
+            "platform": sysinfo.get("system", {}).get("prettyName"),
+            "architecture": sysinfo.get("system", {}).get("architecture"),
+            "operating_system": sysinfo.get("system", {}).get("productType"),
+            "kernel_version": sysinfo.get("system", {}).get("kernelVersion"),
+        }
+        self._attr_native_value = value_map.get(description.key)

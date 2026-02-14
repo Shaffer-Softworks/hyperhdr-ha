@@ -110,6 +110,42 @@
             },
             "average_color": {
                 "name": "Average Color"
+            },
+            "build": {
+                "name": "Build"
+            },
+            "version": {
+                "name": "Version"
+            },
+            "cpu_hardware": {
+                "name": "CPU Hardware"
+            },
+            "cpu_model_name": {
+                "name": "CPU Model Name"
+            },
+            "cpu_model_type": {
+                "name": "CPU Model Type"
+            },
+            "cpu_revision": {
+                "name": "CPU Revision"
+            },
+            "kernel_type": {
+                "name": "Kernel Type"
+            },
+            "hostname": {
+                "name": "Hostname"
+            },
+            "platform": {
+                "name": "Platform"
+            },
+            "architecture": {
+                "name": "Architecture"
+            },
+            "operating_system": {
+                "name": "Operating System"
+            },
+            "kernel_version": {
+                "name": "Kernel Version"
             }
         },
         "light": {

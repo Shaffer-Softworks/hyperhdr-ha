@@ -27,6 +27,7 @@ from .const import (
     CONF_INSTANCE_CLIENTS,
     CONF_ON_UNLOAD,
     CONF_ROOT_CLIENT,
+    CONF_SYSINFO,
     DEFAULT_NAME,
     DOMAIN,
     HYPERHDR_RELEASES_URL,
@@ -290,6 +291,13 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                     HYPERHDR_RELEASES_URL,
                 )
 
+    # Fetch full sysinfo for DeviceInfo (reuses the authenticated root client).
+    sysinfo_resp = await hyperhdr_client.async_sysinfo()
+    if sysinfo_resp is not None and client.ResponseOK(sysinfo_resp):
+        sysinfo = sysinfo_resp.get(hyperhdr_const.KEY_INFO, {})
+    else:
+        sysinfo = {}
+
     # Cannot switch instance or cannot load state? => Not ready.
     if (
         not await hyperhdr_client.async_client_switch_instance()
@@ -306,6 +314,7 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         CONF_ROOT_CLIENT: hyperhdr_client,
         CONF_INSTANCE_CLIENTS: {},
         CONF_ON_UNLOAD: [],
+        CONF_SYSINFO: sysinfo,
     }
 
     async def async_instances_to_clients(response: dict[str, Any]) -> None:
@@ -321,6 +330,8 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         stopped_instances: set[int] = set()
         existing_instances = hass.data[DOMAIN][entry.entry_id][CONF_INSTANCE_CLIENTS]
         server_id = cast(str, entry.unique_id)
+
+        sysinfo = hass.data[DOMAIN][entry.entry_id].get(CONF_SYSINFO, {})
 
         # In practice, an instance can be in 3 states as seen by this function:
         #
@@ -347,11 +358,13 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
                 continue
             existing_instances[instance_num] = hyperhdr_client
             instance_name = instance.get(hyperhdr_const.KEY_FRIENDLY_NAME, DEFAULT_NAME)
+
             async_dispatcher_send(
                 hass,
                 SIGNAL_INSTANCE_ADD.format(entry.entry_id),
                 instance_num,
                 instance_name,
+                sysinfo,
             )
 
         # Remove entities that are not running instances on HyperHDR.
