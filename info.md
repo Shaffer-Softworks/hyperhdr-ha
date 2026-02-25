@@ -2,16 +2,16 @@
 
 ## Installation
 
-1. Add <https://github.com/mjoshd/hyperhdr-ha> to your [HACS](https://hacs.xyz/) custom repositories.
+1. Add <https://github.com/Shaffer-Softworks/hyperhdr-ha> to your [HACS](https://hacs.xyz/) custom repositories.
 1. Choose `Integration` from the category selection.
 1. Click install.
 1. Return to the Integrations page within HACS then click the `+ Explore & download repositories` button.
 1. Search for `HyperHDR`, select it, then click `Download this repository with HACS`.
 1. Restart Home Assistant to load the integration.
 1. Visit the Wiki for information regarding: 
-    - [Initial Setup](https://github.com/mjoshd/hyperhdr-ha/wiki#initial-setup)
-    - [Post-setup Advice](https://github.com/mjoshd/hyperhdr-ha/wiki#post-setup-advice)
-    - [Debug Logging](https://github.com/mjoshd/hyperhdr-ha/wiki#debug-logging)
+    - [Initial Setup](https://github.com/Shaffer-Softworks/hyperhdr-ha/wiki#initial-setup)
+    - [Post-setup Advice](https://github.com/Shaffer-Softworks/hyperhdr-ha/wiki#post-setup-advice)
+    - [Debug Logging](https://github.com/Shaffer-Softworks/hyperhdr-ha/wiki#debug-logging)
 
 ## Configuration
 
