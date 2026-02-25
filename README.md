@@ -38,7 +38,7 @@ HyperHDR is an open source bias lighting implementation which runs on many platf
 - **Automatic Entity Cleanup**: Stale entities from removed features (old camera, color engine, unsupported smoothing) are automatically pruned from the entity registry on integration load.
 - **SSDP Auto-Discovery**: HyperHDR instances on your network are automatically discovered via SSDP/UPnP — no manual IP entry required.
 
-![hyperhdr-logo](https://github.com/Shaffer-Softworks/hyperhdr-ha/blob/main/hyperhdr-logo.png)
+![hyperhdr-logo](https://github.com/Shaffer-Softworks/hyperhdr-ha/blob/master/hyperhdr-logo.png)
 
 ## Installation
 
@@ -178,3 +178,4 @@ If the camera entities are not streaming:
 [releases-shield]: https://img.shields.io/github/release/custom-components/integration_blueprint.svg?style=for-the-badge
 [releases]: https://github.com/custom-components/integration_blueprint/releases
 [user_profile]: https://github.com/ludeeus -->
+
