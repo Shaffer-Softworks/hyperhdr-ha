@@ -27,6 +27,9 @@ jobs:
   hacs:
     name: HACS validation
     runs-on: ubuntu-latest
+    # Only validate default branch so PR branches (e.g. documentation-updates) don't fail
+    # HACS requires: custom_components/<name>/, info.md, hacs.json, manifest.json with domain/name/codeowners/issue_tracker/documentation/version
+    if: github.ref == 'refs/heads/master' || github.event_name == 'workflow_dispatch'
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v6
