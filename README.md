@@ -1,8 +1,5 @@
-[![GitHub Release][releases-shield]][releases]
-[![GitHub Activity][commits-shield]][commits]
-[![License][license-shield]][license]
-
-[![hacs][hacsbadge]][hacs]
+[![CodeQL](https://github.com/Shaffer-Softworks/hyperhdr-ha/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/Shaffer-Softworks/hyperhdr-ha/actions/workflows/github-code-scanning/codeql)
+[![Validate](https://github.com/Shaffer-Softworks/hyperhdr-ha/actions/workflows/validate.yaml/badge.svg)](https://github.com/Shaffer-Softworks/hyperhdr-ha/actions/workflows/validate.yaml)
 
 # HyperHDR custom component for Home Assistant
 
