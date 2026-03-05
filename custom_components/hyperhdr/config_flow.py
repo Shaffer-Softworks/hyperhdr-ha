@@ -217,7 +217,7 @@ class HyperHDRConfigFlow(ConfigFlow, domain=DOMAIN):
         except ValueError:
             self._data[CONF_PORT] = const.DEFAULT_PORT_JSON
 
-        if not (hyperhdr_id := discovery_info.upnp.get(ssdp.ATTR_UPNP_SERIAL)):
+        if not (hyperhdr_id := discovery_info.upnp.get("serialNumber")):
             return self.async_abort(reason="no_id")
 
         # For discovery mechanisms, we set the unique_id as early as possible to
