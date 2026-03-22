@@ -1,5 +1,7 @@
 [![CodeQL](https://github.com/Shaffer-Softworks/hyperhdr-ha/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/Shaffer-Softworks/hyperhdr-ha/actions/workflows/github-code-scanning/codeql)
 [![Validate](https://github.com/Shaffer-Softworks/hyperhdr-ha/actions/workflows/validate.yaml/badge.svg)](https://github.com/Shaffer-Softworks/hyperhdr-ha/actions/workflows/validate.yaml)
+[![Active installs](https://img.shields.io/badge/dynamic/json?color=41BDF5&logo=home-assistant&label=active%20installs&suffix=%20installs&cacheSeconds=15600&url=https://analytics.home-assistant.io/custom_integrations.json&query=$.hyperhdr.total)](https://github.com/Shaffer-Softworks/hyperhdr-ha)
+[![HACS Custom](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/hacs/integration)
 
 # HyperHDR custom component for Home Assistant
 
