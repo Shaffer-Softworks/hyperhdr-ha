@@ -103,15 +103,26 @@ async def async_setup_entry(
     def instance_add(instance_num: int, instance_name: str, sysinfo: dict[str, Any]) -> None:
         """Add entities for a new HyperHDR instance."""
         assert server_id
+        hyperhdr_client = entry_data[CONF_INSTANCE_CLIENTS][instance_num]
+        available_components = {
+            component.get(KEY_NAME)
+            for component in (hyperhdr_client.components or [])
+            if isinstance(component, dict)
+        }
+        components_to_add = [
+            component
+            for component in COMPONENT_SWITCHES
+            if not available_components or component in available_components
+        ]
         async_add_entities(
             HyperHDRComponentSwitch(
                 server_id,
                 instance_num,
                 instance_name,
                 component,
-                entry_data[CONF_INSTANCE_CLIENTS][instance_num],
+                hyperhdr_client,
             )
-            for component in COMPONENT_SWITCHES
+            for component in components_to_add
         )
 
     @callback
@@ -181,6 +192,12 @@ class HyperHDRComponentSwitch(SwitchEntity):
 
     async def _async_send_set_component(self, value: bool) -> None:
         """Send a component control request."""
+        if (
+            self._client.components is not None
+            and self._component_name
+            not in {c.get(KEY_NAME) for c in (self._client.components or []) if isinstance(c, dict)}
+        ):
+            return
         await self._client.async_send_set_component(
             **{
                 KEY_COMPONENTSTATE: {

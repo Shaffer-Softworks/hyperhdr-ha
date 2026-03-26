@@ -39,7 +39,6 @@ NUMBER_ENTITIES = [
     TYPE_HYPERHDR_NUMBER_SMOOTHING_TIME,
     TYPE_HYPERHDR_NUMBER_SMOOTHING_DECAY,
     TYPE_HYPERHDR_NUMBER_SMOOTHING_UPDATE_FREQ,
-    TYPE_HYPERHDR_NUMBER_HDR_TONE_MAPPING,
 ]
 
 SMOOTHING_TIME_DESCRIPTION = NumberEntityDescription(
@@ -69,15 +68,6 @@ SMOOTHING_UPDATE_FREQ_DESCRIPTION = NumberEntityDescription(
     native_max_value=1000,
     native_step=1,
     native_unit_of_measurement="Hz",
-)
-
-HDR_TONE_MAPPING_DESCRIPTION = NumberEntityDescription(
-    key="hdr_tone_mapping",
-    translation_key="hdr_tone_mapping",
-    icon="mdi:palette",
-    native_min_value=0.0,
-    native_max_value=2.0,
-    native_step=0.1,
 )
 
 
@@ -134,17 +124,6 @@ async def async_setup_entry(
                     ),
                 ]
             )
-
-        # HDR tone mapping is always available.
-        entities.append(
-            HyperHDRHDRToneMappingNumber(
-                server_id,
-                instance_num,
-                instance_name,
-                hyperhdr_client,
-                HDR_TONE_MAPPING_DESCRIPTION,
-            ),
-        )
 
         async_add_entities(entities)
 
@@ -380,11 +359,28 @@ class HyperHDRHDRToneMappingNumber(HyperHDRNumber):
         Uses the new videomodehdr/HDR command path when available, falling back
         to the legacy hdrToneMappingMode parameter.
         """
+        # HyperHDR expects the enable flag alongside the mode/value.
+        # Use the current HDR component state when available to avoid implicitly
+        # toggling it when the user only adjusts the value.
+        enable: bool = True
+        for component in self._client.components or []:
+            if not isinstance(component, dict):
+                continue
+            if component.get("name") == "HDR" and "enabled" in component:
+                enable = bool(component["enabled"])
+                break
+
         if hasattr(hyperhdr_const, "KEY_HDR"):
             await self._client.async_set_hdr_tone_mapping(
-                **{hyperhdr_const.KEY_HDR: int(value)}
+                **{
+                    "enable": enable,
+                    hyperhdr_const.KEY_HDR: int(value),
+                }
             )
         else:
             await self._client.async_set_hdr_tone_mapping(
-                **{hyperhdr_const.KEY_HDR_TONE_MAPPING_MODE: int(value)}
+                **{
+                    "enable": enable,
+                    hyperhdr_const.KEY_HDR_TONE_MAPPING_MODE: int(value),
+                }
             )
