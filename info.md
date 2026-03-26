@@ -29,7 +29,15 @@ HyperHDR instances are automatically discovered via **SSDP**. When found, a noti
 <!-- {% endif %} -->
 
 <!-- {% if installed %} -->
-<!-- {% if installed %} -->
+# Integration v0.10.1
+
+Integration manifest **0.1.9**; GitHub release **v0.10.1**.
+
+- **HACS:** `hacs.json` includes **`render_readme`** so HACS renders this release-info page correctly.
+- **SSDP discovery:** The config flow reads the instance identifier from the correct UPnP fields (`discovery_info.upnp`), so discovered HyperHDR entries align with Home Assistant’s SSDP data and avoid bad device IDs (`no_id`) or duplicate discovery prompts.
+- **Diagnostics:** Optional diagnostic-category sensors (build, version, CPU/hardware and model fields, hostname, platform, architecture, operating system, kernel) populated from HyperHDR `sysinfo` when available.
+- **Documentation:** README badges for active installs and HACS Custom; repository links and validation workflow updates for **Shaffer-Softworks/hyperhdr-ha**.
+
 # Integration v0.1.6
 
 **Entity Cleanup & Config Entry Migration:**
