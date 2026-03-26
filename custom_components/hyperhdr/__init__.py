@@ -35,6 +35,7 @@ from .const import (
     SIGNAL_INSTANCE_ADD,
     SIGNAL_INSTANCE_REMOVE,
     TYPE_HYPERHDR_NUMBER_BASE,
+    TYPE_HYPERHDR_NUMBER_HDR_TONE_MAPPING,
     TYPE_HYPERHDR_NUMBER_SMOOTHING_DECAY,
     TYPE_HYPERHDR_NUMBER_SMOOTHING_TIME,
     TYPE_HYPERHDR_NUMBER_SMOOTHING_UPDATE_FREQ,
@@ -182,6 +183,10 @@ _PERMANENTLY_REMOVED_SUFFIXES = (
     "hyperhdr_camera",
     # Color Engine select removed in v0.1.5.
     f"{TYPE_HYPERHDR_SELECT_BASE}_color_engine",
+    # HDR tone mapping number removed (replaced with a select, then removed).
+    f"{TYPE_HYPERHDR_NUMBER_BASE}_{TYPE_HYPERHDR_NUMBER_HDR_TONE_MAPPING}",
+    # HDR tone mapping select removed.
+    f"{TYPE_HYPERHDR_SELECT_BASE}_hdr_tone_mapping",
 )
 
 # Smoothing entity suffixes — removed from the registry when the connected
