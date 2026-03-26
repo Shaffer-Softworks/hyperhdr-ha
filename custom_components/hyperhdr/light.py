@@ -267,19 +267,42 @@ class HyperHDRBaseLight(LightEntity):
         # == Set brightness ==
         if ATTR_BRIGHTNESS in kwargs:
             brightness = kwargs[ATTR_BRIGHTNESS]
+            brightness_pct = int(round((float(brightness) * 100) / 255))
+            luminance_gain = round(float(brightness) / 255, 3)
+
+            # Some HyperHDR builds expose multiple adjustment entries with IDs,
+            # while others only expose a single global adjustment (no ID).
+            sent_any = False
             for item in self._client.adjustment or []:
+                if const.KEY_ID not in item:
+                    continue
+                sent_any = True
+                payload: dict[str, Any] = {const.KEY_ID: item[const.KEY_ID]}
+                if const.KEY_BRIGHTNESS in item:
+                    payload[const.KEY_BRIGHTNESS] = brightness_pct
+                elif "luminanceGain" in item:
+                    payload["luminanceGain"] = luminance_gain
+                else:
+                    # Nothing to set that maps to "brightness" on this server.
+                    continue
+
+                if not await self._client.async_send_set_adjustment(
+                    **{const.KEY_ADJUSTMENT: payload}
+                ):
+                    return
+
+            if not sent_any:
+                global_adj: dict[str, Any] = {}
                 if (
-                    const.KEY_ID in item
-                    and not await self._client.async_send_set_adjustment(
-                        **{
-                            const.KEY_ADJUSTMENT: {
-                                const.KEY_BRIGHTNESS: int(
-                                    round((float(brightness) * 100) / 255)
-                                ),
-                                const.KEY_ID: item[const.KEY_ID],
-                            }
-                        }
-                    )
+                    self._client.adjustment
+                    and const.KEY_BRIGHTNESS in (self._client.adjustment[0] or {})
+                ):
+                    global_adj[const.KEY_BRIGHTNESS] = brightness_pct
+                else:
+                    global_adj["luminanceGain"] = luminance_gain
+
+                if not await self._client.async_send_set_adjustment(
+                    **{const.KEY_ADJUSTMENT: global_adj}
                 ):
                     return
 
@@ -310,7 +333,14 @@ class HyperHDRBaseLight(LightEntity):
                 return
 
             # Turn off all external sources, except the intended.
+            available_components = {
+                c.get(const.KEY_NAME)
+                for c in (self._client.components or [])
+                if isinstance(c, dict)
+            }
             for key in const.KEY_COMPONENTID_EXTERNAL_SOURCES:
+                if available_components and key not in available_components:
+                    continue
                 if not await self._client.async_send_set_component(
                     **{
                         const.KEY_COMPONENTSTATE: {
@@ -372,14 +402,23 @@ class HyperHDRBaseLight(LightEntity):
     def _update_adjustment(self, _: dict[str, Any] | None = None) -> None:
         """Update HyperHDR adjustments."""
         if self._client.adjustment:
-            brightness_pct = self._client.adjustment[0].get(
-                const.KEY_BRIGHTNESS, DEFAULT_BRIGHTNESS
-            )
-            if brightness_pct < 0 or brightness_pct > 100:
-                return
-            self._set_internal_state(
-                brightness=int(round((brightness_pct * 255) / float(100)))
-            )
+            adjustment0 = self._client.adjustment[0]
+            if const.KEY_BRIGHTNESS in adjustment0:
+                brightness_pct = adjustment0.get(const.KEY_BRIGHTNESS, DEFAULT_BRIGHTNESS)
+                if brightness_pct < 0 or brightness_pct > 100:
+                    return
+                self._set_internal_state(
+                    brightness=int(round((brightness_pct * 255) / float(100)))
+                )
+            elif "luminanceGain" in adjustment0:
+                gain = adjustment0.get("luminanceGain", 1.0)
+                try:
+                    gain_f = float(gain)
+                except (TypeError, ValueError):
+                    return
+                if gain_f < 0:
+                    return
+                self._set_internal_state(brightness=int(round(min(gain_f, 1.0) * 255)))
             self.async_write_ha_state()
 
     @callback
@@ -522,10 +561,17 @@ class HyperHDRLight(HyperHDRBaseLight):
         # color, effect), but this is not possible due to:
         # https://github.com/hyperion-project/hyperion.ng/issues/967
         if not bool(self._client.is_on()):
+            available_components = {
+                c.get(const.KEY_NAME)
+                for c in (self._client.components or [])
+                if isinstance(c, dict)
+            }
             for component in (
                 const.KEY_COMPONENTID_ALL,
                 const.KEY_COMPONENTID_LEDDEVICE,
             ):
+                if available_components and component not in available_components:
+                    continue
                 if not await self._client.async_send_set_component(
                     **{
                         const.KEY_COMPONENTSTATE: {
