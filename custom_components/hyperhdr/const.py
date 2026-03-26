@@ -1,5 +1,19 @@
 """Constants for HyperHDR integration."""
 
+from __future__ import annotations
+
+# HyperHDR API: "origin" maxLength in JSON schema (e.g. set-color / set-effect).
+HYPERHDR_ORIGIN_MAX_LENGTH = 20
+
+
+def sanitize_hyperhdr_origin(origin: str) -> str:
+    """Clamp origin to HyperHDR JSON schema maxLength (validation rejects longer strings)."""
+    trimmed = origin.strip()
+    if len(trimmed) <= HYPERHDR_ORIGIN_MAX_LENGTH:
+        return trimmed
+    return trimmed[:HYPERHDR_ORIGIN_MAX_LENGTH]
+
+
 CONF_ADMIN_PASSWORD = "admin_password"
 CONF_AUTH_ID = "auth_id"
 CONF_CREATE_TOKEN = "create_token"
@@ -14,7 +28,7 @@ CONF_EFFECT_SHOW_LIST = "effect_show_list"
 CONF_SYSINFO = "SYSINFO"
 
 DEFAULT_NAME = "HyperHDR"
-DEFAULT_ORIGIN = "Home Assistant"
+DEFAULT_ORIGIN = sanitize_hyperhdr_origin("Home Assistant")
 DEFAULT_PORT_JSON = 19444
 DEFAULT_PORT_UI = 8090
 DEFAULT_PORT_WS = 8090

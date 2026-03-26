@@ -87,7 +87,7 @@ async def async_setup_entry(
                     instance_name,
                     hyperhdr_client,
                     SMOOTHING_TYPE_DESCRIPTION,
-                ),
+                )
             ]
         )
 
