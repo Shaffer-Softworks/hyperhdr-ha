@@ -48,9 +48,16 @@
                 "data": {
                     "effect_show_list": "HyperHDR effects to show",
                     "priority": "HyperHDR priority to use for colors and effects",
-                    "port_ws": "פורט WebSocket (לזרימת LED)"
+                    "port_ws": "פורט WebSocket (לזרימת LED)",
+                    "host": "מארח",
+                    "port": "פתחה"
                 }
             }
+        },
+        "error": {
+            "cannot_connect": "ההתחברות נכשלה",
+            "no_id": "The HyperHDR Ambilight instance did not report its id",
+            "wrong_device": "This address is a different HyperHDR server. Remove this entry and add the new one instead."
         }
     },
     "entity": {

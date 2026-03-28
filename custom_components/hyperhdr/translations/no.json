@@ -48,9 +48,16 @@
                 "data": {
                     "effect_show_list": "HyperHDR-effekter å vise",
                     "priority": "HyperHDR-prioritet for bruke til farger og effekter",
-                    "port_ws": "WebSocket-port (for LED-strømming)"
+                    "port_ws": "WebSocket-port (for LED-strømming)",
+                    "host": "Vert",
+                    "port": "Port"
                 }
             }
+        },
+        "error": {
+            "cannot_connect": "Tilkobling mislyktes",
+            "no_id": "HyperHDR Ambilight-forekomsten rapporterte ikke ID-en",
+            "wrong_device": "Denne adressen tilhører en annen HyperHDR-server. Fjern denne oppføringen og legg til den nye separat."
         }
     },
     "entity": {

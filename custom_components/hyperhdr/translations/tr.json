@@ -48,9 +48,16 @@
                 "data": {
                     "effect_show_list": "HyperHDR effects to show",
                     "priority": "Renkler ve efektler için kullanılacak hyperhdr önceliği",
-                    "port_ws": "WebSocket portu (LED akışı için)"
+                    "port_ws": "WebSocket portu (LED akışı için)",
+                    "host": "Ana Bilgisayar",
+                    "port": "Port"
                 }
             }
+        },
+        "error": {
+            "cannot_connect": "Bağlanma hatası",
+            "no_id": "HyperHDR Ambilight örneği kimliğini bildirmedi",
+            "wrong_device": "Bu adres farklı bir HyperHDR sunucusuna ait. Bu girişi kaldırın ve yeniyi ayrı ekleyin."
         }
     },
     "entity": {
