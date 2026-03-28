@@ -48,9 +48,16 @@
                 "data": {
                     "effect_show_list": "HyperHDR effects to show",
                     "priority": "Prednostna raba HyperHDRa za barve in učinke",
-                    "port_ws": "WebSocket vrata (za LED pretakanje)"
+                    "port_ws": "WebSocket vrata (za LED pretakanje)",
+                    "host": "Gostitelj",
+                    "port": "Vrata"
                 }
             }
+        },
+        "error": {
+            "cannot_connect": "Neuspelo povezovanje",
+            "no_id": "HyperHDR Ambilight instanca ni prijavila tega id",
+            "wrong_device": "Ta naslov je drug strežnik HyperHDR. Odstranite ta vnos in ločeno dodajte novega."
         }
     },
     "entity": {

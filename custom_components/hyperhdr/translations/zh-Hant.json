@@ -48,9 +48,16 @@
                 "data": {
                     "effect_show_list": "顯示 HyperHDR 效應",
                     "priority": "HyperHDR 優先使用之色溫與特效",
-                    "port_ws": "WebSocket 連接埠（用於 LED 串流）"
+                    "port_ws": "WebSocket 連接埠（用於 LED 串流）",
+                    "host": "主機端",
+                    "port": "通訊埠"
                 }
             }
+        },
+        "error": {
+            "cannot_connect": "連線失敗",
+            "no_id": "HyperHDR Ambilight 實體未回報其 ID",
+            "wrong_device": "此位址屬於另一台 HyperHDR 伺服器。請移除此項目並另外新增正確的伺服器。"
         }
     },
     "entity": {

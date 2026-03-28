@@ -48,9 +48,16 @@
                 "data": {
                     "effect_show_list": "Megjelenítendő HyperHDR effektusok",
                     "priority": "HyperHDR prioritás a színekhez és effektekhez",
-                    "port_ws": "WebSocket port (LED streaminghez)"
+                    "port_ws": "WebSocket port (LED streaminghez)",
+                    "host": "Hoszt",
+                    "port": "Port"
                 }
             }
+        },
+        "error": {
+            "cannot_connect": "Sikertelen csatlakozás",
+            "no_id": "A HyperHDR Ambilight példány nem szolgáltatja az azonosítóját",
+            "wrong_device": "Ez a cím egy másik HyperHDR-kiszolgáló. Távolítsa el ezt a bejegyzést, és vegye fel az újat külön."
         }
     },
     "entity": {

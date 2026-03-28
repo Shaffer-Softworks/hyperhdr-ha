@@ -48,9 +48,16 @@
                 "data": {
                     "effect_show_list": "Εφέ HyperHDR για εμφάνιση",
                     "priority": "HyperHDR priority to use for colors and effects",
-                    "port_ws": "Θύρα WebSocket (για ροή LED)"
+                    "port_ws": "Θύρα WebSocket (για ροή LED)",
+                    "host": "Κεντρικός υπολογιστής",
+                    "port": "Θύρα"
                 }
             }
+        },
+        "error": {
+            "cannot_connect": "Αποτυχία σύνδεσης",
+            "no_id": "Το HyperHDR Ambilight δεν ανέφερε το αναγνωριστικό του",
+            "wrong_device": "Αυτή η διεύθυνση είναι διαφορετικός διακομιστής HyperHDR. Αφαιρέστε αυτή την καταχώριση και προσθέστε τη νέα."
         }
     },
     "entity": {

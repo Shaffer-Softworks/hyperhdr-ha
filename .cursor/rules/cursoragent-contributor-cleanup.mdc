@@ -1,0 +1,32 @@
+---
+description: Context on removing cursoragent from GitHub contributors
+alwaysApply: false
+---
+
+# Cursoragent Contributor Cleanup
+
+## Problem
+
+The GitHub repo sidebar shows "cursoragent Cursor Agent" as a contributor due to a `Co-authored-by: Cursor <cursoragent@cursor.com>` trailer in a commit message.
+
+## Status
+
+The git history has already been rewritten to remove the trailer:
+
+- **Old commit**: `5801d39` — had `Co-authored-by: Cursor <cursoragent@cursor.com>` in the body
+- **Rewritten commit**: `c7a7f3f` — same content/parent (`e0b90a6`), trailer removed
+- Both `master` and `origin/master` point to the clean commit `c7a7f3f`
+- No branches or PR refs contain cursoragent references
+
+## GitHub State
+
+- The old dangling commit `5801d39` is still accessible on GitHub as an unreachable object
+- GitHub Contributors API (`/repos/mjoshd/hyperhdr-ha/contributors`) does NOT list cursoragent
+- GitHub Contributor Stats API also does NOT list cursoragent
+- The sidebar contributor list is stale UI cache
+
+## Resolution Options
+
+1. **Wait** — GitHub should eventually re-index and drop cursoragent from the sidebar
+2. **Contact GitHub support** — repo owner (mjoshd) can request a repository garbage collection to permanently remove the dangling commit object
+3. **Prevent future occurrences** — configure Cursor to not add `Co-authored-by` trailers via git settings

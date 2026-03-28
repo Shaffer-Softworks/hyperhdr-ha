@@ -48,9 +48,16 @@
                 "data": {
                     "effect_show_list": "출력할 HyperHDR 효과",
                     "priority": "색상 및 효과에 사용할 HyperHDR 우선 순위",
-                    "port_ws": "WebSocket 포트 (LED 스트리밍용)"
+                    "port_ws": "WebSocket 포트 (LED 스트리밍용)",
+                    "host": "호스트",
+                    "port": "포트"
                 }
             }
+        },
+        "error": {
+            "cannot_connect": "연결하지 못했습니다",
+            "no_id": "HyperHDR Amblight 인스턴스가 해당 ID를 보고하지 않았습니다",
+            "wrong_device": "이 주소는 다른 HyperHDR 서버입니다. 이 항목을 제거한 뒤 새 서버를 별도로 추가하세요."
         }
     },
     "entity": {
