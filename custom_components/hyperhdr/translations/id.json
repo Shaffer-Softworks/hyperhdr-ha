@@ -48,9 +48,16 @@
                 "data": {
                     "effect_show_list": "Efek hyperhdr untuk ditampilkan",
                     "priority": "Prioritas hyperhdr digunakan untuk warna dan efek",
-                    "port_ws": "Port WebSocket (untuk streaming LED)"
+                    "port_ws": "Port WebSocket (untuk streaming LED)",
+                    "host": "Host",
+                    "port": "Port"
                 }
             }
+        },
+        "error": {
+            "cannot_connect": "Gagal terhubung",
+            "no_id": "Instans HyperHDR Ambilight tidak melaporkan ID-nya",
+            "wrong_device": "Alamat ini adalah server HyperHDR yang berbeda. Hapus entri ini dan tambahkan entri baru untuk server tersebut."
         }
     },
     "entity": {

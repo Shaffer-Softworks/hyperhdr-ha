@@ -48,9 +48,16 @@
                 "data": {
                     "effect_show_list": "HyperHDR effects to show",
                     "priority": "HyperHDR Prioritéit fir Faarwen an Effekter",
-                    "port_ws": "WebSocket-Port (fir LED-Streaming)"
+                    "port_ws": "WebSocket-Port (fir LED-Streaming)",
+                    "host": "Host",
+                    "port": "Port"
                 }
             }
+        },
+        "error": {
+            "cannot_connect": "Feeler beim verbannen",
+            "no_id": "Dës HyperHDR Ambilight Instanz huet seng ID net gemellt.",
+            "wrong_device": "Dës Adress ass en aneren HyperHDR-Server. Entfernt dësen Entrée a setzt den neien derbäi."
         }
     },
     "entity": {

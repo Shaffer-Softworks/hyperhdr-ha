@@ -44,10 +44,17 @@
         }
     },
     "options": {
+        "error": {
+            "cannot_connect": "Failed to connect",
+            "no_id": "The HyperHDR Ambilight instance did not report its id",
+            "wrong_device": "This address is a different HyperHDR server. Remove this entry and add the new one instead."
+        },
         "step": {
             "init": {
                 "data": {
                     "effect_show_list": "HyperHDR effects to show",
+                    "host": "Host",
+                    "port": "JSON API Port",
                     "priority": "HyperHDR priority to use for colors and effects",
                     "port_ws": "WebSocket Port (for LED streaming)",
                     "admin_password": "Admin Password (for LED stream authentication)"
