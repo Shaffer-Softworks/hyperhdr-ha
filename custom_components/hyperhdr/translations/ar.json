@@ -48,9 +48,16 @@
                 "data": {
                     "effect_show_list": "تأثيرات HyperHDR المعروضة",
                     "priority": "أولوية HyperHDR المستخدمة للألوان والتأثيرات",
-                    "port_ws": "منفذ WebSocket (لبث LED)"
+                    "port_ws": "منفذ WebSocket (لبث LED)",
+                    "host": "المضيف",
+                    "port": "المنفذ"
                 }
             }
+        },
+        "error": {
+            "cannot_connect": "فشل الاتصال",
+            "no_id": "لم تقم نسخة HyperHDR Ambilight بالإبلاغ عن معرفها",
+            "wrong_device": "هذا العنوان يشير إلى خادم HyperHDR مختلف. احذف هذا الإدخال وأضف الخادم الجديد بدلاً من ذلك."
         }
     },
     "entity": {

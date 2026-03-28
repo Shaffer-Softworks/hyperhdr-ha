@@ -48,9 +48,16 @@
                 "data": {
                     "effect_show_list": "Kuvatavad HyperHDRi efektid",
                     "priority": "Värvide ja efektide puhul on kasutatavad HyperHDRi eelistused",
+                    "host": "Host",
+                    "port": "Port",
                     "port_ws": "WebSocket port (LED-voogedastuseks)"
                 }
             }
+        },
+        "error": {
+            "cannot_connect": "Ühendamine nurjus",
+            "no_id": "HyperHDR Ambilighti eksemplar ei teatanud oma ID-d",
+            "wrong_device": "See aadress on teine HyperHDR server. Eemaldage see kirje ja lisage uus eraldi."
         }
     },
     "entity": {

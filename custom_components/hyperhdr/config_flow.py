@@ -453,18 +453,21 @@ class HyperHDROptionsFlow(OptionsFlow):
             token=self._config_entry.data.get(CONF_TOKEN),
         )
 
+    @staticmethod
+    def _effects_map(hyperhdr_client: client.HyperHDRClient) -> dict[str, str]:
+        """Build effect name -> label map from a connected client."""
+        effects: dict[str, str] = {}
+        for effect in hyperhdr_client.effects or []:
+            if const.KEY_NAME in effect:
+                effects[effect[const.KEY_NAME]] = effect[const.KEY_NAME]
+        return effects
+
     async def async_step_init(
         self, user_input: dict[str, Any] | None = None
     ) -> ConfigFlowResult:
         """Manage the options."""
 
-        effects = {}
-        async with self._create_client() as hyperhdr_client:
-            if not hyperhdr_client:
-                return self.async_abort(reason="cannot_connect")
-            for effect in hyperhdr_client.effects or []:
-                if const.KEY_NAME in effect:
-                    effects[effect[const.KEY_NAME]] = effect[const.KEY_NAME]
+        errors: dict[str, str] = {}
 
         # If a new effect is added to HyperHDR, we always want it to show by default. So
         # rather than store a 'show list' in the config entry, we store a 'hide list'.
@@ -472,60 +475,111 @@ class HyperHDROptionsFlow(OptionsFlow):
         # so we inverse the meaning prior to storage.
 
         if user_input is not None:
-            # Pull out connection-level settings and persist them on
-            # config_entry.data so camera entities (which read from data,
-            # not options) can access them.
+            ui = dict(user_input)
             new_data = {**self._config_entry.data}
-            admin_password = user_input.pop(CONF_ADMIN_PASSWORD, None)
+            new_data[CONF_HOST] = ui.pop(CONF_HOST)
+            new_data[CONF_PORT] = ui.pop(CONF_PORT)
+            admin_password = ui.pop(CONF_ADMIN_PASSWORD, None)
             if admin_password is not None:
                 new_data[CONF_ADMIN_PASSWORD] = admin_password
-            port_ws = user_input.pop(CONF_PORT_WS, None)
+            port_ws = ui.pop(CONF_PORT_WS, None)
             if port_ws is not None:
                 new_data[CONF_PORT_WS] = port_ws
-            if new_data != self._config_entry.data:
-                self.hass.config_entries.async_update_entry(
-                    self._config_entry, data=new_data
-                )
 
-            effect_show_list = user_input.pop(CONF_EFFECT_SHOW_LIST)
-            user_input[CONF_EFFECT_HIDE_LIST] = sorted(
-                set(effects) - set(effect_show_list)
-            )
-            return self.async_create_entry(title="", data=user_input)
+            effects_submit: dict[str, str] = {}
+            async with create_hyperhdr_client(
+                new_data[CONF_HOST],
+                new_data[CONF_PORT],
+                token=new_data.get(CONF_TOKEN),
+                raw_connection=True,
+            ) as hyperhdr_client:
+                if not hyperhdr_client:
+                    errors[CONF_BASE] = "cannot_connect"
+                else:
+                    hyperhdr_id = await hyperhdr_client.async_sysinfo_id()
+                    unique_id = self._config_entry.unique_id
+                    if not hyperhdr_id:
+                        errors[CONF_BASE] = "no_id"
+                    elif unique_id and hyperhdr_id != unique_id:
+                        errors[CONF_BASE] = "wrong_device"
+                    else:
+                        effects_submit = self._effects_map(hyperhdr_client)
+
+            if not errors:
+                effect_show_list = ui.pop(CONF_EFFECT_SHOW_LIST)
+                ui[CONF_EFFECT_HIDE_LIST] = sorted(
+                    set(effects_submit) - set(effect_show_list)
+                )
+                self.hass.config_entries.async_update_entry(
+                    self._config_entry,
+                    data=new_data,
+                    title=f"{new_data[CONF_HOST]}:{new_data[CONF_PORT]}",
+                )
+                return self.async_create_entry(title="", data=ui)
+
+        entry = self._config_entry
+        data = entry.data
+        options = entry.options
+
+        effects: dict[str, str] = {}
+        async with self._create_client() as hyperhdr_client:
+            if not hyperhdr_client:
+                return self.async_abort(reason="cannot_connect")
+            effects = self._effects_map(hyperhdr_client)
 
         default_effect_show_list = list(
-            set(effects)
-            - set(self._config_entry.options.get(CONF_EFFECT_HIDE_LIST, []))
+            set(effects) - set(options.get(CONF_EFFECT_HIDE_LIST, []))
         )
+
+        if user_input is not None:
+            host_default = user_input[CONF_HOST]
+            port_default = user_input[CONF_PORT]
+            priority_default = user_input.get(
+                CONF_PRIORITY, options.get(CONF_PRIORITY, DEFAULT_PRIORITY)
+            )
+            effect_show_default = user_input.get(
+                CONF_EFFECT_SHOW_LIST, default_effect_show_list
+            )
+            port_ws_default = user_input.get(
+                CONF_PORT_WS, data.get(CONF_PORT_WS, DEFAULT_PORT_WS)
+            )
+            admin_suggested = user_input.get(CONF_ADMIN_PASSWORD) or data.get(
+                CONF_ADMIN_PASSWORD, ""
+            )
+        else:
+            host_default = data[CONF_HOST]
+            port_default = data[CONF_PORT]
+            priority_default = options.get(CONF_PRIORITY, DEFAULT_PRIORITY)
+            effect_show_default = default_effect_show_list
+            port_ws_default = data.get(CONF_PORT_WS, DEFAULT_PORT_WS)
+            admin_suggested = data.get(CONF_ADMIN_PASSWORD, "")
 
         return self.async_show_form(
             step_id="init",
             data_schema=vol.Schema(
                 {
+                    vol.Required(CONF_HOST, default=host_default): str,
+                    vol.Required(
+                        CONF_PORT,
+                        default=port_default,
+                    ): vol.All(vol.Coerce(int), vol.Range(min=1, max=65535)),
                     vol.Optional(
                         CONF_PRIORITY,
-                        default=self._config_entry.options.get(
-                            CONF_PRIORITY, DEFAULT_PRIORITY
-                        ),
+                        default=priority_default,
                     ): vol.All(vol.Coerce(int), vol.Range(min=0, max=255)),
                     vol.Optional(
                         CONF_EFFECT_SHOW_LIST,
-                        default=default_effect_show_list,
+                        default=effect_show_default,
                     ): cv.multi_select(effects),
                     vol.Optional(
                         CONF_PORT_WS,
-                        default=self._config_entry.data.get(
-                            CONF_PORT_WS, DEFAULT_PORT_WS
-                        ),
+                        default=port_ws_default,
                     ): vol.All(vol.Coerce(int), vol.Range(min=1, max=65535)),
                     vol.Optional(
                         CONF_ADMIN_PASSWORD,
-                        description={
-                            "suggested_value": self._config_entry.data.get(
-                                CONF_ADMIN_PASSWORD, ""
-                            )
-                        },
+                        description={"suggested_value": admin_suggested or ""},
                     ): str,
                 }
             ),
+            errors=errors,
         )
