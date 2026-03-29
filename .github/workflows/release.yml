@@ -1,0 +1,180 @@
+name: Create release
+
+on:
+  workflow_dispatch:
+    inputs:
+      version:
+        description: Semver (e.g. 0.2.0). A leading v is optional.
+        required: true
+        type: string
+      draft:
+        description: Create as draft release
+        required: false
+        type: boolean
+        default: false
+      prerelease:
+        description: Mark as prerelease
+        required: false
+        type: boolean
+        default: false
+      release_notes:
+        description: Release notes (optional). If empty, GitHub generates notes from commits.
+        required: false
+        type: string
+        default: ""
+
+# actions:write — allow gh workflow run when PR checks must be triggered without a PAT
+permissions:
+  contents: write
+  pull-requests: write
+  actions: write
+
+jobs:
+  normalize:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.meta.outputs.version }}
+      tag: ${{ steps.meta.outputs.tag }}
+      branch: ${{ steps.meta.outputs.branch }}
+    steps:
+      - id: meta
+        env:
+          RAW: ${{ github.event.inputs.version }}
+        run: |
+          set -euo pipefail
+          VERSION="${RAW#v}"
+          if [ -z "$VERSION" ]; then
+            echo "::error::version is empty"
+            exit 1
+          fi
+          if [[ "$VERSION" == *"/"* ]]; then
+            echo "::error::version must not contain /"
+            exit 1
+          fi
+          TAG="v${VERSION}"
+          BRANCH="release/${TAG}"
+          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
+          echo "tag=${TAG}" >> "$GITHUB_OUTPUT"
+          echo "branch=${BRANCH}" >> "$GITHUB_OUTPUT"
+
+  release:
+    needs: normalize
+    runs-on: ubuntu-latest
+    concurrency:
+      group: create-release-${{ github.repository }}-${{ needs.normalize.outputs.version }}
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          fetch-depth: 0
+          # Optional: fine-grained or classic PAT with repo scope. Without it, GitHub suppresses
+          # pull_request workflows for pushes/PRs done with GITHUB_TOKEN — required checks stay pending.
+          token: ${{ secrets.WORKFLOW_TRIGGER_TOKEN != '' && secrets.WORKFLOW_TRIGGER_TOKEN || github.token }}
+
+      - name: Bump manifest, push release branch, publish release, open PR
+        env:
+          GH_TOKEN: ${{ secrets.WORKFLOW_TRIGGER_TOKEN != '' && secrets.WORKFLOW_TRIGGER_TOKEN || github.token }}
+          HAS_WORKFLOW_PAT: ${{ secrets.WORKFLOW_TRIGGER_TOKEN != '' }}
+          VERSION: ${{ needs.normalize.outputs.version }}
+          TAG: ${{ needs.normalize.outputs.tag }}
+          BRANCH: ${{ needs.normalize.outputs.branch }}
+          INPUT_DRAFT: ${{ github.event.inputs.draft }}
+          INPUT_PRERELEASE: ${{ github.event.inputs.prerelease }}
+          RELEASE_NOTES: ${{ github.event.inputs.release_notes }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        run: |
+          set -euo pipefail
+
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git checkout -b "$BRANCH"
+
+          export MANIFEST_VERSION="$VERSION"
+          python3 << 'PY'
+          import json
+          import os
+          from pathlib import Path
+
+          version = os.environ["MANIFEST_VERSION"]
+          path = Path("custom_components/hyperhdr/manifest.json")
+          with path.open(encoding="utf-8") as f:
+              data = json.load(f)
+          data["version"] = version
+          text = json.dumps(data, indent=2, ensure_ascii=False) + "\n"
+          path.write_text(text, encoding="utf-8")
+          PY
+
+          git add custom_components/hyperhdr/manifest.json
+          if git diff --staged --quiet; then
+            echo "::error::Manifest already at ${VERSION}; nothing to commit."
+            exit 1
+          fi
+          git commit -m "chore: bump manifest to ${VERSION} for ${TAG}"
+
+          # Re-runs reuse branch name release/v*; a plain push fails non-fast-forward if the
+          # branch already exists with different history. Force-with-lease updates only when
+          # the remote ref still matches what we fetched (safer than bare --force).
+          git fetch origin "refs/heads/${BRANCH}:refs/remotes/origin/${BRANCH}" 2>/dev/null || true
+          if git rev-parse "refs/remotes/origin/${BRANCH}" >/dev/null 2>&1; then
+            git push -u origin "$BRANCH" --force-with-lease="refs/heads/${BRANCH}:refs/remotes/origin/${BRANCH}"
+          else
+            git push -u origin "$BRANCH"
+          fi
+
+          git fetch origin --tags
+          HEAD_SHA=$(git rev-parse HEAD)
+          if git show-ref --verify --quiet "refs/tags/${TAG}"; then
+            TAG_SHA=$(git rev-parse "${TAG}^{}" 2>/dev/null || git rev-parse "refs/tags/${TAG}")
+            if [ "$TAG_SHA" != "$HEAD_SHA" ]; then
+              echo "::error::Git tag \`${TAG}\` already exists and points to \`${TAG_SHA}\`, but \`${BRANCH}\` HEAD is \`${HEAD_SHA}\`. On GitHub delete the \`${TAG}\` tag and any release tied to it (Releases → … → Delete), then re-run this workflow, or use a higher version."
+              exit 1
+            fi
+          fi
+
+          EXTRA=( )
+          if [ "$INPUT_DRAFT" = "true" ]; then EXTRA+=(--draft); fi
+          if [ "$INPUT_PRERELEASE" = "true" ]; then EXTRA+=(--prerelease); fi
+
+          if [ -n "$RELEASE_NOTES" ]; then
+            printf '%s\n' "$RELEASE_NOTES" > /tmp/release-notes.md
+            gh release create "$TAG" --target "$BRANCH" --title "$TAG" -F /tmp/release-notes.md "${EXTRA[@]}"
+          else
+            gh release create "$TAG" --target "$BRANCH" --title "$TAG" --generate-notes "${EXTRA[@]}"
+          fi
+
+          if [ "$(gh pr list --head "$BRANCH" --state open --json number -q 'length')" -eq 0 ]; then
+            gh pr create \
+              --base "$DEFAULT_BRANCH" \
+              --head "$BRANCH" \
+              --title "Merge ${TAG} manifest bump" \
+              --body "Automated manifest bump for [${TAG}](https://github.com/${{ github.repository }}/releases/tag/${TAG}). Merge after checks pass so \`${DEFAULT_BRANCH}\` matches the release."
+          else
+            echo "::notice::An open PR already exists for \`${BRANCH}\`; skipping \`gh pr create\`."
+          fi
+
+          # Without a PAT, GitHub does not run other workflows for this push/PR. Dispatch Validate
+          # on the release branch so hassfest/HACS run and show on the PR (same commit as head).
+          if [ "${HAS_WORKFLOW_PAT}" != "true" ]; then
+            echo "::notice::No WORKFLOW_TRIGGER_TOKEN — triggering Validate on \`${BRANCH}\` so PR checks are not stuck."
+            gh workflow run validate.yaml --ref "$BRANCH"
+          fi
+
+      - name: Summary
+        if: success()
+        env:
+          BRANCH: ${{ needs.normalize.outputs.branch }}
+          TAG: ${{ needs.normalize.outputs.tag }}
+          DEFAULT_BRANCH: ${{ github.event.repository.default_branch }}
+        run: |
+          {
+            echo "## Create release"
+            echo "The manifest bump lives on branch **\`${BRANCH}\`**, not on **\`${DEFAULT_BRANCH}\`** until you **merge the pull request** from this run."
+            echo ""
+            echo "If \`${DEFAULT_BRANCH}\` still shows the old version, open **Pull requests** and merge the PR titled **Merge ${TAG} manifest bump**."
+            echo ""
+            echo "**Draft releases** use a temporary \`untagged-…\` URL in the job log until you **Publish** the release on GitHub; then the normal \`/releases/tag/${TAG}\` link applies."
+            echo ""
+            echo "### PR checks"
+            echo "If required checks were stuck: GitHub often **does not run** \`pull_request\` workflows for commits pushed with the default \`GITHUB_TOKEN\`. This workflow **dispatches Validate** on the release branch when secret \`WORKFLOW_TRIGGER_TOKEN\` is unset. Optionally add that repo secret (PAT with **contents** + **pull requests**, and **actions** if you use fine-grained) so push/PR use a non-GitHub Actions identity and checks start automatically like a normal PR."
+          } >> "$GITHUB_STEP_SUMMARY"
