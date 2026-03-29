@@ -97,7 +97,7 @@ jobs:
           from pathlib import Path
 
           version = os.environ["MANIFEST_VERSION"]
-          path = Path("custom_components/android_management_api/manifest.json")
+          path = Path("custom_components/hyperhdr/manifest.json")
           with path.open(encoding="utf-8") as f:
               data = json.load(f)
           data["version"] = version
@@ -105,7 +105,7 @@ jobs:
           path.write_text(text, encoding="utf-8")
           PY
 
-          git add custom_components/android_management_api/manifest.json
+          git add custom_components/hyperhdr/manifest.json
           if git diff --staged --quiet; then
             echo "::error::Manifest already at ${VERSION}; nothing to commit."
             exit 1
