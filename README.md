@@ -1,7 +1,7 @@
 [![CodeQL](https://github.com/Shaffer-Softworks/hyperhdr-ha/actions/workflows/github-code-scanning/codeql/badge.svg)](https://github.com/Shaffer-Softworks/hyperhdr-ha/actions/workflows/github-code-scanning/codeql)
 [![Validate](https://github.com/Shaffer-Softworks/hyperhdr-ha/actions/workflows/validate.yaml/badge.svg)](https://github.com/Shaffer-Softworks/hyperhdr-ha/actions/workflows/validate.yaml)
 [![Active installs](https://img.shields.io/badge/dynamic/json?color=41BDF5&logo=home-assistant&label=active%20installs&suffix=%20installs&cacheSeconds=15600&url=https://analytics.home-assistant.io/custom_integrations.json&query=$.hyperhdr.total)](https://github.com/Shaffer-Softworks/hyperhdr-ha)
-[![HACS Custom](https://img.shields.io/badge/HACS-Custom-orange.svg)](https://github.com/hacs/integration)
+[![HACS Default](https://img.shields.io/badge/HACS-Default-41BDF5.svg)](https://github.com/hacs/default)
 
 # HyperHDR custom component for Home Assistant
 
@@ -36,16 +36,11 @@ HyperHDR is an open source bias lighting implementation which runs on many platf
 
 ### Using HACS
 
-1. Add <https://github.com/Shaffer-Softworks/hyperhdr-ha> to your [HACS](https://hacs.xyz/) custom repositories.
-1. Choose `Integration` from the category selection.
-1. Click install.
-1. Return to the Integrations page within HACS then click the `+ Explore & download repositories` button.
-1. Search for `HyperHDR`, select it, then click `Download this repository with HACS`.
-1. Restart Home Assistant to load the integration.
-1. Visit the Wiki for information regarding: 
-    - [Initial Setup](https://github.com/Shaffer-Softworks/hyperhdr-ha/wiki#initial-setup)
-    - [Post-setup Advice](https://github.com/Shaffer-Softworks/hyperhdr-ha/wiki#post-setup-advice)
-    - [Debug Logging](https://github.com/Shaffer-Softworks/hyperhdr-ha/wiki#debug-logging)
+This integration is made available through the Home Assistant Community Store default feed. Simply search for **HyperHDR** and install it directly from HACS.
+
+Please see the [official HACS documentation](https://hacs.xyz/docs/) for information on how to install and use HACS.
+
+Restart Home Assistant after installation. For setup and troubleshooting, see the [project wiki](https://github.com/Shaffer-Softworks/hyperhdr-ha/wiki).
 
 ### Manually (not recommended)
 
