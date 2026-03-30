@@ -132,15 +132,20 @@ jobs:
             fi
           fi
 
+          # HACS zip_release (hacs.json): archive must unpack to custom_components/hyperhdr/
+          rm -f hyperhdr.zip
+          zip -r hyperhdr.zip custom_components/hyperhdr \
+            -x "*__pycache__/*" -x "*.pyc"
+
           EXTRA=( )
           if [ "$INPUT_DRAFT" = "true" ]; then EXTRA+=(--draft); fi
           if [ "$INPUT_PRERELEASE" = "true" ]; then EXTRA+=(--prerelease); fi
 
           if [ -n "$RELEASE_NOTES" ]; then
             printf '%s\n' "$RELEASE_NOTES" > /tmp/release-notes.md
-            gh release create "$TAG" --target "$BRANCH" --title "$TAG" -F /tmp/release-notes.md "${EXTRA[@]}"
+            gh release create "$TAG" hyperhdr.zip --target "$BRANCH" --title "$TAG" -F /tmp/release-notes.md "${EXTRA[@]}"
           else
-            gh release create "$TAG" --target "$BRANCH" --title "$TAG" --generate-notes "${EXTRA[@]}"
+            gh release create "$TAG" hyperhdr.zip --target "$BRANCH" --title "$TAG" --generate-notes "${EXTRA[@]}"
           fi
 
           if [ "$(gh pr list --head "$BRANCH" --state open --json number -q 'length')" -eq 0 ]; then
@@ -174,6 +179,8 @@ jobs:
             echo "If \`${DEFAULT_BRANCH}\` still shows the old version, open **Pull requests** and merge the PR titled **Merge ${TAG} manifest bump**."
             echo ""
             echo "**Draft releases** use a temporary \`untagged-…\` URL in the job log until you **Publish** the release on GitHub; then the normal \`/releases/tag/${TAG}\` link applies."
+            echo ""
+            echo "Release asset **\`hyperhdr.zip\`** (HACS \`zip_release\`) contains \`custom_components/hyperhdr/\` for extraction into the Home Assistant config directory."
             echo ""
             echo "### PR checks"
             echo "If required checks were stuck: GitHub often **does not run** \`pull_request\` workflows for commits pushed with the default \`GITHUB_TOKEN\`. This workflow **dispatches Validate** on the release branch when secret \`WORKFLOW_TRIGGER_TOKEN\` is unset. Optionally add that repo secret (PAT with **contents** + **pull requests**, and **actions** if you use fine-grained) so push/PR use a non-GitHub Actions identity and checks start automatically like a normal PR."
