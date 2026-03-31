@@ -132,10 +132,13 @@ jobs:
             fi
           fi
 
-          # HACS zip_release (hacs.json): archive must unpack to custom_components/hyperhdr/
-          rm -f hyperhdr.zip
-          zip -r hyperhdr.zip custom_components/hyperhdr \
-            -x "*__pycache__/*" -x "*.pyc"
+          # HACS zip_release: HACS extracts into custom_components/hyperhdr/, so paths in the
+          # archive must be integration-root (manifest.json, __init__.py, …), not
+          # custom_components/hyperhdr/… (that double-nests a custom_components folder).
+          ROOT="$(git rev-parse --show-toplevel)"
+          rm -f "${ROOT}/hyperhdr.zip"
+          ( cd "${ROOT}/custom_components/hyperhdr" && zip -r "${ROOT}/hyperhdr.zip" . \
+            -x "*__pycache__/*" -x "*.pyc" )
 
           EXTRA=( )
           if [ "$INPUT_DRAFT" = "true" ]; then EXTRA+=(--draft); fi
@@ -180,7 +183,7 @@ jobs:
             echo ""
             echo "**Draft releases** use a temporary \`untagged-…\` URL in the job log until you **Publish** the release on GitHub; then the normal \`/releases/tag/${TAG}\` link applies."
             echo ""
-            echo "Release asset **\`hyperhdr.zip\`** (HACS \`zip_release\`) contains \`custom_components/hyperhdr/\` for extraction into the Home Assistant config directory."
+            echo "Release asset **\`hyperhdr.zip\`** (HACS \`zip_release\`) contains the integration files at the zip root (\`manifest.json\`, \`__init__.py\`, …); HACS unpacks them into \`custom_components/hyperhdr/\`."
             echo ""
             echo "### PR checks"
             echo "If required checks were stuck: GitHub often **does not run** \`pull_request\` workflows for commits pushed with the default \`GITHUB_TOKEN\`. This workflow **dispatches Validate** on the release branch when secret \`WORKFLOW_TRIGGER_TOKEN\` is unset. Optionally add that repo secret (PAT with **contents** + **pull requests**, and **actions** if you use fine-grained) so push/PR use a non-GitHub Actions identity and checks start automatically like a normal PR."
