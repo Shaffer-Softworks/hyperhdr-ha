@@ -44,7 +44,7 @@ Restart Home Assistant after installation. For setup and troubleshooting, see th
 
 ### Manually (not recommended)
 
-- Download the [latest release](https://github.com/Shaffer-Softworks/hyperhdr-ha/releases) as a **zip file** then extract it and move the `hyperhdr` folder into the `custom_components` folder in your Home Assistant installation.
+- Download the [latest release](https://github.com/Shaffer-Softworks/hyperhdr-ha/releases) as a **zip file**, create a folder named `hyperhdr` inside the `custom_components` folder in your Home Assistant installation, then extract the zip contents directly into that folder.
 - Restart Home Assistant to load the integration.
 
 **Dependencies**: This integration requires `hyperhdr-py-sickkick==0.2.0`. When installing via HACS, the package is installed automatically. For manual installation, ensure your Home Assistant environment has this package available.
