@@ -22,6 +22,7 @@ CONF_INSTANCE_CLIENTS = "INSTANCE_CLIENTS"
 CONF_ON_UNLOAD = "ON_UNLOAD"
 CONF_PORT_WS = "port_ws"
 CONF_PRIORITY = "priority"
+CONF_CLEAR_PRIORITY_ON_TURN_OFF = "clear_priority_on_turn_off"
 CONF_ROOT_CLIENT = "ROOT_CLIENT"
 CONF_EFFECT_HIDE_LIST = "effect_hide_list"
 CONF_EFFECT_SHOW_LIST = "effect_show_list"
@@ -33,6 +34,7 @@ DEFAULT_PORT_JSON = 19444
 DEFAULT_PORT_UI = 8090
 DEFAULT_PORT_WS = 8090
 DEFAULT_PRIORITY = 128
+DEFAULT_CLEAR_PRIORITY_ON_TURN_OFF = False
 
 DOMAIN = "hyperhdr"
 
@@ -53,6 +55,7 @@ TYPE_HYPERHDR_LED_CAMERA = "hyperhdr_led_camera"
 TYPE_HYPERHDR_LED_GRADIENT_CAMERA = "hyperhdr_led_gradient_camera"
 TYPE_HYPERHDR_LIGHT = "hyperhdr_light"
 TYPE_HYPERHDR_PRIORITY_LIGHT = "hyperhdr_priority_light"
+TYPE_HYPERHDR_CLEAR_PRIORITY_BUTTON = "hyperhdr_clear_priority_button"
 TYPE_HYPERHDR_COMPONENT_SWITCH_BASE = "hyperhdr_component_switch"
 
 TYPE_HYPERHDR_SENSOR_BASE = "hyperhdr_sensor"

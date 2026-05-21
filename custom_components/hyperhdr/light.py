@@ -33,9 +33,11 @@ from . import (
     listen_for_instance_updates,
 )
 from .const import (
+    CONF_CLEAR_PRIORITY_ON_TURN_OFF,
     CONF_EFFECT_HIDE_LIST,
     CONF_INSTANCE_CLIENTS,
     CONF_PRIORITY,
+    DEFAULT_CLEAR_PRIORITY_ON_TURN_OFF,
     DEFAULT_ORIGIN,
     DEFAULT_PRIORITY,
     DOMAIN,
@@ -247,9 +249,16 @@ class HyperHDRBaseLight(LightEntity):
         """Get a value from the provided options."""
         defaults = {
             CONF_PRIORITY: DEFAULT_PRIORITY,
+            CONF_CLEAR_PRIORITY_ON_TURN_OFF: DEFAULT_CLEAR_PRIORITY_ON_TURN_OFF,
             CONF_EFFECT_HIDE_LIST: [],
         }
         return self._options.get(key, defaults[key])
+
+    async def _async_clear_configured_priority(self) -> bool:
+        """Clear the configured HyperHDR priority slot."""
+        return await self._client.async_send_clear(
+            **{const.KEY_PRIORITY: self._get_option(CONF_PRIORITY)}
+        )
 
     async def async_turn_on(self, **kwargs: Any) -> None:
         """Turn on the light."""
@@ -327,9 +336,7 @@ class HyperHDRBaseLight(LightEntity):
                 component = effect
 
             # Clear any color/effect.
-            if not await self._client.async_send_clear(
-                **{const.KEY_PRIORITY: self._get_option(CONF_PRIORITY)}
-            ):
+            if not await self._async_clear_configured_priority():
                 return
 
             # Turn off all external sources, except the intended.
@@ -355,9 +362,7 @@ class HyperHDRBaseLight(LightEntity):
         elif effect and effect != KEY_EFFECT_SOLID:
             # This call should not be necessary, but without it there is no priorities-update issued:
             # https://github.com/hyperhdr-project/hyperhdr.ng/issues/992
-            if not await self._client.async_send_clear(
-                **{const.KEY_PRIORITY: self._get_option(CONF_PRIORITY)}
-            ):
+            if not await self._async_clear_configured_priority():
                 return
 
             if not await self._client.async_send_set_effect(
@@ -587,6 +592,9 @@ class HyperHDRLight(HyperHDRBaseLight):
 
     async def async_turn_off(self, **kwargs: Any) -> None:
         """Turn off the light."""
+        if self._get_option(CONF_CLEAR_PRIORITY_ON_TURN_OFF):
+            if not await self._async_clear_configured_priority():
+                return
         if not await self._client.async_send_set_component(
             **{
                 const.KEY_COMPONENTSTATE: {
@@ -627,9 +635,7 @@ class HyperHDRPriorityLight(HyperHDRBaseLight):
 
     async def async_turn_off(self, **kwargs: Any) -> None:
         """Turn off the light."""
-        if not await self._client.async_send_clear(
-            **{const.KEY_PRIORITY: self._get_option(CONF_PRIORITY)}
-        ):
+        if not await self._async_clear_configured_priority():
             return
         await self._client.async_send_set_color(
             **{

@@ -44,7 +44,15 @@ from .const import (
 )
 
 ### HyperHDR v0.0.8
-PLATFORMS = [Platform.CAMERA, Platform.LIGHT, Platform.SWITCH, Platform.NUMBER, Platform.SELECT, Platform.SENSOR]
+PLATFORMS = [
+    Platform.BUTTON,
+    Platform.CAMERA,
+    Platform.LIGHT,
+    Platform.SWITCH,
+    Platform.NUMBER,
+    Platform.SELECT,
+    Platform.SENSOR,
+]
 
 ### Disabled platforms (uncomment to enable specific ones)
 # PLATFORMS = [Platform.LIGHT, Platform.SWITCH]
