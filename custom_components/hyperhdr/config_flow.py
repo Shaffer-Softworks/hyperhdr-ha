@@ -35,11 +35,13 @@ from . import create_hyperhdr_client
 from .const import (
     CONF_ADMIN_PASSWORD,
     CONF_AUTH_ID,
+    CONF_CLEAR_PRIORITY_ON_TURN_OFF,
     CONF_CREATE_TOKEN,
     CONF_EFFECT_HIDE_LIST,
     CONF_EFFECT_SHOW_LIST,
     CONF_PORT_WS,
     CONF_PRIORITY,
+    DEFAULT_CLEAR_PRIORITY_ON_TURN_OFF,
     DEFAULT_ORIGIN,
     DEFAULT_PORT_WS,
     DEFAULT_PRIORITY,
@@ -537,6 +539,13 @@ class HyperHDROptionsFlow(OptionsFlow):
             priority_default = user_input.get(
                 CONF_PRIORITY, options.get(CONF_PRIORITY, DEFAULT_PRIORITY)
             )
+            clear_priority_default = user_input.get(
+                CONF_CLEAR_PRIORITY_ON_TURN_OFF,
+                options.get(
+                    CONF_CLEAR_PRIORITY_ON_TURN_OFF,
+                    DEFAULT_CLEAR_PRIORITY_ON_TURN_OFF,
+                ),
+            )
             effect_show_default = user_input.get(
                 CONF_EFFECT_SHOW_LIST, default_effect_show_list
             )
@@ -550,6 +559,10 @@ class HyperHDROptionsFlow(OptionsFlow):
             host_default = data[CONF_HOST]
             port_default = data[CONF_PORT]
             priority_default = options.get(CONF_PRIORITY, DEFAULT_PRIORITY)
+            clear_priority_default = options.get(
+                CONF_CLEAR_PRIORITY_ON_TURN_OFF,
+                DEFAULT_CLEAR_PRIORITY_ON_TURN_OFF,
+            )
             effect_show_default = default_effect_show_list
             port_ws_default = data.get(CONF_PORT_WS, DEFAULT_PORT_WS)
             admin_suggested = data.get(CONF_ADMIN_PASSWORD, "")
@@ -567,6 +580,10 @@ class HyperHDROptionsFlow(OptionsFlow):
                         CONF_PRIORITY,
                         default=priority_default,
                     ): vol.All(vol.Coerce(int), vol.Range(min=0, max=255)),
+                    vol.Optional(
+                        CONF_CLEAR_PRIORITY_ON_TURN_OFF,
+                        default=clear_priority_default,
+                    ): bool,
                     vol.Optional(
                         CONF_EFFECT_SHOW_LIST,
                         default=effect_show_default,
