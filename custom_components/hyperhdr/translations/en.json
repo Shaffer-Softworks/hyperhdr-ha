@@ -56,6 +56,7 @@
                     "host": "Host",
                     "port": "JSON API Port",
                     "priority": "HyperHDR priority to use for colors and effects",
+                    "clear_priority_on_turn_off": "Clear priority when main light turns off",
                     "port_ws": "WebSocket Port (for LED streaming)",
                     "admin_password": "Admin Password (for LED stream authentication)"
                 }
@@ -153,6 +154,11 @@
             },
             "kernel_version": {
                 "name": "Kernel Version"
+            }
+        },
+        "button": {
+            "clear_priority": {
+                "name": "Clear Priority"
             }
         },
         "light": {
