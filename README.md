@@ -10,6 +10,7 @@ HyperHDR is an open source bias lighting implementation which runs on many platf
 
 | Platform | Description |
 |----------|-------------|
+| `button` | Clear the configured HyperHDR priority slot (releases solid/effect control). |
 | `camera` | Live LED Colors and LED Gradient camera streams via WebSocket. |
 | `light` | Control HyperHDR lighting with color, brightness, and effects. |
 | `sensor` | Monitor visible priority and average color information. |
@@ -81,6 +82,7 @@ After the integration is set up, you can adjust the following via **Options** (g
 | Option | Description |
 |--------|-------------|
 | **Priority** | Default priority level for light commands (0–255). |
+| **Clear priority when main light turns off** | When enabled (default), turning off the main HyperHDR Light sends HyperHDR's `clear` command at the configured priority so USB grabber and other lower-priority sources can take over again. |
 | **Effect Show List** | Select which effects to expose in Home Assistant. |
 | **WebSocket Port** | Port for LED camera streams (default `8090`). |
 | **Admin Password** | Password for LED stream authentication. |
@@ -91,7 +93,7 @@ After the integration is set up, you can adjust the following via **Options** (g
 
 Entities are created automatically for each running HyperHDR instance:
 
-- **Always created**: Light, Priority Light, Component Switches, HDR Tone Mapping, Visible Priority Sensor, Average Color Sensor, LED Colors Camera, LED Gradient Camera.
+- **Always created**: Light, Priority Light, Clear Priority button, Component Switches, HDR Tone Mapping, Visible Priority Sensor, Average Color Sensor, LED Colors Camera, LED Gradient Camera.
 - **Conditionally created**: Smoothing Time, Smoothing Decay, Smoothing Update Frequency, and Smoothing Type entities are only created when the connected HyperHDR server exposes smoothing data in its `serverinfo` response. If the server does not expose this data, these entities are not created at all.
 - **Disabled by default**: Camera entities and most number/select entities are disabled by default to avoid unnecessary overhead. Enable them in Home Assistant's entity settings if needed.
 

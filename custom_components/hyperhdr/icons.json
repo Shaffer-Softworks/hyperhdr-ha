@@ -1,5 +1,10 @@
 {
     "entity": {
+        "button": {
+            "clear_priority": {
+                "default": "mdi:priority-high"
+            }
+        },
         "switch": {
             "all": {
                 "default": "mdi:power"
