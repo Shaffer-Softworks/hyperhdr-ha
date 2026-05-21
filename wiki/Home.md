@@ -80,7 +80,7 @@ After the integration is set up, you can adjust settings via the **Options** gea
 | Option | Description | Default |
 |--------|-------------|---------|
 | Priority | Default priority level for light commands (0–255). | `128` |
-| Clear priority when main light turns off | Sends HyperHDR's `clear` command at the configured priority when the main light is turned off, so sources like USB grabber can take over again. | `true` |
+| Clear priority when main light turns off | Sends HyperHDR's `clear` command at the configured priority when the main light is turned off, so sources like USB grabber can take over again. | `false` |
 | Effect Show List | Select which HyperHDR effects to expose in Home Assistant. New effects added to HyperHDR will appear by default. | All effects shown |
 | WebSocket Port | Port for LED camera streams. | `8090` |
 | Admin Password | Password for LED stream authentication (required if Local API Authentication is enabled in HyperHDR). | (empty) |
@@ -106,7 +106,7 @@ This integration creates the following platforms:
 Two light entities are created for each HyperHDR instance:
 
 - **HyperHDR Priority Light** (disabled by default) — Controls only the configured priority level (default 128). Does not support external effects. Useful for advanced priority-based control.
-- **HyperHDR Light** (enabled by default) — Controls the LED device on/off state and displays the currently visible priority. Supports color, brightness, and effect selection (including external source effects like Video Grabber and USB Capture). When **Clear priority when main light turns off** is enabled in integration options (default), turning this light off also clears the configured priority slot so lower-priority sources (e.g. USB grabber) are not blocked by a lingering solid color or effect.
+- **HyperHDR Light** (enabled by default) — Controls the LED device on/off state and displays the currently visible priority. Supports color, brightness, and effect selection (including external source effects like Video Grabber and USB Capture). Optionally enable **Clear priority when main light turns off** in integration options so turning this light off also clears the configured priority slot (useful when USB grabber or other sources stay blocked after solid color or effect control).
 
 Both entities expose HyperHDR effects in the effect list. The "Solid" effect is always available for setting solid colors.
 

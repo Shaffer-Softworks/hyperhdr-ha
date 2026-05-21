@@ -82,7 +82,7 @@ After the integration is set up, you can adjust the following via **Options** (g
 | Option | Description |
 |--------|-------------|
 | **Priority** | Default priority level for light commands (0–255). |
-| **Clear priority when main light turns off** | When enabled (default), turning off the main HyperHDR Light sends HyperHDR's `clear` command at the configured priority so USB grabber and other lower-priority sources can take over again. |
+| **Clear priority when main light turns off** | When enabled, turning off the main HyperHDR Light sends HyperHDR's `clear` command at the configured priority so USB grabber and other lower-priority sources can take over again. Disabled by default; use the **Clear Priority** button or enable this option if you want automatic clearing. |
 | **Effect Show List** | Select which effects to expose in Home Assistant. |
 | **WebSocket Port** | Port for LED camera streams (default `8090`). |
 | **Admin Password** | Password for LED stream authentication. |
