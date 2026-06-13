@@ -260,6 +260,25 @@ class HyperHDRBaseLight(LightEntity):
             **{const.KEY_PRIORITY: self._get_option(CONF_PRIORITY)}
         )
 
+    def _scale_rgb_to_brightness(
+        self, rgb_color: Sequence[int], brightness: int
+    ) -> list[int]:
+        """Scale RGB to HA brightness for solid color priority."""
+        if brightness >= 255:
+            return list(rgb_color)
+        scale = brightness / 255.0
+        return [min(255, int(round(channel * scale))) for channel in rgb_color]
+
+    def _unscale_rgb_from_brightness(
+        self, rgb_color: Sequence[int], brightness: int
+    ) -> tuple[int, int, int]:
+        """Restore full-brightness RGB from scaled solid color priority."""
+        if brightness <= 0 or brightness >= 255:
+            return tuple(rgb_color)
+        return tuple(
+            min(255, int(round(channel * 255 / brightness))) for channel in rgb_color
+        )
+
     async def async_turn_on(self, **kwargs: Any) -> None:
         """Turn on the light."""
         # == Get key parameters ==
@@ -272,6 +291,13 @@ class HyperHDRBaseLight(LightEntity):
             rgb_color = color_util.color_hs_to_RGB(*kwargs[ATTR_HS_COLOR])
         else:
             rgb_color = self._rgb_color
+
+        stored_brightness = self._brightness
+
+        if ATTR_HS_COLOR in kwargs:
+            self._set_internal_state(rgb_color=rgb_color)
+        if ATTR_BRIGHTNESS in kwargs:
+            self._set_internal_state(brightness=kwargs[ATTR_BRIGHTNESS])
 
         # == Set brightness ==
         if ATTR_BRIGHTNESS in kwargs:
@@ -375,10 +401,19 @@ class HyperHDRBaseLight(LightEntity):
                 return
         # == Set a color
         else:
+            effective_brightness = (
+                kwargs[ATTR_BRIGHTNESS] if ATTR_BRIGHTNESS in kwargs else self._brightness
+            )
+            base_rgb = rgb_color
+            if ATTR_HS_COLOR not in kwargs:
+                base_rgb = self._unscale_rgb_from_brightness(
+                    rgb_color, stored_brightness
+                )
+            send_color = self._scale_rgb_to_brightness(base_rgb, effective_brightness)
             if not await self._client.async_send_set_color(
                 **{
                     const.KEY_PRIORITY: self._get_option(CONF_PRIORITY),
-                    const.KEY_COLOR: rgb_color,
+                    const.KEY_COLOR: send_color,
                     const.KEY_ORIGIN: DEFAULT_ORIGIN,
                 }
             ):
@@ -448,8 +483,14 @@ class HyperHDRBaseLight(LightEntity):
                     rgb_color=DEFAULT_COLOR, effect=priority[const.KEY_OWNER]
                 )
             elif componentid == const.KEY_COMPONENTID_COLOR:
+                reported_rgb = priority[const.KEY_VALUE][const.KEY_RGB]
+                origin = str(priority.get(const.KEY_ORIGIN, ""))
+                if origin.startswith(DEFAULT_ORIGIN):
+                    reported_rgb = self._unscale_rgb_from_brightness(
+                        reported_rgb, self._brightness
+                    )
                 self._set_internal_state(
-                    rgb_color=priority[const.KEY_VALUE][const.KEY_RGB],
+                    rgb_color=reported_rgb,
                     effect=KEY_EFFECT_SOLID,
                 )
         self.async_write_ha_state()
