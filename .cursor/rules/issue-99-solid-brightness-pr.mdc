@@ -1,0 +1,36 @@
+---
+description: Context for issue #99 solid brightness fix and PR #100
+globs: custom_components/hyperhdr/light.py,docs/issue-99-solid-brightness.md,scripts/docker*,docker-compose.test.yml
+alwaysApply: false
+---
+
+# Issue #99 / PR #100 — Solid brightness
+
+## Status (2026-06-13)
+
+- **Issue:** [#99](https://github.com/Shaffer-Softworks/hyperhdr-ha/issues/99) — HA brightness slider does not dim Solid colors
+- **PR:** [#100](https://github.com/Shaffer-Softworks/hyperhdr-ha/pull/100) — `solid-brightness-fix` → `master`
+- **Commit:** `fix: scale solid color RGB by HA brightness (#99)` (single squashed commit, no Cursor co-author)
+
+## Fix summary
+
+`custom_components/hyperhdr/light.py`:
+
+- `_scale_rgb_to_brightness()` / `_unscale_rgb_from_brightness()` helpers
+- Scale RGB in Solid `async_send_set_color` path; unscale when syncing COLOR priorities from HyperHDR when `origin` starts with `DEFAULT_ORIGIN` (`"Home Assistant"`)
+- Optimistic `_brightness` / `_rgb_color` updates in `async_turn_on` before API calls
+- Do **not** scale in effect or external-source branches
+
+Full design notes: `docs/issue-99-solid-brightness.md`
+
+## Docker dev / E2E
+
+- Compose: `docker-compose.test.yml` → container `homeassistant-test`, port 8123
+- Credentials: run `scripts/docker-rebuild-ha-test.sh` (do **not** document username/password in repo docs)
+- E2E: `scripts/docker_test_solid_brightness.py`, `scripts/docker_test_effect_brightness.py`
+- Python module changes need **container restart** (not just config entry reload)
+
+## Session notes
+
+- Removed hardcoded test credentials from `docs/issue-99-solid-brightness.md`
+- Branch was squashed to one conventional commit; Cursor auto-adds `Co-authored-by` on normal `git commit` — use `git commit-tree` if co-author must be omitted

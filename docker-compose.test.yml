@@ -1,0 +1,14 @@
+# Home Assistant dev instance for hyperhdr-ha integration testing.
+# Config persists in ./config (HyperHDR integration entry, entities, etc.).
+services:
+  homeassistant-test:
+    image: ghcr.io/home-assistant/home-assistant:stable
+    container_name: homeassistant-test
+    restart: unless-stopped
+    ports:
+      - "8123:8123"
+    environment:
+      TZ: America/Chicago
+    volumes:
+      - ./config:/config
+      - ./custom_components:/config/custom_components
