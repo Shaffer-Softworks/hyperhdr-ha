@@ -32,6 +32,18 @@ HyperHDR is an open source bias lighting implementation which runs on many platf
 
 ![hyperhdr-logo](https://github.com/Shaffer-Softworks/hyperhdr-ha/blob/master/hyperhdr-logo.png)
 
+## Screenshots
+
+| Integrations | Integration detail |
+|--------------|-------------------|
+| [![Integrations](docs/images/integrations.png)](docs/images/integrations.png) | [![Integration detail](docs/images/integration-detail.png)](docs/images/integration-detail.png) |
+
+| Config flow | Options |
+|-------------|---------|
+| [![Config flow](docs/images/config-flow.png)](docs/images/config-flow.png) | [![Options](docs/images/options-menu.png)](docs/images/options-menu.png) |
+
+![Basement TV Strip device (v22.0.0 smoothing controls)](docs/images/basement-tv-strip-device.png)
+
 ## Installation
 
 ### Using HACS
@@ -148,6 +160,22 @@ If the camera entities are not streaming:
 - **Developer Tools** — Use the Camera entity to view the current snapshot.
 - **Mobile App** — View the live stream in the Home Assistant mobile application.
 - **MJPEG Stream** — Access the raw stream at `/api/camera_proxy_stream/camera.<entity_id>`.
+
+## Development
+
+### Refreshing screenshots
+
+README images live in `docs/images/` and are driven by `docs/screenshot-manifest.yaml`. With the Docker test instance running (`docker compose -f docker-compose.test.yml up -d`) and the HyperHDR entry configured:
+
+```bash
+export HA_REFRESH_TOKEN="<refresh token from HA profile Security → Long-Lived Access Tokens, or a refresh_token with client_id http://localhost:8123/>"
+export HA_DEVICE_REGISTRY_PATH="$PWD/config/.storage/core.device_registry"
+pip install playwright requests pyyaml
+python3 -m playwright install chromium
+python3 ~/.cursor/skills/ha-integration-screenshots/scripts/capture_ha_screenshots.py --repo-root .
+```
+
+Enable any disabled-by-default entities (smoothing, cameras) you want visible on the device page before capturing.
 
 <!-- ***
 

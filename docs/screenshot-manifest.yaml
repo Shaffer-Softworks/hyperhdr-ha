@@ -1,0 +1,30 @@
+# Home Assistant UI screenshots for README docs.
+# Capture: HA_REFRESH_TOKEN=... python3 ~/.cursor/skills/ha-integration-screenshots/scripts/capture_ha_screenshots.py --repo-root .
+
+domain: hyperhdr
+ha_url: http://localhost:8123
+output_dir: docs/images
+integration_type: device
+viewport:
+  width: 1280
+  height: 1400
+
+screenshots:
+  - name: integrations.png
+    path: /config/integrations
+    wait_ms: 2500
+
+  - name: integration-detail.png
+    path: /config/integrations/integration/{domain}
+    wait_ms: 2500
+
+  - name: options-menu.png
+    action: options_menu
+
+  - name: config-flow.png
+    action: config_flow
+    button: Add entry
+
+  - name: basement-tv-strip-device.png
+    device: by_name:Basement TV Strip
+    wait_ms: 3500
