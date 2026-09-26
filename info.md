@@ -29,7 +29,7 @@ HyperHDR instances are automatically discovered via **SSDP**. When found, a noti
 <!-- {% endif %} -->
 
 <!-- {% if installed %} -->
-# Integration v1.1.0
+# Integration v1.2.1
 
 HyperHDR **v22** smoothing controls via authenticated config get/set:
 
