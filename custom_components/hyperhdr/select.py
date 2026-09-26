@@ -28,21 +28,30 @@ from .const import (
     HYPERHDR_MANUFACTURER_NAME,
     HYPERHDR_MODEL_NAME,
     SIGNAL_ENTITY_REMOVE,
+    SIGNAL_SMOOTHING_CONFIG,
     TYPE_HYPERHDR_SELECT_BASE,
     TYPE_HYPERHDR_SELECT_SMOOTHING_TYPE,
 )
+from .smoothing_config import async_patch_smoothing_config, smoothing_config_available
 
 SELECT_ENTITIES = [
     TYPE_HYPERHDR_SELECT_SMOOTHING_TYPE,
 ]
 
-SMOOTHING_TYPE_OPTIONS = [
-    hyperhdr_const.SMOOTHING_TYPE_LINEAR,
-    hyperhdr_const.SMOOTHING_TYPE_EXPONENTIAL,
-    hyperhdr_const.SMOOTHING_TYPE_INERTIA,
-    hyperhdr_const.SMOOTHING_TYPE_HYBRID_RGB,
-    hyperhdr_const.SMOOTHING_TYPE_YUV,
-]
+SMOOTHING_TYPE_OPTIONS = list(
+    getattr(
+        hyperhdr_const,
+        "SMOOTHING_TYPE_OPTIONS_V22",
+        (
+            "Stepper",
+            "YuvInterpolator",
+            "RgbInterpolator",
+            "HybridInterpolator",
+            "HybridRgbInterpolator",
+            "ExponentialInterpolator",
+        ),
+    )
+)
 
 SMOOTHING_TYPE_DESCRIPTION = SelectEntityDescription(
     key="smoothing_type",
@@ -75,13 +84,13 @@ async def async_setup_entry(
         assert server_id
         hyperhdr_client = entry_data[CONF_INSTANCE_CLIENTS][instance_num]
 
-        # Only create smoothing entities if the server exposes smoothing data.
-        if hyperhdr_client.smoothing is None:
+        if not smoothing_config_available(entry_data, instance_num):
             return
 
         async_add_entities(
             [
                 HyperHDRSmoothingTypeSelect(
+                    config_entry.entry_id,
                     server_id,
                     instance_num,
                     instance_name,
@@ -161,16 +170,13 @@ class HyperHDRSelect(SelectEntity):
 
 
 class HyperHDRSmoothingTypeSelect(HyperHDRSelect):
-    """Select entity for smoothing type.
-
-    The HyperHDR smoothing API is not available on all server versions.
-    If ``self._client.smoothing`` is None the entity reports unavailable.
-    """
+    """Select entity for v22 smoothing interpolator type."""
 
     _attr_options = SMOOTHING_TYPE_OPTIONS
 
     def __init__(
         self,
+        entry_id: str,
         server_id: str,
         instance_num: int,
         instance_name: str,
@@ -181,32 +187,48 @@ class HyperHDRSmoothingTypeSelect(HyperHDRSelect):
         super().__init__(
             server_id, instance_num, instance_name, hyperhdr_client, entity_description
         )
+        self._entry_id = entry_id
+        self._server_id = server_id
+        self._instance_num = instance_num
+        self._device_id = get_hyperhdr_device_id(server_id, instance_num)
         self._attr_unique_id = _select_unique_id(
             server_id, instance_num, TYPE_HYPERHDR_SELECT_SMOOTHING_TYPE
         )
-        self._client_callbacks = {
-            f"{hyperhdr_const.KEY_SMOOTHING}-{hyperhdr_const.KEY_UPDATE}": self._update_smoothing_type
-        }
 
     @property
     def available(self) -> bool:
-        """Return availability — requires smoothing data from the server."""
+        """Return availability — requires smoothing config."""
         return bool(self._client.has_loaded_state and self._client.smoothing)
 
     async def async_added_to_hass(self) -> None:
         """Register callbacks and populate initial state."""
         await super().async_added_to_hass()
+        self.async_on_remove(
+            async_dispatcher_connect(
+                self.hass,
+                SIGNAL_SMOOTHING_CONFIG.format(self._device_id),
+                self._update_smoothing_type,
+            )
+        )
         self._update_smoothing_type()
 
     @callback
     def _update_smoothing_type(self, _: dict[str, Any] | None = None) -> None:
         """Update smoothing type selection."""
         if self._client.smoothing:
-            self._attr_current_option = self._client.smoothing.get(
-                hyperhdr_const.KEY_SMOOTHING_TYPE
+            option = self._client.smoothing.get(
+                hyperhdr_const.KEY_SMOOTHING_TYPE_CONFIG
             )
+            if option in self._attr_options:
+                self._attr_current_option = option
         self.async_write_ha_state()
 
     async def async_select_option(self, option: str) -> None:
         """Set smoothing type."""
-        await self._client.async_set_smoothing(smoothingType=option)
+        await async_patch_smoothing_config(
+            self.hass,
+            self._entry_id,
+            self._server_id,
+            self._instance_num,
+            **{hyperhdr_const.KEY_SMOOTHING_TYPE_CONFIG: option},
+        )

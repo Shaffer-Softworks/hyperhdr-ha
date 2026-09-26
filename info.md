@@ -29,6 +29,17 @@ HyperHDR instances are automatically discovered via **SSDP**. When found, a noti
 <!-- {% endif %} -->
 
 <!-- {% if installed %} -->
+# Integration v1.1.0
+
+HyperHDR **v22** smoothing controls via authenticated config get/set:
+
+- **New switches:** Anti-flicker Filter, Continuous Output
+- **New numbers:** Smoothing Factor, Stiffness, Damping, Y Limit
+- **Reworked:** Smoothing Time / Update Frequency / Type use v22 config schema (`time_ms`, `HybridRgbInterpolator`, …)
+- **Removed:** Smoothing Decay (not in v22 schema); pruned automatically
+- **Auth:** Smoothing config entities require successful `config` getconfig — set **Admin Password** in Options when local admin auth is enabled
+- **Dependency:** `hyperhdr-py-sickkick` `0.2.2` → `0.2.3`
+
 # Integration v1.0.2
 
 Polish on top of v1.0.1:

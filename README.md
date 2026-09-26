@@ -14,9 +14,9 @@ HyperHDR is an open source bias lighting implementation which runs on many platf
 | `camera` | Live LED Colors and LED Gradient camera streams via WebSocket. |
 | `light` | Control HyperHDR lighting with color, brightness, and effects. |
 | `sensor` | Monitor visible priority and average color information. |
-| `switch` | Toggle HyperHDR components (smoothing, HDR tone mapping, blackborder detection, etc.). |
-| `number` | Adjust HDR tone mapping intensity. Smoothing parameters (time, decay, update frequency) are available when the server exposes smoothing data. |
-| `select` | Choose smoothing type (linear, exponential, inertia, hybrid, yuv) when the server exposes smoothing data. |
+| `switch` | Toggle HyperHDR components, plus Anti-flicker Filter and Continuous Output when smoothing config is available. |
+| `number` | Smoothing parameters (time, update frequency, factor, stiffness, damping, Y limit) when config get/set is available. |
+| `select` | Choose v22 smoothing interpolator type when config get/set is available. |
 
 ### Key Features
 
@@ -24,10 +24,10 @@ HyperHDR is an open source bias lighting implementation which runs on many platf
 - **LED Gradient Camera**: Real-time per-LED gradient visualization rendered as a JPEG image from raw RGB data.
 - **Average Color Sensor**: Average RGB as hex with attributes, from `current-state`/`average-color` RPC (with LED stream and priority-color fallbacks).
 - **HDR Tone Mapping**: Adjust HDR tone mapping intensity with a dedicated number entity. Supports both legacy `hdrToneMappingMode` and the newer `videomodehdr` command paths.
-- **Smoothing Controls** *(conditional)*: Number entities for time, decay, and update frequency — only created when the connected HyperHDR server exposes smoothing data.
-- **Smoothing Type Selection** *(conditional)*: Choose from multiple smoothing interpolation algorithms — only created when smoothing data is available.
+- **Smoothing Controls** *(conditional)*: Number and select entities for HyperHDR v22 smoothing config (`time_ms`, update frequency, factor, stiffness, damping, Y limit, interpolator type) — created when `config` getconfig succeeds. Requires **Admin Password** (or open admin auth) when HyperHDR local admin authentication is enabled.
+- **Anti-flicker / Continuous Output** *(conditional)*: Config switches for `antiFlickeringFilter` and `continuousOutput`.
 - **Component Switches**: Enable/disable HyperHDR components (advanced users).
-- **Automatic Entity Cleanup**: Stale entities from removed features (old camera, color engine, unsupported smoothing) are automatically pruned from the entity registry on integration load.
+- **Automatic Entity Cleanup**: Stale entities from removed features (old camera, color engine, decay, unsupported smoothing) are automatically pruned from the entity registry on integration load.
 - **SSDP Auto-Discovery**: HyperHDR instances on your network are automatically discovered via SSDP/UPnP — no manual IP entry required.
 
 ![hyperhdr-logo](https://github.com/Shaffer-Softworks/hyperhdr-ha/blob/master/hyperhdr-logo.png)
@@ -47,7 +47,7 @@ Restart Home Assistant after installation. For setup and troubleshooting, see th
 - Download the [latest release](https://github.com/Shaffer-Softworks/hyperhdr-ha/releases) as a **zip file** then extract it and move the `hyperhdr` folder into the `custom_components` folder in your Home Assistant installation.
 - Restart Home Assistant to load the integration.
 
-**Dependencies**: This integration requires `hyperhdr-py-sickkick==0.2.2`. When installing via HACS, the package is installed automatically. For manual installation, ensure your Home Assistant environment has this package available.
+**Dependencies**: This integration requires `hyperhdr-py-sickkick==0.2.3`. When installing via HACS, the package is installed automatically. For manual installation, ensure your Home Assistant environment has this package available.
 
 ## Configuration
 
@@ -73,7 +73,7 @@ If your HyperHDR instance has **Local API Authentication** enabled, the LED came
 - **During initial setup** — enter it in the optional "Admin Password" field on the connection form.
 - **After setup** — go to the integration's **Options** (gear icon) and add or change the admin password there.
 
-When configured, the LED Colors and LED Gradient camera streams authenticate using the admin password over the WebSocket connection. If a token is also configured, the admin password takes priority for stream authentication (tokens do not grant the admin privileges required by `imagestream-start`). HyperHDR requires passwords to be **at least 8 characters** (the default after `hyperhdr --resetPassword` is `hyperhdr`). Leave the field blank to clear a stored password when Local API Authentication is not used.
+When configured, the LED Colors and LED Gradient camera streams authenticate using the admin password over the WebSocket connection. The same password is used to escalate privileges for **smoothing config** entities (`config` get/set) on HyperHDR builds that require admin authorization. If a token is also configured, the admin password takes priority for stream authentication (tokens do not grant the admin privileges required by `imagestream-start`). HyperHDR requires passwords to be **at least 8 characters** (the default after `hyperhdr --resetPassword` is `hyperhdr`). Leave the field blank to clear a stored password when Local API Authentication is not used.
 
 LED camera WebSockets start only when the camera is viewed (lazy-start), so disabled/unused cameras do not open stream connections.
 

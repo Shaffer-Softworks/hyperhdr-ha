@@ -28,46 +28,80 @@ from .const import (
     HYPERHDR_MANUFACTURER_NAME,
     HYPERHDR_MODEL_NAME,
     SIGNAL_ENTITY_REMOVE,
+    SIGNAL_SMOOTHING_CONFIG,
     TYPE_HYPERHDR_NUMBER_BASE,
+    TYPE_HYPERHDR_NUMBER_SMOOTHING_DAMPING,
+    TYPE_HYPERHDR_NUMBER_SMOOTHING_FACTOR,
+    TYPE_HYPERHDR_NUMBER_SMOOTHING_STIFFNESS,
     TYPE_HYPERHDR_NUMBER_SMOOTHING_TIME,
-    TYPE_HYPERHDR_NUMBER_SMOOTHING_DECAY,
     TYPE_HYPERHDR_NUMBER_SMOOTHING_UPDATE_FREQ,
-    TYPE_HYPERHDR_NUMBER_HDR_TONE_MAPPING,
+    TYPE_HYPERHDR_NUMBER_SMOOTHING_Y_LIMIT,
 )
+from .smoothing_config import async_patch_smoothing_config, smoothing_config_available
 
 NUMBER_ENTITIES = [
     TYPE_HYPERHDR_NUMBER_SMOOTHING_TIME,
-    TYPE_HYPERHDR_NUMBER_SMOOTHING_DECAY,
     TYPE_HYPERHDR_NUMBER_SMOOTHING_UPDATE_FREQ,
+    TYPE_HYPERHDR_NUMBER_SMOOTHING_FACTOR,
+    TYPE_HYPERHDR_NUMBER_SMOOTHING_STIFFNESS,
+    TYPE_HYPERHDR_NUMBER_SMOOTHING_DAMPING,
+    TYPE_HYPERHDR_NUMBER_SMOOTHING_Y_LIMIT,
 ]
 
 SMOOTHING_TIME_DESCRIPTION = NumberEntityDescription(
     key="smoothing_time",
     translation_key="smoothing_time",
     icon="mdi:clock-outline",
-    native_min_value=0,
-    native_max_value=1000,
-    native_step=1,
+    native_min_value=25,
+    native_max_value=5000,
+    native_step=25,
     native_unit_of_measurement="ms",
-)
-
-SMOOTHING_DECAY_DESCRIPTION = NumberEntityDescription(
-    key="smoothing_decay",
-    translation_key="smoothing_decay",
-    icon="mdi:curve",
-    native_min_value=0.0,
-    native_max_value=1.0,
-    native_step=0.01,
 )
 
 SMOOTHING_UPDATE_FREQ_DESCRIPTION = NumberEntityDescription(
     key="smoothing_update_freq",
     translation_key="smoothing_update_freq",
     icon="mdi:speedometer",
+    native_min_value=20,
+    native_max_value=200,
+    native_step=5,
+    native_unit_of_measurement="Hz",
+)
+
+SMOOTHING_FACTOR_DESCRIPTION = NumberEntityDescription(
+    key="smoothing_factor",
+    translation_key="smoothing_factor",
+    icon="mdi:chart-bell-curve",
+    native_min_value=0.0,
+    native_max_value=1.0,
+    native_step=0.05,
+)
+
+SMOOTHING_STIFFNESS_DESCRIPTION = NumberEntityDescription(
+    key="smoothing_stiffness",
+    translation_key="smoothing_stiffness",
+    icon="mdi:spring",
     native_min_value=0,
     native_max_value=1000,
-    native_step=1,
-    native_unit_of_measurement="Hz",
+    native_step=10,
+)
+
+SMOOTHING_DAMPING_DESCRIPTION = NumberEntityDescription(
+    key="smoothing_damping",
+    translation_key="smoothing_damping",
+    icon="mdi:waves",
+    native_min_value=0,
+    native_max_value=1000,
+    native_step=2,
+)
+
+SMOOTHING_Y_LIMIT_DESCRIPTION = NumberEntityDescription(
+    key="smoothing_y_limit",
+    translation_key="smoothing_y_limit",
+    icon="mdi:arrow-collapse-vertical",
+    native_min_value=0.0,
+    native_max_value=1.0,
+    native_step=0.01,
 )
 
 
@@ -97,30 +131,72 @@ async def async_setup_entry(
 
         entities: list[HyperHDRNumber] = []
 
-        # Only create smoothing entities if the server exposes smoothing data.
-        if hyperhdr_client.smoothing is not None:
+        if smoothing_config_available(entry_data, instance_num):
             entities.extend(
                 [
-                    HyperHDRSmoothingTimeNumber(
+                    HyperHDRSmoothingConfigNumber(
+                        config_entry.entry_id,
                         server_id,
                         instance_num,
                         instance_name,
                         hyperhdr_client,
                         SMOOTHING_TIME_DESCRIPTION,
+                        TYPE_HYPERHDR_NUMBER_SMOOTHING_TIME,
+                        hyperhdr_const.KEY_SMOOTHING_TIME_MS,
+                        cast_int=True,
                     ),
-                    HyperHDRSmoothingDecayNumber(
-                        server_id,
-                        instance_num,
-                        instance_name,
-                        hyperhdr_client,
-                        SMOOTHING_DECAY_DESCRIPTION,
-                    ),
-                    HyperHDRSmoothingUpdateFreqNumber(
+                    HyperHDRSmoothingConfigNumber(
+                        config_entry.entry_id,
                         server_id,
                         instance_num,
                         instance_name,
                         hyperhdr_client,
                         SMOOTHING_UPDATE_FREQ_DESCRIPTION,
+                        TYPE_HYPERHDR_NUMBER_SMOOTHING_UPDATE_FREQ,
+                        hyperhdr_const.KEY_SMOOTHING_UPDATE_FREQUENCY,
+                        cast_int=True,
+                    ),
+                    HyperHDRSmoothingConfigNumber(
+                        config_entry.entry_id,
+                        server_id,
+                        instance_num,
+                        instance_name,
+                        hyperhdr_client,
+                        SMOOTHING_FACTOR_DESCRIPTION,
+                        TYPE_HYPERHDR_NUMBER_SMOOTHING_FACTOR,
+                        hyperhdr_const.KEY_SMOOTHING_FACTOR,
+                    ),
+                    HyperHDRSmoothingConfigNumber(
+                        config_entry.entry_id,
+                        server_id,
+                        instance_num,
+                        instance_name,
+                        hyperhdr_client,
+                        SMOOTHING_STIFFNESS_DESCRIPTION,
+                        TYPE_HYPERHDR_NUMBER_SMOOTHING_STIFFNESS,
+                        hyperhdr_const.KEY_SMOOTHING_STIFFNESS,
+                        cast_int=True,
+                    ),
+                    HyperHDRSmoothingConfigNumber(
+                        config_entry.entry_id,
+                        server_id,
+                        instance_num,
+                        instance_name,
+                        hyperhdr_client,
+                        SMOOTHING_DAMPING_DESCRIPTION,
+                        TYPE_HYPERHDR_NUMBER_SMOOTHING_DAMPING,
+                        hyperhdr_const.KEY_SMOOTHING_DAMPING,
+                        cast_int=True,
+                    ),
+                    HyperHDRSmoothingConfigNumber(
+                        config_entry.entry_id,
+                        server_id,
+                        instance_num,
+                        instance_name,
+                        hyperhdr_client,
+                        SMOOTHING_Y_LIMIT_DESCRIPTION,
+                        TYPE_HYPERHDR_NUMBER_SMOOTHING_Y_LIMIT,
+                        hyperhdr_const.KEY_SMOOTHING_Y_LIMIT,
                     ),
                 ]
             )
@@ -196,191 +272,67 @@ class HyperHDRNumber(NumberEntity):
         self._client.remove_callbacks(self._client_callbacks)
 
 
-class _HyperHDRSmoothingNumber(HyperHDRNumber):
-    """Base class for smoothing number entities.
+class HyperHDRSmoothingConfigNumber(HyperHDRNumber):
+    """Number entity backed by HyperHDR v22 smoothing config."""
 
-    The HyperHDR smoothing API is not available on all server versions.
-    If ``self._client.smoothing`` is None the entity reports unavailable.
-    """
-
-    _smoothing_key: str  # Override in subclasses.
+    def __init__(
+        self,
+        entry_id: str,
+        server_id: str,
+        instance_num: int,
+        instance_name: str,
+        hyperhdr_client: client.HyperHDRClient,
+        entity_description: NumberEntityDescription,
+        type_suffix: str,
+        config_key: str,
+        *,
+        cast_int: bool = False,
+    ) -> None:
+        """Initialize the number."""
+        super().__init__(
+            server_id, instance_num, instance_name, hyperhdr_client, entity_description
+        )
+        self._entry_id = entry_id
+        self._server_id = server_id
+        self._instance_num = instance_num
+        self._config_key = config_key
+        self._cast_int = cast_int
+        self._device_id = get_hyperhdr_device_id(server_id, instance_num)
+        self._attr_unique_id = _number_unique_id(server_id, instance_num, type_suffix)
 
     @property
     def available(self) -> bool:
-        """Return availability — requires smoothing data from the server."""
+        """Return availability — requires cached smoothing config."""
         return bool(self._client.has_loaded_state and self._client.smoothing)
 
     async def async_added_to_hass(self) -> None:
         """Register callbacks and populate initial state."""
         await super().async_added_to_hass()
+        self.async_on_remove(
+            async_dispatcher_connect(
+                self.hass,
+                SIGNAL_SMOOTHING_CONFIG.format(self._device_id),
+                self._update_value,
+            )
+        )
         self._update_value()
 
     @callback
     def _update_value(self, _: dict[str, Any] | None = None) -> None:
-        """Update the value from the client's smoothing data."""
+        """Update the value from the client's smoothing config cache."""
         if self._client.smoothing:
-            self._attr_native_value = self._client.smoothing.get(
-                self._smoothing_key
-            )
-        self.async_write_ha_state()
-
-
-class HyperHDRSmoothingTimeNumber(_HyperHDRSmoothingNumber):
-    """Number entity for smoothing time."""
-
-    _smoothing_key = hyperhdr_const.KEY_SMOOTHING_TIME
-
-    def __init__(
-        self,
-        server_id: str,
-        instance_num: int,
-        instance_name: str,
-        hyperhdr_client: client.HyperHDRClient,
-        entity_description: NumberEntityDescription,
-    ) -> None:
-        """Initialize the number."""
-        super().__init__(
-            server_id, instance_num, instance_name, hyperhdr_client, entity_description
-        )
-        self._attr_unique_id = _number_unique_id(
-            server_id, instance_num, TYPE_HYPERHDR_NUMBER_SMOOTHING_TIME
-        )
-        self._client_callbacks = {
-            f"{hyperhdr_const.KEY_SMOOTHING}-{hyperhdr_const.KEY_UPDATE}": self._update_value
-        }
-
-    async def async_set_native_value(self, value: float) -> None:
-        """Set smoothing time value."""
-        await self._client.async_set_smoothing(time=int(value))
-
-
-class HyperHDRSmoothingDecayNumber(_HyperHDRSmoothingNumber):
-    """Number entity for smoothing decay."""
-
-    _smoothing_key = hyperhdr_const.KEY_SMOOTHING_DECAY
-
-    def __init__(
-        self,
-        server_id: str,
-        instance_num: int,
-        instance_name: str,
-        hyperhdr_client: client.HyperHDRClient,
-        entity_description: NumberEntityDescription,
-    ) -> None:
-        """Initialize the number."""
-        super().__init__(
-            server_id, instance_num, instance_name, hyperhdr_client, entity_description
-        )
-        self._attr_unique_id = _number_unique_id(
-            server_id, instance_num, TYPE_HYPERHDR_NUMBER_SMOOTHING_DECAY
-        )
-        self._client_callbacks = {
-            f"{hyperhdr_const.KEY_SMOOTHING}-{hyperhdr_const.KEY_UPDATE}": self._update_value
-        }
-
-    async def async_set_native_value(self, value: float) -> None:
-        """Set smoothing decay value."""
-        await self._client.async_set_smoothing(decay=value)
-
-
-class HyperHDRSmoothingUpdateFreqNumber(_HyperHDRSmoothingNumber):
-    """Number entity for smoothing update frequency."""
-
-    _smoothing_key = hyperhdr_const.KEY_SMOOTHING_UPDATE_FREQUENCY
-
-    def __init__(
-        self,
-        server_id: str,
-        instance_num: int,
-        instance_name: str,
-        hyperhdr_client: client.HyperHDRClient,
-        entity_description: NumberEntityDescription,
-    ) -> None:
-        """Initialize the number."""
-        super().__init__(
-            server_id, instance_num, instance_name, hyperhdr_client, entity_description
-        )
-        self._attr_unique_id = _number_unique_id(
-            server_id, instance_num, TYPE_HYPERHDR_NUMBER_SMOOTHING_UPDATE_FREQ
-        )
-        self._client_callbacks = {
-            f"{hyperhdr_const.KEY_SMOOTHING}-{hyperhdr_const.KEY_UPDATE}": self._update_value
-        }
-
-    async def async_set_native_value(self, value: float) -> None:
-        """Set smoothing update frequency value."""
-        await self._client.async_set_smoothing(updateFrequency=int(value))
-
-
-class HyperHDRHDRToneMappingNumber(HyperHDRNumber):
-    """Number entity for HDR tone mapping."""
-
-    def __init__(
-        self,
-        server_id: str,
-        instance_num: int,
-        instance_name: str,
-        hyperhdr_client: client.HyperHDRClient,
-        entity_description: NumberEntityDescription,
-    ) -> None:
-        """Initialize the number."""
-        super().__init__(
-            server_id, instance_num, instance_name, hyperhdr_client, entity_description
-        )
-        self._attr_unique_id = _number_unique_id(
-            server_id, instance_num, TYPE_HYPERHDR_NUMBER_HDR_TONE_MAPPING
-        )
-        # Subscribe to both the legacy hdrToneMappingMode and the new videomodehdr
-        # update events so the entity stays in sync regardless of HyperHDR version.
-        self._client_callbacks: dict[str, Any] = {
-            f"{hyperhdr_const.KEY_HDR_TONE_MAPPING}-{hyperhdr_const.KEY_UPDATE}": self._update_value,
-        }
-        _key_videomode_hdr = getattr(hyperhdr_const, "KEY_VIDEOMODE_HDR", None)
-        if _key_videomode_hdr:
-            self._client_callbacks[
-                f"{_key_videomode_hdr}-{hyperhdr_const.KEY_UPDATE}"
-            ] = self._update_value
-
-    async def async_added_to_hass(self) -> None:
-        """Register callbacks and populate initial state."""
-        await super().async_added_to_hass()
-        self._update_value()
-
-    @callback
-    def _update_value(self, _: dict[str, Any] | None = None) -> None:
-        """Update HDR tone mapping value."""
-        if hasattr(self._client, "hdr_mode"):
-            self._attr_native_value = self._client.hdr_mode
+            value = self._client.smoothing.get(self._config_key)
+            if value is not None:
+                self._attr_native_value = float(value)
         self.async_write_ha_state()
 
     async def async_set_native_value(self, value: float) -> None:
-        """Set HDR tone mapping value.
-
-        Uses the new videomodehdr/HDR command path when available, falling back
-        to the legacy hdrToneMappingMode parameter.
-        """
-        # HyperHDR expects the enable flag alongside the mode/value.
-        # Use the current HDR component state when available to avoid implicitly
-        # toggling it when the user only adjusts the value.
-        enable: bool = True
-        for component in self._client.components or []:
-            if not isinstance(component, dict):
-                continue
-            if component.get("name") == "HDR" and "enabled" in component:
-                enable = bool(component["enabled"])
-                break
-
-        if hasattr(hyperhdr_const, "KEY_HDR"):
-            await self._client.async_set_hdr_tone_mapping(
-                **{
-                    "enable": enable,
-                    hyperhdr_const.KEY_HDR: int(value),
-                }
-            )
-        else:
-            await self._client.async_set_hdr_tone_mapping(
-                **{
-                    "enable": enable,
-                    hyperhdr_const.KEY_HDR_TONE_MAPPING_MODE: int(value),
-                }
-            )
+        """Set smoothing config field."""
+        field_value: float | int = int(value) if self._cast_int else value
+        await async_patch_smoothing_config(
+            self.hass,
+            self._entry_id,
+            self._server_id,
+            self._instance_num,
+            **{self._config_key: field_value},
+        )

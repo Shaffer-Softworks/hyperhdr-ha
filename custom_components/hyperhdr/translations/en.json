@@ -39,7 +39,7 @@
                     "host": "Host",
                     "port": "JSON API Port",
                     "port_ws": "WebSocket Port (for LED streaming)",
-                    "admin_password": "Admin Password (optional, for stream authentication)"
+                    "admin_password": "Admin Password (optional, for stream auth and smoothing config)"
                 }
             }
         }
@@ -61,7 +61,7 @@
                     "clear_priority_on_turn_off": "Clear priority when main light turns off",
                     "keep_realtime_on_turn_off": "Keep WLED in realtime mode when off (idle black)",
                     "port_ws": "WebSocket Port (for LED streaming)",
-                    "admin_password": "Admin Password (for LED stream authentication)"
+                    "admin_password": "Admin Password (for LED streams and smoothing config)"
                 }
             }
         }
@@ -94,17 +94,32 @@
             },
             "hdr_tone_mapping": {
                 "name": "HDR Tone Mapping"
+            },
+            "smoothing_anti_flicker": {
+                "name": "Anti-flicker Filter"
+            },
+            "smoothing_continuous_output": {
+                "name": "Continuous Output"
             }
         },
         "number": {
             "smoothing_time": {
                 "name": "Smoothing Time"
             },
-            "smoothing_decay": {
-                "name": "Smoothing Decay"
-            },
             "smoothing_update_freq": {
                 "name": "Smoothing Update Frequency"
+            },
+            "smoothing_factor": {
+                "name": "Smoothing Factor"
+            },
+            "smoothing_stiffness": {
+                "name": "Smoothing Stiffness"
+            },
+            "smoothing_damping": {
+                "name": "Smoothing Damping"
+            },
+            "smoothing_y_limit": {
+                "name": "Smoothing Y Limit"
             },
             "hdr_tone_mapping": {
                 "name": "HDR Tone Mapping"

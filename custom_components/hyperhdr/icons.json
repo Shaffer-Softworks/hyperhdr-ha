@@ -32,6 +32,12 @@
             },
             "hdr_tone_mapping": {
                 "default": "mdi:contrast-box"
+            },
+            "smoothing_anti_flicker": {
+                "default": "mdi:flash"
+            },
+            "smoothing_continuous_output": {
+                "default": "mdi:led-on"
             }
         }
     }

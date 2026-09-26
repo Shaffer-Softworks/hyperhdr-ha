@@ -24,9 +24,11 @@ from homeassistant.helpers.dispatcher import (
 
 
 from .const import (
+    CONF_ADMIN_PASSWORD,
     CONF_INSTANCE_CLIENTS,
     CONF_ON_UNLOAD,
     CONF_ROOT_CLIENT,
+    CONF_SMOOTHING_CONFIGS,
     CONF_SYSINFO,
     DEFAULT_NAME,
     DOMAIN,
@@ -36,14 +38,21 @@ from .const import (
     SIGNAL_INSTANCE_REMOVE,
     TYPE_HYPERHDR_NUMBER_BASE,
     TYPE_HYPERHDR_NUMBER_HDR_TONE_MAPPING,
+    TYPE_HYPERHDR_NUMBER_SMOOTHING_DAMPING,
     TYPE_HYPERHDR_NUMBER_SMOOTHING_DECAY,
+    TYPE_HYPERHDR_NUMBER_SMOOTHING_FACTOR,
+    TYPE_HYPERHDR_NUMBER_SMOOTHING_STIFFNESS,
     TYPE_HYPERHDR_NUMBER_SMOOTHING_TIME,
     TYPE_HYPERHDR_NUMBER_SMOOTHING_UPDATE_FREQ,
+    TYPE_HYPERHDR_NUMBER_SMOOTHING_Y_LIMIT,
     TYPE_HYPERHDR_SELECT_BASE,
     TYPE_HYPERHDR_SELECT_SMOOTHING_TYPE,
     TYPE_HYPERHDR_SENSOR_AVERAGE_COLOR,
     TYPE_HYPERHDR_SENSOR_BASE,
+    TYPE_HYPERHDR_SWITCH_ANTI_FLICKER,
+    TYPE_HYPERHDR_SWITCH_CONTINUOUS_OUTPUT,
 )
+from .smoothing_config import async_load_smoothing_config, smoothing_config_available
 
 ### HyperHDR v0.0.8
 PLATFORMS = [
@@ -197,15 +206,22 @@ _PERMANENTLY_REMOVED_SUFFIXES = (
     f"{TYPE_HYPERHDR_NUMBER_BASE}_{TYPE_HYPERHDR_NUMBER_HDR_TONE_MAPPING}",
     # HDR tone mapping select removed.
     f"{TYPE_HYPERHDR_SELECT_BASE}_hdr_tone_mapping",
+    # Decay removed in v1.1.0 (not in HyperHDR v22 smoothing schema).
+    f"{TYPE_HYPERHDR_NUMBER_BASE}_{TYPE_HYPERHDR_NUMBER_SMOOTHING_DECAY}",
 )
 
 # Smoothing entity suffixes — removed from the registry when the connected
-# HyperHDR server does not expose smoothing data.
+# HyperHDR server does not expose smoothing config (via config getconfig).
 _SMOOTHING_SUFFIXES = (
     f"{TYPE_HYPERHDR_NUMBER_BASE}_{TYPE_HYPERHDR_NUMBER_SMOOTHING_TIME}",
-    f"{TYPE_HYPERHDR_NUMBER_BASE}_{TYPE_HYPERHDR_NUMBER_SMOOTHING_DECAY}",
     f"{TYPE_HYPERHDR_NUMBER_BASE}_{TYPE_HYPERHDR_NUMBER_SMOOTHING_UPDATE_FREQ}",
+    f"{TYPE_HYPERHDR_NUMBER_BASE}_{TYPE_HYPERHDR_NUMBER_SMOOTHING_FACTOR}",
+    f"{TYPE_HYPERHDR_NUMBER_BASE}_{TYPE_HYPERHDR_NUMBER_SMOOTHING_STIFFNESS}",
+    f"{TYPE_HYPERHDR_NUMBER_BASE}_{TYPE_HYPERHDR_NUMBER_SMOOTHING_DAMPING}",
+    f"{TYPE_HYPERHDR_NUMBER_BASE}_{TYPE_HYPERHDR_NUMBER_SMOOTHING_Y_LIMIT}",
     f"{TYPE_HYPERHDR_SELECT_BASE}_{TYPE_HYPERHDR_SELECT_SMOOTHING_TYPE}",
+    TYPE_HYPERHDR_SWITCH_ANTI_FLICKER,
+    TYPE_HYPERHDR_SWITCH_CONTINUOUS_OUTPUT,
 )
 
 _AVERAGE_COLOR_UNIQUE_SUFFIX = (
@@ -218,12 +234,10 @@ def _async_cleanup_stale_entities(
 ) -> None:
     """Remove stale entity-registry entries left over from removed features.
 
-    Permanently removed entities (old camera, color engine) are always pruned.
-    Smoothing entities are pruned per-instance when the connected HyperHDR
-    server does not expose smoothing data.
+    Permanently removed entities (old camera, color engine, decay) are always pruned.
+    Smoothing entities are pruned per-instance when smoothing config was not loaded.
     """
     ent_reg = er.async_get(hass)
-    instance_clients = hass.data[DOMAIN][entry.entry_id][CONF_INSTANCE_CLIENTS]
 
     for entity_entry in er.async_entries_for_config_entry(ent_reg, entry.entry_id):
         uid = entity_entry.unique_id
@@ -234,13 +248,14 @@ def _async_cleanup_stale_entities(
             ent_reg.async_remove(entity_entry.entity_id)
             continue
 
-        # Remove smoothing entities for instances whose server lacks smoothing.
+        # Remove smoothing entities for instances without loaded smoothing config.
         if any(uid.endswith(f"_{suffix}") for suffix in _SMOOTHING_SUFFIXES):
             parts = split_hyperhdr_unique_id(uid)
             if parts is not None:
                 _, instance_num, _ = parts
-                inst_client = instance_clients.get(instance_num)
-                if inst_client is not None and inst_client.smoothing is None:
+                if not smoothing_config_available(
+                    hass.data[DOMAIN][entry.entry_id], instance_num
+                ):
                     _LOGGER.debug(
                         "Removing unsupported smoothing entity %s (%s)",
                         entity_entry.entity_id,
@@ -373,9 +388,12 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
     hass.data[DOMAIN][entry.entry_id] = {
         CONF_ROOT_CLIENT: hyperhdr_client,
         CONF_INSTANCE_CLIENTS: {},
+        CONF_SMOOTHING_CONFIGS: {},
         CONF_ON_UNLOAD: [],
         CONF_SYSINFO: sysinfo,
     }
+
+    admin_password = entry.data.get(CONF_ADMIN_PASSWORD) or None
 
     async def async_instances_to_clients(response: dict[str, Any]) -> None:
         """Convert instances to HyperHDR clients."""
@@ -419,6 +437,21 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
             existing_instances[instance_num] = hyperhdr_client
             instance_name = instance.get(hyperhdr_const.KEY_FRIENDLY_NAME, DEFAULT_NAME)
 
+            smoothing = await async_load_smoothing_config(
+                hyperhdr_client, admin_password=admin_password
+            )
+            if smoothing is not None:
+                hass.data[DOMAIN][entry.entry_id][CONF_SMOOTHING_CONFIGS][
+                    instance_num
+                ] = smoothing
+            else:
+                _LOGGER.info(
+                    "HyperHDR smoothing config unavailable for instance %s; "
+                    "configure Admin Password in Options if Local API / admin "
+                    "authentication is enabled",
+                    instance_num,
+                )
+
             async_dispatcher_send(
                 hass,
                 SIGNAL_INSTANCE_ADD.format(entry.entry_id),
@@ -430,6 +463,9 @@ async def async_setup_entry(hass: HomeAssistant, entry: ConfigEntry) -> bool:
         # Remove entities that are not running instances on HyperHDR.
         for instance_num in set(existing_instances) - running_instances:
             del existing_instances[instance_num]
+            hass.data[DOMAIN][entry.entry_id][CONF_SMOOTHING_CONFIGS].pop(
+                instance_num, None
+            )
             async_dispatcher_send(
                 hass, SIGNAL_INSTANCE_REMOVE.format(entry.entry_id), instance_num
             )

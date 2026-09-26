@@ -43,7 +43,7 @@ HyperHDR is an open source bias lighting implementation which runs on many platf
 - Download the [latest release](https://github.com/Shaffer-Softworks/hyperhdr-ha/releases) as a zip file, extract it, and move the `hyperhdr` folder into the `custom_components` folder in your Home Assistant installation.
 - Restart Home Assistant to load the integration.
 
-**Dependencies:** This integration requires `hyperhdr-py-sickkick==0.2.2`. When installing via HACS, the package is installed automatically. For manual installation, ensure your Home Assistant environment has this package available.
+**Dependencies:** This integration requires `hyperhdr-py-sickkick==0.2.3`. When installing via HACS, the package is installed automatically. For manual installation, ensure your Home Assistant environment has this package available.
 
 ---
 
@@ -84,7 +84,7 @@ After the integration is set up, you can adjust settings via the **Options** gea
 | Keep WLED in realtime mode when off (idle black) | When enabled, turning off the main light keeps the LED device enabled and sends a black output instead of disabling the LED device. This prevents WLED from resuming stored presets when the light is "off". Useful for WLED backends where disabling the LED device releases WLED from realtime mode. | `false` |
 | Effect Show List | Select which HyperHDR effects to expose in Home Assistant. New effects added to HyperHDR will appear by default. | All effects shown |
 | WebSocket Port | Port for LED camera streams. | `8090` |
-| Admin Password | Password for LED stream authentication (required if Local API Authentication is enabled in HyperHDR). | (empty) |
+| Admin Password | Password for LED stream authentication and for HyperHDR v22 smoothing config get/set when local admin auth is enabled. | (empty) |
 
 ---
 
@@ -98,9 +98,9 @@ This integration creates the following platforms:
 | `camera` | Live LED Colors and LED Gradient camera streams via WebSocket. |
 | `light` | Control HyperHDR lighting with color, brightness, and effects. |
 | `sensor` | Monitor visible priority and average color information. |
-| `switch` | Toggle HyperHDR components (smoothing, HDR tone mapping, blackbar detection, etc.). |
-| `number` | Adjust HDR tone mapping intensity. Smoothing parameters (time, decay, update frequency) when the server exposes smoothing data. |
-| `select` | Choose smoothing type (linear, exponential, inertia, hybrid-rgb, yuv) when the server exposes smoothing data. |
+| `switch` | Toggle HyperHDR components, plus Anti-flicker Filter and Continuous Output when smoothing config is available. |
+| `number` | Smoothing parameters (time, update frequency, factor, stiffness, damping, Y limit) when config get/set is available. |
+| `select` | Choose v22 smoothing interpolator type when config get/set is available. |
 
 ### Light
 
@@ -130,6 +130,13 @@ Nine component switches are created (all disabled by default), intended for adva
 | LED Device | Toggle the LED device output |
 | USB Capture | Toggle USB video capture |
 | HDR Tone Mapping | Toggle HDR tone mapping processing |
+
+When HyperHDR smoothing **config** can be read (see Admin Password note below), two additional config switches are created (disabled by default):
+
+| Switch | Description |
+|--------|-------------|
+| Anti-flicker Filter | `antiFlickeringFilter` in HyperHDR v22 smoothing config |
+| Continuous Output | `continuousOutput` in HyperHDR v22 smoothing config |
 
 ### Camera
 
@@ -164,25 +171,29 @@ Shows the currently active (visible) priority with detailed attributes: Color, O
 Displays the average RGB color as a hex value with RGB array attributes. Data sources (in priority order):
 
 1. LED gradient stream — real-time data from the LED Gradient camera when that entity is enabled and streaming (throttled to 2-second intervals).
-2. Server-side `current-state` / `average-color` — HyperHDR JSON-RPC (requires `hyperhdr-py-sickkick` ≥ 0.2.2).
+2. Server-side `current-state` / `average-color` — HyperHDR JSON-RPC (requires `hyperhdr-py-sickkick` ≥ 0.2.3).
 3. Visible priority COLOR component — falls back to the color of the currently visible priority.
 
 ### Number
 
-Up to four number entities are created:
+Smoothing number entities are created when HyperHDR `config` getconfig returns a smoothing object (requires admin auth when enabled on the server):
 
-| Entity | Range | Step | Condition |
-|--------|-------|------|-----------|
-| HDR Tone Mapping | 0.0–2.0 | 0.1 | Always created (disabled by default) |
-| Smoothing Time | 0–1000 ms | 1 | Only if server exposes smoothing data |
-| Smoothing Decay | 0.0–1.0 | 0.01 | Only if server exposes smoothing data |
-| Smoothing Update Frequency | 0–1000 Hz | 1 | Only if server exposes smoothing data |
+| Entity | Range | Step | Notes |
+|--------|-------|------|-------|
+| Smoothing Time | 25–5000 ms | 25 | `time_ms` |
+| Smoothing Update Frequency | 20–200 Hz | 5 | `updateFrequency` |
+| Smoothing Factor | 0.0–1.0 | 0.05 | `smoothingFactor` |
+| Smoothing Stiffness | 0–1000 | 10 | `stiffness` |
+| Smoothing Damping | 0–1000 | 2 | `damping` |
+| Smoothing Y Limit | 0.0–1.0 | 0.01 | `y_limit` |
+
+All are disabled by default. The legacy Smoothing Decay entity is removed on load.
 
 ### Select
 
 One select entity is conditionally created:
 
-- **Smoothing Type** (disabled by default) — Options: `linear`, `exponential`, `inertia`, `hybrid-rgb`, `yuv`. Only created when the server exposes smoothing data.
+- **Smoothing Type** (disabled by default) — Options: `Stepper`, `YuvInterpolator`, `RgbInterpolator`, `HybridInterpolator`, `HybridRgbInterpolator`, `ExponentialInterpolator`.
 
 ---
 
@@ -196,8 +207,8 @@ The integration supports multiple HyperHDR instances per server. Entities are cr
 
 When upgrading from older versions, the integration automatically removes stale entities from the Home Assistant entity registry:
 
-- **Permanently removed:** The old JSON-API camera entity and the Color Engine select entity (both removed in v0.1.5) are always cleaned up.
-- **Conditionally removed:** Smoothing entities (time, decay, update frequency, type) are removed for any instance whose server does not expose smoothing data.
+- **Permanently removed:** The old JSON-API camera entity, Color Engine select, and Smoothing Decay number are always cleaned up.
+- **Conditionally removed:** Smoothing config entities are removed for any instance whose smoothing config could not be loaded (for example when admin authentication is required but no Admin Password is configured).
 
 No manual intervention is required — the cleanup runs on every integration load.
 

@@ -22,6 +22,8 @@ from hyperhdr.const import (
     KEY_COMPONENTSTATE,
     KEY_ENABLED,
     KEY_NAME,
+    KEY_SMOOTHING_ANTI_FLICKERING_FILTER,
+    KEY_SMOOTHING_CONTINUOUS_OUTPUT,
     KEY_STATE,
     KEY_UPDATE,
 )
@@ -49,8 +51,12 @@ from .const import (
     HYPERHDR_MANUFACTURER_NAME,
     HYPERHDR_MODEL_NAME,
     SIGNAL_ENTITY_REMOVE,
+    SIGNAL_SMOOTHING_CONFIG,
     TYPE_HYPERHDR_COMPONENT_SWITCH_BASE,
+    TYPE_HYPERHDR_SWITCH_ANTI_FLICKER,
+    TYPE_HYPERHDR_SWITCH_CONTINUOUS_OUTPUT,
 )
+from .smoothing_config import async_patch_smoothing_config, smoothing_config_available
 
 COMPONENT_SWITCHES = [
     KEY_COMPONENTID_ALL,
@@ -115,14 +121,42 @@ async def async_setup_entry(
             if not available_components or component in available_components
         ]
         async_add_entities(
-            HyperHDRComponentSwitch(
-                server_id,
-                instance_num,
-                instance_name,
-                component,
-                hyperhdr_client,
+            [
+                HyperHDRComponentSwitch(
+                    server_id,
+                    instance_num,
+                    instance_name,
+                    component,
+                    hyperhdr_client,
+                )
+                for component in components_to_add
+            ]
+            + (
+                [
+                    HyperHDRSmoothingConfigSwitch(
+                        config_entry.entry_id,
+                        server_id,
+                        instance_num,
+                        instance_name,
+                        hyperhdr_client,
+                        TYPE_HYPERHDR_SWITCH_ANTI_FLICKER,
+                        "smoothing_anti_flicker",
+                        KEY_SMOOTHING_ANTI_FLICKERING_FILTER,
+                    ),
+                    HyperHDRSmoothingConfigSwitch(
+                        config_entry.entry_id,
+                        server_id,
+                        instance_num,
+                        instance_name,
+                        hyperhdr_client,
+                        TYPE_HYPERHDR_SWITCH_CONTINUOUS_OUTPUT,
+                        "smoothing_continuous_output",
+                        KEY_SMOOTHING_CONTINUOUS_OUTPUT,
+                    ),
+                ]
+                if smoothing_config_available(entry_data, instance_num)
+                else []
             )
-            for component in components_to_add
         )
 
     @callback
@@ -134,6 +168,16 @@ async def async_setup_entry(
                 hass,
                 SIGNAL_ENTITY_REMOVE.format(
                     _component_to_unique_id(server_id, component, instance_num),
+                ),
+            )
+        for switch_type in (
+            TYPE_HYPERHDR_SWITCH_ANTI_FLICKER,
+            TYPE_HYPERHDR_SWITCH_CONTINUOUS_OUTPUT,
+        ):
+            async_dispatcher_send(
+                hass,
+                SIGNAL_ENTITY_REMOVE.format(
+                    get_hyperhdr_unique_id(server_id, instance_num, switch_type),
                 ),
             )
 
@@ -238,3 +282,97 @@ class HyperHDRComponentSwitch(SwitchEntity):
     async def async_will_remove_from_hass(self) -> None:
         """Cleanup prior to hass removal."""
         self._client.remove_callbacks(self._client_callbacks)
+
+
+class HyperHDRSmoothingConfigSwitch(SwitchEntity):
+    """Switch backed by HyperHDR v22 smoothing config fields."""
+
+    _attr_entity_category = EntityCategory.CONFIG
+    _attr_should_poll = False
+    _attr_has_entity_name = True
+    _attr_entity_registry_enabled_default = False
+
+    def __init__(
+        self,
+        entry_id: str,
+        server_id: str,
+        instance_num: int,
+        instance_name: str,
+        hyperhdr_client: client.HyperHDRClient,
+        type_suffix: str,
+        translation_key: str,
+        config_key: str,
+    ) -> None:
+        """Initialize the switch."""
+        self._entry_id = entry_id
+        self._server_id = server_id
+        self._instance_num = instance_num
+        self._config_key = config_key
+        self._client = hyperhdr_client
+        self._device_id = get_hyperhdr_device_id(server_id, instance_num)
+        self._attr_unique_id = get_hyperhdr_unique_id(
+            server_id, instance_num, type_suffix
+        )
+        self._attr_translation_key = translation_key
+        self._attr_device_info = DeviceInfo(
+            identifiers={(DOMAIN, self._device_id)},
+            manufacturer=HYPERHDR_MANUFACTURER_NAME,
+            model=HYPERHDR_MODEL_NAME,
+            name=instance_name,
+            configuration_url=self._client.remote_url,
+        )
+
+    @property
+    def available(self) -> bool:
+        """Return availability — requires smoothing config."""
+        return bool(self._client.has_loaded_state and self._client.smoothing)
+
+    @property
+    def is_on(self) -> bool:
+        """Return true if the config flag is enabled."""
+        if not self._client.smoothing:
+            return False
+        return bool(self._client.smoothing.get(self._config_key, False))
+
+    async def async_turn_on(self, **kwargs: Any) -> None:
+        """Enable the smoothing config flag."""
+        await async_patch_smoothing_config(
+            self.hass,
+            self._entry_id,
+            self._server_id,
+            self._instance_num,
+            **{self._config_key: True},
+        )
+
+    async def async_turn_off(self, **kwargs: Any) -> None:
+        """Disable the smoothing config flag."""
+        await async_patch_smoothing_config(
+            self.hass,
+            self._entry_id,
+            self._server_id,
+            self._instance_num,
+            **{self._config_key: False},
+        )
+
+    @callback
+    def _update_state(self, _: dict[str, Any] | None = None) -> None:
+        """Refresh switch state from cached smoothing config."""
+        self.async_write_ha_state()
+
+    async def async_added_to_hass(self) -> None:
+        """Register remove and smoothing-config listeners."""
+        self.async_on_remove(
+            async_dispatcher_connect(
+                self.hass,
+                SIGNAL_ENTITY_REMOVE.format(self._attr_unique_id),
+                functools.partial(self.async_remove, force_remove=True),
+            )
+        )
+        self.async_on_remove(
+            async_dispatcher_connect(
+                self.hass,
+                SIGNAL_SMOOTHING_CONFIG.format(self._device_id),
+                self._update_state,
+            )
+        )
+        self._update_state()
