@@ -81,6 +81,12 @@ ICON_LIGHTBULB = "mdi:lightbulb"
 ICON_EFFECT = "mdi:lava-lamp"
 ICON_EXTERNAL_SOURCE = "mdi:television-ambient-light"
 
+# Below ~4.7% brightness the 8-bit rounding collapses the channel ratio and
+# solid colors read back as pure red. The scaling math is clamped at this
+# floor while Home Assistant keeps tracking the true slider target through
+# the adjustment channel. Trade-off: solid colors bottom out around ~5%.
+SOLID_COLOR_BRIGHTNESS_FLOOR = 12
+
 
 async def async_setup_entry(
     hass: HomeAssistant,
@@ -149,9 +155,15 @@ class HyperHDRBaseLight(LightEntity):
         self._client = hyperhdr_client
 
         # Active state representing the HyperHDR instance.
+        # _rgb_color always holds the full-brightness color; brightness is
+        # applied at send time in _scale_rgb_to_brightness.
         self._brightness: int = 255
         self._rgb_color: Sequence[int] = DEFAULT_COLOR
         self._effect: str = KEY_EFFECT_SOLID
+        # Set once we have sent a solid color ourselves in this session. HA
+        # does not restore light state on startup, so until then the cache is
+        # stale (e.g. white) and echoes must be reconstructed as before.
+        self._color_cache_known: bool = False
 
         self._static_effect_list: list[str] = [KEY_EFFECT_SOLID]
         if self._support_external_effects:
@@ -267,15 +279,20 @@ class HyperHDRBaseLight(LightEntity):
         self, rgb_color: Sequence[int], brightness: int
     ) -> list[int]:
         """Scale RGB to HA brightness for solid color priority."""
-        if brightness >= 255:
+        math_brightness = brightness
+        if 0 < math_brightness < SOLID_COLOR_BRIGHTNESS_FLOOR:
+            math_brightness = SOLID_COLOR_BRIGHTNESS_FLOOR
+        if math_brightness >= 255:
             return list(rgb_color)
-        scale = brightness / 255.0
+        scale = math_brightness / 255.0
         return [min(255, int(round(channel * scale))) for channel in rgb_color]
 
     def _unscale_rgb_from_brightness(
         self, rgb_color: Sequence[int], brightness: int
     ) -> tuple[int, int, int]:
         """Restore full-brightness RGB from scaled solid color priority."""
+        if 0 < brightness < SOLID_COLOR_BRIGHTNESS_FLOOR:
+            brightness = SOLID_COLOR_BRIGHTNESS_FLOOR
         if brightness <= 0 or brightness >= 255:
             return tuple(rgb_color)
         return tuple(
@@ -294,8 +311,6 @@ class HyperHDRBaseLight(LightEntity):
             rgb_color = color_util.color_hs_to_RGB(*kwargs[ATTR_HS_COLOR])
         else:
             rgb_color = self._rgb_color
-
-        stored_brightness = self._brightness
 
         if ATTR_HS_COLOR in kwargs:
             self._set_internal_state(rgb_color=rgb_color)
@@ -407,12 +422,7 @@ class HyperHDRBaseLight(LightEntity):
             effective_brightness = (
                 kwargs[ATTR_BRIGHTNESS] if ATTR_BRIGHTNESS in kwargs else self._brightness
             )
-            base_rgb = rgb_color
-            if ATTR_HS_COLOR not in kwargs:
-                base_rgb = self._unscale_rgb_from_brightness(
-                    rgb_color, stored_brightness
-                )
-            send_color = self._scale_rgb_to_brightness(base_rgb, effective_brightness)
+            send_color = self._scale_rgb_to_brightness(rgb_color, effective_brightness)
             if not await self._client.async_send_set_color(
                 **{
                     const.KEY_PRIORITY: self._get_option(CONF_PRIORITY),
@@ -421,6 +431,9 @@ class HyperHDRBaseLight(LightEntity):
                 }
             ):
                 return
+            # Our color is now sitting in the priority slot, so the cache is
+            # authoritative until it gets replaced externally.
+            self._color_cache_known = True
 
     def _set_internal_state(
         self,
@@ -488,14 +501,22 @@ class HyperHDRBaseLight(LightEntity):
             elif componentid == const.KEY_COMPONENTID_COLOR:
                 reported_rgb = priority[const.KEY_VALUE][const.KEY_RGB]
                 origin = str(priority.get(const.KEY_ORIGIN, ""))
-                if origin.startswith(DEFAULT_ORIGIN):
-                    reported_rgb = self._unscale_rgb_from_brightness(
-                        reported_rgb, self._brightness
+                if origin.startswith(DEFAULT_ORIGIN) and self._color_cache_known:
+                    # Echo of a color we sent this session, which is already
+                    # fully scaled. Keep the full-brightness cache instead of
+                    # round-tripping it through unscale + scale again.
+                    self._set_internal_state(effect=KEY_EFFECT_SOLID)
+                else:
+                    if origin.startswith(DEFAULT_ORIGIN):
+                        # Color from before this session (light state is not
+                        # restored on startup), so reconstruct as before.
+                        reported_rgb = self._unscale_rgb_from_brightness(
+                            reported_rgb, self._brightness
+                        )
+                    self._set_internal_state(
+                        rgb_color=reported_rgb,
+                        effect=KEY_EFFECT_SOLID,
                     )
-                self._set_internal_state(
-                    rgb_color=reported_rgb,
-                    effect=KEY_EFFECT_SOLID,
-                )
         self.async_write_ha_state()
 
     @callback
