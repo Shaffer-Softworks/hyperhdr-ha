@@ -126,6 +126,9 @@
             }
         },
         "select": {
+            "hdr_tone_mapping": {
+                "name": "HDR Tone Mapping Mode"
+            },
             "smoothing_type": {
                 "name": "Smoothing Type"
             }

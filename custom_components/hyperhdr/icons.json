@@ -5,6 +5,14 @@
                 "default": "mdi:priority-high"
             }
         },
+        "select": {
+            "hdr_tone_mapping": {
+                "default": "mdi:contrast-box"
+            },
+            "smoothing_type": {
+                "default": "mdi:sine-wave"
+            }
+        },
         "switch": {
             "all": {
                 "default": "mdi:power"
