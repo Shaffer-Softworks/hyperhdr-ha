@@ -128,6 +128,7 @@ The **LED Colors** camera entity streams the HyperHDR imagestream over a dedicat
 - **Purpose**: Designed for **PicCap** instances where the standard MJPEG stream may not work, or for visualizing the exact LED output.
 - **Disabled by Default**: This entity is **disabled by default**. You must enable it in Home Assistant settings.
 - **Stream Type**: Uses `HyperHDRLedColorsStream` from `hyperhdr.stream` with automatic reconnection and admin password authentication.
+- **HLS / live view**: Advertises `CameraEntityFeature.STREAM`. The integration serves the same JPEG buffer as multipart MJPEG on localhost for Home Assistant’s stream worker (FFmpeg), which publishes `/api/hls/…` for tablet live view, Lovelace, and `camera.record`. MJPEG camera cards that do not use HLS still work via the existing handler. Live view is **HLS-only** (go2rtc WebRTC is not used — raw MJPEG cannot feed WebRTC without HA’s generic-camera `ffmpeg:` workaround). Encoding JPEG→H.264 runs on the Home Assistant host (same warmup delay as other cameras); the HyperHDR device keeps sending imagestream as today.
 - **Authentication**: Requires admin password for instances with Local API Authentication enabled (token-only auth is insufficient for imagestream).
 
 ### LED Gradient Camera
@@ -136,6 +137,7 @@ The **LED Gradient** camera entity visualizes the raw per-LED color data as a gr
 
 - **Purpose**: Displays a JPEG image representing the current color of each LED, stretched to a visible height. Useful for monitoring individual LED output in real time.
 - **Disabled by Default**: This entity is **disabled by default**. Enable it in Home Assistant settings if desired.
+- **Still only**: Remains a still/MJPEG-card camera (no HLS). Encoding a 20px-tall color bar as H.264 is not worth the CPU cost.
 - **Stream Type**: Uses `HyperHDRLedGradientStream` from `hyperhdr.stream` with built-in RGB-to-JPEG conversion (via Pillow), automatic reconnection, and the same authentication support as the LED Colors camera.
 - **Image Format**: Raw binary LED data (RGB bytes) is converted into a 1-pixel-tall JPEG image scaled to 20px height for visibility.
 - **Average Color Dispatch**: This camera computes the average RGB color from each frame and dispatches it to the Average Color sensor (throttled to every 2 seconds to avoid flooding the event bus).

@@ -5,6 +5,7 @@ from __future__ import annotations
 import asyncio
 import functools
 import logging
+import socket
 import time
 from typing import Any
 
@@ -17,8 +18,10 @@ from hyperhdr.stream import (
 from homeassistant.components.camera import (
     DEFAULT_CONTENT_TYPE,
     Camera,
+    CameraEntityFeature,
     async_get_still_stream,
 )
+from homeassistant.components.stream import CONF_USE_WALLCLOCK_AS_TIMESTAMPS
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_HOST, CONF_TOKEN
 from homeassistant.core import HomeAssistant, callback
@@ -213,12 +216,14 @@ class HyperHDRLedCamera(_HyperHDRLedCameraBase):
 
     Uses HyperHDRLedColorsStream from hyperhdr.stream for WebSocket streaming
     with automatic reconnection and token/admin-password authentication.
-    Stream starts lazily on first image/MJPEG request.
+    Stream starts lazily on first image/MJPEG request. STREAM/HLS is served
+    via a localhost multipart MJPEG endpoint that FFmpeg opens.
     """
 
     _attr_has_entity_name = True
     _attr_name = "LED Colors"
     _attr_entity_registry_enabled_default = False
+    _attr_supported_features = CameraEntityFeature.STREAM
 
     def __init__(
         self,
@@ -233,6 +238,7 @@ class HyperHDRLedCamera(_HyperHDRLedCameraBase):
     ) -> None:
         """Initialize the LED camera."""
         super().__init__()
+        self.stream_options[CONF_USE_WALLCLOCK_AS_TIMESTAMPS] = True
         self._attr_unique_id = get_hyperhdr_unique_id(
             server_id, instance_num, TYPE_HYPERHDR_LED_CAMERA
         )
@@ -250,6 +256,77 @@ class HyperHDRLedCamera(_HyperHDRLedCameraBase):
             model=HYPERHDR_MODEL_NAME,
             name=instance_name,
         )
+        self._local_runner: web.AppRunner | None = None
+        self._local_site: web.BaseSite | None = None
+        self._local_port: int | None = None
+
+    async def _ensure_local_mjpeg_server(self) -> str:
+        """Start a loopback multipart MJPEG server for FFmpeg if needed."""
+        if self._local_port is not None:
+            return f"http://127.0.0.1:{self._local_port}/mjpeg"
+
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        try:
+            sock.bind(("127.0.0.1", 0))
+            port = sock.getsockname()[1]
+
+            app = web.Application()
+            app.router.add_get("/mjpeg", self._handle_local_mjpeg)
+            runner = web.AppRunner(app)
+            await runner.setup()
+            site = web.SockSite(runner, sock)
+            await site.start()
+        except Exception:
+            sock.close()
+            raise
+
+        self._local_runner = runner
+        self._local_site = site
+        self._local_port = port
+        _LOGGER.debug(
+            "LED Colors local MJPEG server listening on 127.0.0.1:%s", port
+        )
+        return f"http://127.0.0.1:{port}/mjpeg"
+
+    async def _handle_local_mjpeg(self, request: web.Request) -> web.StreamResponse:
+        """Serve multipart MJPEG from _last_image when FFmpeg connects."""
+        self._ensure_stream_started()
+        return await async_get_still_stream(
+            request,
+            self._wait_for_image,
+            DEFAULT_CONTENT_TYPE,
+            0.0,
+        )
+
+    async def stream_source(self) -> str | None:
+        """Return localhost MJPEG URL for the HA stream worker / FFmpeg."""
+        return await self._ensure_local_mjpeg_server()
+
+    async def _async_get_supported_webrtc_provider(self, fn):  # noqa: ANN001
+        """Keep the frontend on HLS; do not hand this camera to go2rtc.
+
+        go2rtc only auto-wraps ``generic`` camera HTTP sources with
+        ``ffmpeg:``. Our multipart MJPEG is otherwise registered as raw HTTP,
+        which cannot feed WebRTC and fails with an RTSP DESCRIBE 404. HLS via
+        the stream worker (with wall-clock timestamps) is the supported live
+        path for tablets, Lovelace, and ``camera.record``.
+        """
+        return None
+
+    async def _stop_local_mjpeg_server(self) -> None:
+        """Tear down the loopback MJPEG server."""
+        if self._local_site is not None:
+            await self._local_site.stop()
+            self._local_site = None
+        if self._local_runner is not None:
+            await self._local_runner.cleanup()
+            self._local_runner = None
+        self._local_port = None
+
+    async def async_will_remove_from_hass(self) -> None:
+        """Stop WebSocket stream and local MJPEG server."""
+        await super().async_will_remove_from_hass()
+        await self._stop_local_mjpeg_server()
 
     async def _stream_worker(self) -> None:
         """Background task to receive stream frames and update the camera image."""
