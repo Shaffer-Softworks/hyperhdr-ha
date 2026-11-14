@@ -5,6 +5,7 @@ from __future__ import annotations
 import asyncio
 import functools
 import logging
+import shutil
 import socket
 import time
 from typing import Any
@@ -21,7 +22,6 @@ from homeassistant.components.camera import (
     CameraEntityFeature,
     async_get_still_stream,
 )
-from homeassistant.components.stream import CONF_USE_WALLCLOCK_AS_TIMESTAMPS
 from homeassistant.config_entries import ConfigEntry
 from homeassistant.const import CONF_HOST, CONF_TOKEN
 from homeassistant.core import HomeAssistant, callback
@@ -50,6 +50,79 @@ from .const import (
 )
 
 _LOGGER = logging.getLogger(__name__)
+
+# Home Assistant's stream worker remuxes into fMP4. It does not transcode, so a
+# JPEG source is published as mp4v, which browsers and ExoPlayer will not play.
+_H264_CONTENT_TYPE = "video/mp2t"
+_H264_FRAME_RATE = 10
+_FFMPEG_STDOUT_CHUNK = 65536
+_FFMPEG_KILL_RETURN_CODE = -9
+
+
+def _h264_ffmpeg_command(binary: str, mjpeg_url: str) -> list[str]:
+    """Build ffmpeg argv that turns the localhost MJPEG into H.264 MPEG-TS."""
+    # Even dimensions of at least 2px: libx264 rejects a 1px-tall LED image.
+    video_filter = (
+        f"fps={_H264_FRAME_RATE},"
+        "scale=trunc(max(2\\,iw)/2)*2:trunc(max(2\\,ih)/2)*2"
+    )
+    return [
+        binary,
+        "-hide_banner",
+        "-loglevel",
+        "warning",
+        "-nostdin",
+        "-fflags",
+        "nobuffer",
+        "-flags",
+        "low_delay",
+        "-use_wallclock_as_timestamps",
+        "1",
+        "-f",
+        "mpjpeg",
+        "-i",
+        mjpeg_url,
+        "-an",
+        "-vf",
+        video_filter,
+        "-c:v",
+        "libx264",
+        "-preset",
+        "ultrafast",
+        "-tune",
+        "zerolatency",
+        "-pix_fmt",
+        "yuv420p",
+        "-profile:v",
+        "baseline",
+        "-g",
+        str(_H264_FRAME_RATE),
+        "-keyint_min",
+        str(_H264_FRAME_RATE),
+        "-sc_threshold",
+        "0",
+        "-force_key_frames",
+        "expr:gte(t,n_forced*1)",
+        "-flush_packets",
+        "1",
+        "-muxdelay",
+        "0",
+        "-muxpreload",
+        "0",
+        "-f",
+        "mpegts",
+        "pipe:1",
+    ]
+
+
+def _ffmpeg_binary(hass: HomeAssistant) -> str | None:
+    """Return the ffmpeg binary Home Assistant is configured to use."""
+    from homeassistant.components.ffmpeg import get_ffmpeg_manager
+
+    try:
+        return get_ffmpeg_manager(hass).binary
+    except (ValueError, KeyError):
+        return shutil.which("ffmpeg")
 
 
 async def async_setup_entry(
@@ -216,8 +289,9 @@ class HyperHDRLedCamera(_HyperHDRLedCameraBase):
 
     Uses HyperHDRLedColorsStream from hyperhdr.stream for WebSocket streaming
     with automatic reconnection and token/admin-password authentication.
-    Stream starts lazily on first image/MJPEG request. STREAM/HLS is served
-    via a localhost multipart MJPEG endpoint that FFmpeg opens.
+    Stream starts lazily on first image/MJPEG request. STREAM/HLS is H.264:
+    ffmpeg transcodes the localhost MJPEG into MPEG-TS, and Home Assistant's
+    stream worker remuxes that to ``/api/hls/``.
     """
 
     _attr_has_entity_name = True
@@ -238,7 +312,6 @@ class HyperHDRLedCamera(_HyperHDRLedCameraBase):
     ) -> None:
         """Initialize the LED camera."""
         super().__init__()
-        self.stream_options[CONF_USE_WALLCLOCK_AS_TIMESTAMPS] = True
         self._attr_unique_id = get_hyperhdr_unique_id(
             server_id, instance_num, TYPE_HYPERHDR_LED_CAMERA
         )
@@ -259,6 +332,9 @@ class HyperHDRLedCamera(_HyperHDRLedCameraBase):
         self._local_runner: web.AppRunner | None = None
         self._local_site: web.BaseSite | None = None
         self._local_port: int | None = None
+        self._h264_runner: web.AppRunner | None = None
+        self._h264_site: web.BaseSite | None = None
+        self._h264_port: int | None = None
 
     async def _ensure_local_mjpeg_server(self) -> str:
         """Start a loopback multipart MJPEG server for FFmpeg if needed."""
@@ -298,18 +374,104 @@ class HyperHDRLedCamera(_HyperHDRLedCameraBase):
             0.0,
         )
 
+    async def _ensure_h264_server(self) -> str | None:
+        """Serve ffmpeg's H.264 MPEG-TS on loopback for the stream worker."""
+        if self._h264_port is not None:
+            return f"http://127.0.0.1:{self._h264_port}/stream.ts"
+        if _ffmpeg_binary(self.hass) is None:
+            _LOGGER.error(
+                "ffmpeg is not available; LED Colors cannot publish an H.264 stream"
+            )
+            return None
+        await self._ensure_local_mjpeg_server()
+
+        sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        try:
+            sock.bind(("127.0.0.1", 0))
+            port = sock.getsockname()[1]
+            app = web.Application()
+            app.router.add_get("/stream.ts", self._handle_h264)
+            runner = web.AppRunner(app)
+            await runner.setup()
+            site = web.SockSite(runner, sock)
+            await site.start()
+        except Exception:
+            sock.close()
+            raise
+
+        self._h264_runner = runner
+        self._h264_site = site
+        self._h264_port = port
+        _LOGGER.debug("LED Colors H.264 server listening on 127.0.0.1:%s", port)
+        return f"http://127.0.0.1:{port}/stream.ts"
+
+    async def _handle_h264(self, request: web.Request) -> web.StreamResponse:
+        """Transcode the MJPEG buffer to H.264 MPEG-TS for one stream client."""
+        binary = _ffmpeg_binary(self.hass)
+        if binary is None or self._local_port is None:
+            raise web.HTTPServiceUnavailable
+
+        process = await asyncio.create_subprocess_exec(
+            *_h264_ffmpeg_command(
+                binary, f"http://127.0.0.1:{self._local_port}/mjpeg"
+            ),
+            stdout=asyncio.subprocess.PIPE,
+            stderr=asyncio.subprocess.PIPE,
+        )
+        assert process.stdout is not None
+        assert process.stderr is not None
+        stderr_task = asyncio.create_task(
+            process.stderr.read(), name=f"hyperhdr_ffmpeg_stderr_{self._device_id}"
+        )
+        response = web.StreamResponse()
+        response.content_type = _H264_CONTENT_TYPE
+        try:
+            await response.prepare(request)
+            while True:
+                chunk = await process.stdout.read(_FFMPEG_STDOUT_CHUNK)
+                if not chunk:
+                    break
+                await response.write(chunk)
+        finally:
+            if process.returncode is None:
+                process.kill()
+                await asyncio.shield(process.wait())
+            stderr = (
+                (await asyncio.shield(stderr_task))
+                .decode("utf-8", errors="replace")
+                .strip()
+            )
+            # A viewer disconnect kills ffmpeg on purpose. Log only a real failure.
+            if process.returncode not in (0, None, _FFMPEG_KILL_RETURN_CODE):
+                _LOGGER.warning(
+                    "LED Colors ffmpeg exited %s: %s",
+                    process.returncode,
+                    stderr or "(no stderr)",
+                )
+        return response
+
+    async def _stop_h264_server(self) -> None:
+        """Tear down the loopback H.264 server."""
+        if self._h264_site is not None:
+            await self._h264_site.stop()
+            self._h264_site = None
+        if self._h264_runner is not None:
+            await self._h264_runner.cleanup()
+            self._h264_runner = None
+        self._h264_port = None
+
     async def stream_source(self) -> str | None:
-        """Return localhost MJPEG URL for the HA stream worker / FFmpeg."""
-        return await self._ensure_local_mjpeg_server()
+        """Return a localhost H.264 MPEG-TS URL for the HA stream worker."""
+        return await self._ensure_h264_server()
 
     async def _async_get_supported_webrtc_provider(self, fn):  # noqa: ANN001
         """Keep the frontend on HLS; do not hand this camera to go2rtc.
 
         go2rtc only auto-wraps ``generic`` camera HTTP sources with
-        ``ffmpeg:``. Our multipart MJPEG is otherwise registered as raw HTTP,
+        ``ffmpeg:``. Our MPEG-TS URL is otherwise registered as raw HTTP,
         which cannot feed WebRTC and fails with an RTSP DESCRIBE 404. HLS via
-        the stream worker (with wall-clock timestamps) is the supported live
-        path for tablets, Lovelace, and ``camera.record``.
+        the stream worker is the live path for tablets, Lovelace, and
+        ``camera.record``.
         """
         return None
 
@@ -324,7 +486,8 @@ class HyperHDRLedCamera(_HyperHDRLedCameraBase):
         self._local_port = None
 
     async def async_will_remove_from_hass(self) -> None:
-        """Stop WebSocket stream and local MJPEG server."""
+        """Stop WebSocket stream and the loopback MJPEG and H.264 servers."""
+        await self._stop_h264_server()
         await super().async_will_remove_from_hass()
         await self._stop_local_mjpeg_server()
 

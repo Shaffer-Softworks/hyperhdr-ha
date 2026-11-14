@@ -159,7 +159,8 @@ async def _run(
         }.get(led_colors_entity, {})
         print(f"LED Colors state after frames: {colors.get('state')}")
 
-        # Ask HA stream worker for HLS playlist (uses stream_source -> localhost MJPEG).
+        # Ask HA stream worker for HLS. stream_source is H.264 MPEG-TS; a raw
+        # JPEG source is remuxed as mp4v, which the tablet and browsers cannot play.
         print("Requesting camera/stream (HLS)...")
         msg_id, stream_msg = await _ws_send(
             ws,
@@ -186,6 +187,10 @@ async def _run(
         if status != 200 or "#EXTM3U" not in master_text:
             print("FAIL master playlist invalid")
             return 1
+        if "avc1" not in master_text:
+            print("FAIL master playlist is not H.264 (expected CODECS avc1)")
+            return 1
+        print("OK master playlist is H.264")
         media_url = _media_playlist_url(f"{base}{hls_url}", master_text)
         if not media_url:
             print("FAIL master playlist has no media URI")
