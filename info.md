@@ -29,6 +29,14 @@ HyperHDR instances are automatically discovered via **SSDP**. When found, a noti
 <!-- {% endif %} -->
 
 <!-- {% if installed %} -->
+# Integration v1.3.2
+
+LED Colors live view now plays in browsers and the Home Assistant app:
+
+- **H.264 HLS:** ffmpeg on the Home Assistant host transcodes the local MJPEG buffer to H.264 MPEG-TS ([#123](https://github.com/Shaffer-Softworks/hyperhdr-ha/pull/123)). Home Assistant’s stream worker only remuxes, so the v1.3.1 JPEG source was published as `mp4v`, which those players cannot decode.
+- Classic MJPEG camera cards are unchanged. LED Gradient stays a still image.
+- **Dependency:** the Home Assistant `ffmpeg` integration is required.
+
 # Integration v1.3.1
 
 Since **v1.2.1**:
