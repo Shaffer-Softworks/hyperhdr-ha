@@ -29,6 +29,14 @@ HyperHDR instances are automatically discovered via **SSDP**. When found, a noti
 <!-- {% endif %} -->
 
 <!-- {% if installed %} -->
+# Integration v1.2.2
+
+- **HDR Tone Mapping Mode** select: Off / On / **Auto**
+  - Off/On → `videomodehdr` (`HDR` 0/1)
+  - Auto → `automaticToneMapping.enable` via config get/set (v21+)
+- Distinct from the existing HDR component switch (processing enable/disable)
+- Docs synced; version warn cutoff raised to **22.0.0.0**
+
 # Integration v1.2.1
 
 HyperHDR **v22** smoothing controls via authenticated config get/set:

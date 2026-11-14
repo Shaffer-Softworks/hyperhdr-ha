@@ -100,7 +100,7 @@ This integration creates the following platforms:
 | `sensor` | Monitor visible priority and average color information. |
 | `switch` | Toggle HyperHDR components, plus Anti-flicker Filter and Continuous Output when smoothing config is available. |
 | `number` | Smoothing parameters (time, update frequency, factor, stiffness, damping, Y limit) when config get/set is available. |
-| `select` | Choose v22 smoothing interpolator type when config get/set is available. |
+| `select` | HDR Tone Mapping Mode (Off / On / Auto), plus v22 smoothing interpolator type when config get/set is available. |
 
 ### Light
 
@@ -129,7 +129,7 @@ Nine component switches are created (all disabled by default), intended for adva
 | Platform Capture | Toggle platform screen capture |
 | LED Device | Toggle the LED device output |
 | USB Capture | Toggle USB video capture |
-| HDR Tone Mapping | Toggle HDR tone mapping processing |
+| HDR Tone Mapping | Toggle HDR processing component on/off (not the same as Off/On/Auto mode) |
 
 When HyperHDR smoothing **config** can be read (see Admin Password note below), two additional config switches are created (disabled by default):
 
@@ -191,9 +191,8 @@ All are disabled by default. The legacy Smoothing Decay entity is removed on loa
 
 ### Select
 
-One select entity is conditionally created:
-
-- **Smoothing Type** (disabled by default) — Options: `Stepper`, `YuvInterpolator`, `RgbInterpolator`, `HybridInterpolator`, `HybridRgbInterpolator`, `ExponentialInterpolator`.
+- **HDR Tone Mapping Mode** (always created, disabled by default) — Options: `Off`, `On`, `Auto`. Off/On use HyperHDR's `videomodehdr` command (`HDR` 0/1). **Auto** enables Image Processing `automaticToneMapping` via config get/set (v21+; Admin Password when local admin auth is required). This is separate from the HDR component switch above.
+- **Smoothing Type** (conditional, disabled by default) — Options: `Stepper`, `YuvInterpolator`, `RgbInterpolator`, `HybridInterpolator`, `HybridRgbInterpolator`, `ExponentialInterpolator`. Created when smoothing config can be loaded.
 
 ---
 
@@ -207,7 +206,7 @@ The integration supports multiple HyperHDR instances per server. Entities are cr
 
 When upgrading from older versions, the integration automatically removes stale entities from the Home Assistant entity registry:
 
-- **Permanently removed:** The old JSON-API camera entity, Color Engine select, and Smoothing Decay number are always cleaned up.
+- **Permanently removed:** The old JSON-API camera entity, Color Engine select, HDR intensity number, and Smoothing Decay number are always cleaned up.
 - **Conditionally removed:** Smoothing config entities are removed for any instance whose smoothing config could not be loaded (for example when admin authentication is required but no Admin Password is configured).
 
 No manual intervention is required — the cleanup runs on every integration load.

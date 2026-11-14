@@ -16,18 +16,18 @@ HyperHDR is an open source bias lighting implementation which runs on many platf
 | `sensor` | Monitor visible priority and average color information. |
 | `switch` | Toggle HyperHDR components, plus Anti-flicker Filter and Continuous Output when smoothing config is available. |
 | `number` | Smoothing parameters (time, update frequency, factor, stiffness, damping, Y limit) when config get/set is available. |
-| `select` | Choose v22 smoothing interpolator type when config get/set is available. |
+| `select` | HDR Tone Mapping Mode (Off / On / Auto), plus v22 smoothing interpolator type when config get/set is available. |
 
 ### Key Features
 
 - **LED Colors Camera**: Live WebSocket stream of the HyperHDR imagestream output — ideal for PicCap instances or visualizing exact LED output.
 - **LED Gradient Camera**: Real-time per-LED gradient visualization rendered as a JPEG image from raw RGB data.
 - **Average Color Sensor**: Average RGB as hex with attributes, from `current-state`/`average-color` RPC (with LED stream and priority-color fallbacks).
-- **HDR Tone Mapping**: Adjust HDR tone mapping intensity with a dedicated number entity. Supports both legacy `hdrToneMappingMode` and the newer `videomodehdr` command paths.
+- **HDR Tone Mapping Mode**: Select entity for Off / On / **Auto**. Off/On use `videomodehdr`; Auto toggles Image Processing `automaticToneMapping.enable` (v21+, via config get/set — Admin Password when required). Distinct from the HDR component switch, which enables or disables HDR processing.
 - **Smoothing Controls** *(conditional)*: Number and select entities for HyperHDR v22 smoothing config (`time_ms`, update frequency, factor, stiffness, damping, Y limit, interpolator type) — created when `config` getconfig succeeds. Requires **Admin Password** (or open admin auth) when HyperHDR local admin authentication is enabled.
 - **Anti-flicker / Continuous Output** *(conditional)*: Config switches for `antiFlickeringFilter` and `continuousOutput`.
-- **Component Switches**: Enable/disable HyperHDR components (advanced users).
-- **Automatic Entity Cleanup**: Stale entities from removed features (old camera, color engine, decay, unsupported smoothing) are automatically pruned from the entity registry on integration load.
+- **Component Switches**: Enable/disable HyperHDR components (advanced users), including an HDR Tone Mapping component on/off switch.
+- **Automatic Entity Cleanup**: Stale entities from removed features (old camera, color engine, HDR intensity number, decay, unsupported smoothing) are automatically pruned from the entity registry on integration load.
 - **SSDP Auto-Discovery**: HyperHDR instances on your network are automatically discovered via SSDP/UPnP — no manual IP entry required.
 
 ![hyperhdr-logo](https://github.com/Shaffer-Softworks/hyperhdr-ha/blob/master/hyperhdr-logo.png)
@@ -108,16 +108,16 @@ After the integration is set up, you can adjust the following via **Options** (g
 
 Entities are created automatically for each running HyperHDR instance:
 
-- **Always created**: Light, Priority Light, Clear Priority button, Component Switches, HDR Tone Mapping, Visible Priority Sensor, Average Color Sensor, LED Colors Camera, LED Gradient Camera.
-- **Conditionally created**: Smoothing Time, Smoothing Decay, Smoothing Update Frequency, and Smoothing Type entities are only created when the connected HyperHDR server exposes smoothing data in its `serverinfo` response. If the server does not expose this data, these entities are not created at all.
-- **Disabled by default**: Camera entities and most number/select entities are disabled by default to avoid unnecessary overhead. Enable them in Home Assistant's entity settings if needed.
+- **Always created**: Light, Priority Light, Clear Priority button, Component Switches, HDR Tone Mapping Mode select, Visible Priority Sensor, Average Color Sensor, LED Colors Camera, LED Gradient Camera.
+- **Conditionally created**: Smoothing Time, Update Frequency, Factor, Stiffness, Damping, Y Limit, Smoothing Type, Anti-flicker, and Continuous Output entities are only created when HyperHDR `config` getconfig returns a smoothing object. If that fails (for example missing Admin Password), these entities are not created.
+- **Disabled by default**: Camera entities and most number/select/switch entities are disabled by default to avoid unnecessary overhead. Enable them in Home Assistant's entity settings if needed.
 
 ### Automatic Stale Entity Cleanup
 
 When upgrading from older versions, the integration automatically removes stale entities from the Home Assistant entity registry:
 
-- **Permanently removed**: The old JSON-API camera entity and the Color Engine select entity are always cleaned up.
-- **Conditionally removed**: Smoothing entities (time, decay, update frequency, type) are removed for any instance whose server does not expose smoothing data.
+- **Permanently removed**: The old JSON-API camera, Color Engine select, HDR intensity number, and Smoothing Decay number are always cleaned up.
+- **Conditionally removed**: Smoothing config entities are removed for any instance whose smoothing config could not be loaded.
 
 No manual intervention is required — the cleanup runs on every integration load.
 
