@@ -218,6 +218,40 @@ async def _run(
         print("--- playlist head ---")
         print("\n".join(playlist.splitlines()[:20]))
         print("--------------------")
+
+        def _media_sequence(text: str) -> int | None:
+            for line in text.splitlines():
+                if line.startswith("#EXT-X-MEDIA-SEQUENCE:"):
+                    try:
+                        return int(line.split(":", 1)[1].strip())
+                    except ValueError:
+                        return None
+            return None
+
+        # Stall regression: identical LED JPEGs used to starve ffmpeg until the
+        # stream worker hit SOURCE_TIMEOUT (~30s) and demux failed. Sequence
+        # must keep advancing while we hold the HLS URL open.
+        first_seq = _media_sequence(playlist)
+        print(f"Waiting for MEDIA-SEQUENCE to advance (start={first_seq})...")
+        advanced = False
+        for attempt in range(1, 25):
+            await asyncio.sleep(2)
+            status, body, _ctype = _http_get(media_url, access_token, timeout=20.0)
+            text = body.decode("utf-8", errors="replace")
+            seq = _media_sequence(text)
+            print(f"  sequence poll {attempt}: HTTP {status} MEDIA-SEQUENCE={seq}")
+            if (
+                status == 200
+                and first_seq is not None
+                and seq is not None
+                and seq > first_seq
+            ):
+                advanced = True
+                break
+        if not advanced:
+            print("FAIL MEDIA-SEQUENCE did not advance (stream likely stalled)")
+            return 1
+        print("OK MEDIA-SEQUENCE advanced while stream stayed open")
         print("PASS LED Colors STREAM/HLS")
         return 0
 

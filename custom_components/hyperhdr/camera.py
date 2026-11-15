@@ -16,14 +16,16 @@ from hyperhdr.stream import (
     HyperHDRLedGradientStream,
 )
 
+from aiohttp.client_exceptions import ClientConnectionResetError
 from homeassistant.components.camera import (
     DEFAULT_CONTENT_TYPE,
     Camera,
     CameraEntityFeature,
     async_get_still_stream,
 )
+from homeassistant.components.stream import CONF_USE_WALLCLOCK_AS_TIMESTAMPS
 from homeassistant.config_entries import ConfigEntry
-from homeassistant.const import CONF_HOST, CONF_TOKEN
+from homeassistant.const import CONF_HOST, CONF_TOKEN, CONTENT_TYPE_MULTIPART
 from homeassistant.core import HomeAssistant, callback
 from homeassistant.helpers.device_registry import DeviceInfo
 from homeassistant.helpers.dispatcher import (
@@ -57,6 +59,10 @@ _H264_CONTENT_TYPE = "video/mp2t"
 _H264_FRAME_RATE = 10
 _FFMPEG_STDOUT_CHUNK = 65536
 _FFMPEG_KILL_RETURN_CODE = -9
+# HA's stream SOURCE_TIMEOUT is 30s. Keep ffmpeg fed even when LED JPEGs are
+# identical or HyperHDR briefly pauses — async_get_still_stream skips equals.
+_MJPEG_REPEAT_INTERVAL_S = 0.1
+_FRAME_BOUNDARY = b"--frameboundary\r\n"
 
 
 def _h264_ffmpeg_command(binary: str, mjpeg_url: str) -> list[str]:
@@ -85,6 +91,10 @@ def _h264_ffmpeg_command(binary: str, mjpeg_url: str) -> list[str]:
         "-an",
         "-vf",
         video_filter,
+        "-fps_mode",
+        "cfr",
+        "-r",
+        str(_H264_FRAME_RATE),
         "-c:v",
         "libx264",
         "-preset",
@@ -329,6 +339,9 @@ class HyperHDRLedCamera(_HyperHDRLedCameraBase):
             model=HYPERHDR_MODEL_NAME,
             name=instance_name,
         )
+        # Live LED JPEGs do not carry stable decode timestamps; wallclock keeps
+        # the remuxer from stalling when frames are repeated for ffmpeg.
+        self.stream_options[CONF_USE_WALLCLOCK_AS_TIMESTAMPS] = True
         self._local_runner: web.AppRunner | None = None
         self._local_site: web.BaseSite | None = None
         self._local_port: int | None = None
@@ -365,14 +378,49 @@ class HyperHDRLedCamera(_HyperHDRLedCameraBase):
         return f"http://127.0.0.1:{port}/mjpeg"
 
     async def _handle_local_mjpeg(self, request: web.Request) -> web.StreamResponse:
-        """Serve multipart MJPEG from _last_image when FFmpeg connects."""
+        """Serve multipart MJPEG for ffmpeg, repeating the last frame.
+
+        ``async_get_still_stream`` skips identical JPEG bytes. Static or briefly
+        paused LED colors then starve ffmpeg, and Home Assistant's stream worker
+        hits its 30s source timeout (``Immediate exit requested``). Always write
+        the latest buffer on a short interval so the H.264 pipe stays alive.
+        """
         self._ensure_stream_started()
-        return await async_get_still_stream(
-            request,
-            self._wait_for_image,
-            DEFAULT_CONTENT_TYPE,
-            0.0,
-        )
+        response = web.StreamResponse()
+        response.content_type = CONTENT_TYPE_MULTIPART.format("--frameboundary")
+        await response.prepare(request)
+
+        async with self._image_cond:
+            while self._last_image is None:
+                await self._image_cond.wait()
+            image = self._last_image
+
+        try:
+            while True:
+                assert image is not None
+                await response.write(
+                    _FRAME_BOUNDARY
+                    + (
+                        f"Content-Type: {DEFAULT_CONTENT_TYPE}\r\n"
+                        f"Content-Length: {len(image)}\r\n\r\n"
+                    ).encode()
+                    + image
+                    + b"\r\n"
+                )
+                async with self._image_cond:
+                    try:
+                        await asyncio.wait_for(
+                            self._image_cond.wait(),
+                            timeout=_MJPEG_REPEAT_INTERVAL_S,
+                        )
+                    except TimeoutError:
+                        pass
+                    if self._last_image is not None:
+                        image = self._last_image
+        except (ClientConnectionResetError, ConnectionResetError):
+            # ffmpeg disconnects when the stream worker restarts or stops.
+            pass
+        return response
 
     async def _ensure_h264_server(self) -> str | None:
         """Serve ffmpeg's H.264 MPEG-TS on loopback for the stream worker."""
@@ -432,6 +480,9 @@ class HyperHDRLedCamera(_HyperHDRLedCameraBase):
                 if not chunk:
                     break
                 await response.write(chunk)
+        except (ClientConnectionResetError, ConnectionResetError):
+            # Stream worker closed the HTTP client (idle timeout / restart).
+            pass
         finally:
             if process.returncode is None:
                 process.kill()
